@@ -15,7 +15,7 @@ tags:
     description: Operasi yang berhubungan dengan admin puskesmas
   - name: Admin Apotek
     description: Operasi yang berhubungan dengan admin apotek
-  - name: User
+  - name: Pengguna
     description: Operasi yang berhubungan dengan pengguna
   - name: Obat
     description: Operasi yang berhubungan dengan obat
@@ -66,7 +66,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Username atau password salah
+                    example: username atau password salah
         '400':
           description: Bad request
           content:
@@ -202,7 +202,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Username atau password salah
+                    example: username atau password salah
         '400':
           description: Bad request
           content:
@@ -243,9 +243,9 @@ paths:
                     type: string
                   namaPuskesmas:
                     type: string
-                  phone:
+                  telepon:
                     type: string
-                  address:
+                  alamat:
                     type: string
         '401':
           description: Unauthorized
@@ -282,14 +282,14 @@ paths:
               properties:
                 namaPuskesmas:
                   type: string
-                phone:
+                telepon:
                   type: string
-                address:
+                alamat:
                   type: string
               required:
                 - namaPuskesmas
-                - phone
-                - address
+                - telepon
+                - alamat
       responses:
         '200':
           description: Admin puskesmas berhasil diupdate
@@ -452,9 +452,9 @@ paths:
                           type: string
                         username:
                           type: string
-                        phone:
+                        telepon:
                           type: string
-                        address:
+                        alamat:
                           type: string
         '401':
           description: Unauthorized
@@ -495,13 +495,13 @@ paths:
                   type: string
                 password:
                   type: string
-                phone:
+                telepon:
                   type: string
-                address:
+                alamat:
                   type: string
               required:
-                - phone
-                - address
+                - telepon
+                - alamat
                 - namaPuskesmas
                 - username
                 - password
@@ -537,7 +537,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username atau No HP sudah digunakan
+          description: username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -548,8 +548,8 @@ paths:
               examples:
                 usernameUsed:
                   value:
-                    error: Username sudah digunakan
-                phoneNumberUsed:
+                    error: username sudah digunakan
+                teleponNumberUsed:
                   value:
                     error: Nomor hp sudah digunakan
         '500':
@@ -592,9 +592,9 @@ paths:
                         type: string
                       username:
                         type: string
-                      phone:
+                      telepon:
                         type: string
-                      address:
+                      alamat:
                         type: string
         '401':
           description: Unauthorized
@@ -652,13 +652,13 @@ paths:
                 password:
                   type: string
                   nullable: true
-                phone:
+                telepon:
                   type: string
-                address:
+                alamat:
                   type: string
               required:
-                - address
-                - phone
+                - alamat
+                - telepon
                 - namaPuskesmas
                 - username
       responses:
@@ -693,7 +693,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username atau No HP sudah digunakan
+          description: username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -704,8 +704,8 @@ paths:
               examples:
                 usernameUsed:
                   value:
-                    error: Username sudah digunakan
-                phoneNumberUsed:
+                    error: username sudah digunakan
+                teleponNumberUsed:
                   value:
                     error: Nomor hp sudah digunakan
         '404':
@@ -840,7 +840,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Username atau password salah
+                    example: username atau password salah
         '400':
           description: Bad request
           content:
@@ -880,9 +880,9 @@ paths:
                     type: string
                   namaApotek:
                     type: string
-                  phone:
+                  telepon:
                     type: string
-                  address:
+                  alamat:
                     type: string
         '401':
           description: Unauthorized
@@ -919,14 +919,14 @@ paths:
               properties:
                 namaApotek:
                   type: string
-                phone:
+                telepon:
                   type: string
-                address:
+                alamat:
                   type: string
               required:
                 - namaApotek
-                - phone
-                - address
+                - telepon
+                - alamat
       responses:
         '200':
           description: Admin apotek berhasil diupdate
@@ -1091,9 +1091,9 @@ paths:
                           type: string
                         username:
                           type: string
-                        phone:
+                        telepon:
                           type: string
-                        address:
+                        alamat:
                           type: string
         '401':
           description: Unauthorized
@@ -1134,16 +1134,16 @@ paths:
                   type: string
                 password:
                   type: string
-                phone:
+                telepon:
                   type: string
-                address:
+                alamat:
                   type: string
               required:
                 - namaApotek
                 - username
                 - password
-                - phone
-                - address
+                - telepon
+                - alamat
       responses:
         '201':
           description: Admin apotek berhasil dibuat
@@ -1176,7 +1176,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username atau No HP sudah digunakan
+          description: username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -1187,8 +1187,8 @@ paths:
               examples:
                 usernameUsed:
                   value:
-                    error: Username sudah digunakan
-                phoneNumberUsed:
+                    error: username sudah digunakan
+                teleponNumberUsed:
                   value:
                     error: Nomor hp sudah digunakan
         '500':
@@ -1231,9 +1231,9 @@ paths:
                         type: string
                       username:
                         type: string
-                      phone:
+                      telepon:
                         type: string
-                      address:
+                      alamat:
                         type: string
         '401':
           description: Unauthorized
@@ -1291,15 +1291,15 @@ paths:
                 password:
                   type: string
                   nullable: true
-                phone:
+                telepon:
                   type: string
-                address:
+                alamat:
                   type: string
               required:
                 - namaApotek
                 - username
-                - phone
-                - address
+                - telepon
+                - alamat
       responses:
         '200':
           description: Admin apotek berhasil diupdate
@@ -1332,7 +1332,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username atau No HP sudah digunakan
+          description: username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -1343,8 +1343,8 @@ paths:
               examples:
                 usernameUsed:
                   value:
-                    error: Username sudah digunakan
-                phoneNumberUsed:
+                    error: username sudah digunakan
+                teleponNumberUsed:
                   value:
                     error: Nomor hp sudah digunakan
         '404':
@@ -1440,11 +1440,11 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /api/user/login:
+  /api/pengguna/login:
     post:
       tags:
-        - User
-      summary: Login user
+        - Pengguna
+      summary: Login pengguna
       requestBody:
         required: true
         content:
@@ -1479,7 +1479,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Username atau password salah
+                    example: username atau password salah
         '400':
           description: Bad request
           content:
@@ -1500,11 +1500,11 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /api/user/current:
+  /api/pengguna/current:
     get:
       tags:
-        - User
-      summary: Get current user
+        - Pengguna
+      summary: Get current pengguna
       security:
         - jwtAuth: [ ]
       responses:
@@ -1520,13 +1520,13 @@ paths:
                     properties:
                       id:
                         type: integer
-                      fullName:
+                      namaLengkap:
                         type: string
-                      phone:
+                      telepon:
                         type: string
-                      familyPhone:
+                      teleponKeluarga:
                         type: string
-                      address:
+                      alamat:
                         type: string
                       username:
                         type: string
@@ -1552,8 +1552,8 @@ paths:
                     example: Internal server error
     patch:
       tags:
-        - User
-      summary: Update current user
+        - Pengguna
+      summary: Update current pengguna
       security:
         - jwtAuth: [ ]
       requestBody:
@@ -1563,24 +1563,24 @@ paths:
             schema:
               type: object
               properties:
-                fullName:
+                namaLengkap:
                   type: string
-                phone:
+                telepon:
                   type: string
-                familyPhone:
+                teleponKeluarga:
                   type: string
-                address:
+                alamat:
                   type: string
               required:
-                - fullName
-                - phone
-                - familyPhone
-                - address
+                - namaLengkap
+                - telepon
+                - teleponKeluarga
+                - alamat
                 - username
 
       responses:
         '200':
-          description: User berhasil diupdate
+          description: Pengguna berhasil diupdate
           content:
             application/json:
               schema:
@@ -1588,7 +1588,7 @@ paths:
                 properties:
                   data:
                     type: string
-                    example: User berhasil diupdate
+                    example: Pengguna berhasil diupdate
         '400':
           description: Bad request
           content:
@@ -1639,11 +1639,11 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /api/user/current/password:
+  /api/pengguna/current/password:
     post:
       tags:
-        - User
-      summary: Update user password
+        - Pengguna
+      summary: Update pengguna password
       security:
         - jwtAuth: [ ]
       requestBody:
@@ -1715,11 +1715,11 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /api/user:
+  /api/pengguna:
     get:
       tags:
-        - User
-      summary: Get all users
+        - Pengguna
+      summary: Get all penggunas
       security:
         - jwtAuth: [ ]
       responses:
@@ -1737,13 +1737,13 @@ paths:
                       properties:
                         id:
                           type: integer
-                        fullName:
+                        namaLengkap:
                           type: string
-                        phone:
+                        telepon:
                           type: string
-                        familyPhone:
+                        teleponKeluarga:
                           type: string
-                        address:
+                        alamat:
                           type: string
                         username:
                           type: string
@@ -1769,8 +1769,8 @@ paths:
                     example: Internal server error
     post:
       tags:
-        - User
-      summary: Create or register new user
+        - Pengguna
+      summary: Create or register new pengguna
       requestBody:
         required: true
         content:
@@ -1778,28 +1778,28 @@ paths:
             schema:
               type: object
               properties:
-                fullName:
+                namaLengkap:
                   type: string
-                phone:
+                telepon:
                   type: string
-                familyPhone:
+                teleponKeluarga:
                   type: string
-                address:
+                alamat:
                   type: string
                 username:
                   type: string
                 password:
                   type: string
               required:
-                - fullName
-                - phone
-                - familyPhone
-                - address
+                - namaLengkap
+                - telepon
+                - teleponKeluarga
+                - alamat
                 - username
                 - password
       responses:
         '201':
-          description: User berhasil dibuat
+          description: Pengguna berhasil dibuat
           content:
             application/json:
               schema:
@@ -1807,7 +1807,7 @@ paths:
                 properties:
                   data:
                     type: string
-                    example: User berhasil dibuat
+                    example: Pengguna berhasil dibuat
         '400':
           description: Bad request
           content:
@@ -1829,7 +1829,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username atau No HP sudah digunakan
+          description: username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -1840,8 +1840,8 @@ paths:
               examples:
                 usernameUsed:
                   value:
-                    error: Username sudah digunakan
-                phoneNumberUsed:
+                    error: username sudah digunakan
+                teleponNumberUsed:
                   value:
                     error: Nomor hp sudah digunakan
         '500':
@@ -1854,11 +1854,11 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /api/user/{id}:
+  /api/pengguna/{id}:
     get:
       tags:
-        - User
-      summary: Get user by id
+        - Pengguna
+      summary: Get pengguna by id
       security:
         - jwtAuth: [ ]
       parameters:
@@ -1880,13 +1880,13 @@ paths:
                     properties:
                       id:
                         type: integer
-                      fullName:
+                      namaLengkap:
                         type: string
-                      phone:
+                      telepon:
                         type: string
-                      familyPhone:
+                      teleponKeluarga:
                         type: string
-                      address:
+                      alamat:
                         type: string
                       username:
                         type: string
@@ -1923,8 +1923,8 @@ paths:
                     example: Internal server error
     patch:
       tags:
-        - User
-      summary: Update user
+        - Pengguna
+      summary: Update pengguna
       security:
         - jwtAuth: [ ]
       parameters:
@@ -1940,13 +1940,13 @@ paths:
             schema:
               type: object
               properties:
-                fullName:
+                namaLengkap:
                   type: string
-                phone:
+                telepon:
                   type: string
-                familyPhone:
+                teleponKeluarga:
                   type: string
-                address:
+                alamat:
                   type: string
                 username:
                   type: string
@@ -1954,14 +1954,14 @@ paths:
                   type: string
                   nullable: true
               required:
-                - fullName
-                - phone
-                - familyPhone
-                - address
+                - namaLengkap
+                - telepon
+                - teleponKeluarga
+                - alamat
                 - username
       responses:
         '200':
-          description: User berhasil diupdate
+          description: Pengguna berhasil diupdate
           content:
             application/json:
               schema:
@@ -1969,7 +1969,7 @@ paths:
                 properties:
                   data:
                     type: string
-                    example: User berhasil diupdate
+                    example: Pengguna berhasil diupdate
         '400':
           description: Bad request
           content:
@@ -1991,7 +1991,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username atau No HP sudah digunakan
+          description: username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -2002,8 +2002,8 @@ paths:
               examples:
                 usernameUsed:
                   value:
-                    error: Username sudah digunakan
-                phoneNumberUsed:
+                    error: username sudah digunakan
+                teleponNumberUsed:
                   value:
                     error: Nomor hp sudah digunakan
         '404':
@@ -2028,8 +2028,8 @@ paths:
                     example: Internal server error
     delete:
       tags:
-        - User
-      summary: Delete user
+        - Pengguna
+      summary: Delete pengguna
       security:
         - jwtAuth: [ ]
       parameters:
@@ -2040,7 +2040,7 @@ paths:
             type: integer
       responses:
         '200':
-          description: User berhasil dihapus
+          description: Pengguna berhasil dihapus
           content:
             application/json:
               schema:
@@ -2048,7 +2048,7 @@ paths:
                 properties:
                   data:
                     type: string
-                    example: User berhasil dihapus
+                    example: Pengguna berhasil dihapus
         '400':
           description: Bad request
           content:
@@ -2070,7 +2070,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: User masih digunakan dan tidak dapat dihapus
+          description: Pengguna masih digunakan dan tidak dapat dihapus
           content:
             application/json:
               schema:
@@ -2078,7 +2078,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: User masih digunakan dan tidak dapat dihapus
+                    example: Pengguna masih digunakan dan tidak dapat dihapus
         '404':
           description: Not found
           content:
@@ -2125,6 +2125,19 @@ paths:
                           type: string
                         jumlah:
                           type: integer
+                        adminApotek:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            namaApotek:
+                              type: string
+                            telepon:
+                              type: string
+                            alamat:
+                              type: string
+                            username:
+                              type: string
         '401':
           description: Unauthorized
           content:
@@ -2162,7 +2175,10 @@ paths:
                   type: string
                 jumlah:
                   type: integer
+                idAdminApotek:
+                  type: integer
               required:
+                - idAdminApotek
                 - namaObat
                 - jumlah
       responses:
@@ -2196,6 +2212,16 @@ paths:
                   error:
                     type: string
                     example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
         '500':
           description: Internal server error
           content:
@@ -2234,6 +2260,19 @@ paths:
                         type: string
                       jumlah:
                         type: integer
+                      adminApotek:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          namaApotek:
+                            type: string
+                          telepon:
+                            type: string
+                          alamat:
+                            type: string
+                          username:
+                            type: string
         '401':
           description: Unauthorized
           content:
@@ -2287,7 +2326,10 @@ paths:
                   type: string
                 jumlah:
                   type: integer
+                idAdminApotek:
+                  type: integer
               required:
+                - idAdminApotek
                 - jumlah
                 - namaObat
       responses:
@@ -2451,24 +2493,24 @@ paths:
                               type: integer
                             namaPuskesmas:
                               type: string
-                            phone:
+                            telepon:
                               type: string
-                            address:
+                            alamat:
                               type: string
                             username:
                               type: string
-                        user:
+                        pengguna:
                           type: object
                           properties:
                             id:
                               type: integer
-                            fullName:
+                            namaLengkap:
                               type: string
-                            phone:
+                            telepon:
                               type: string
-                            familyPhone:
+                            teleponKeluarga:
                               type: string
-                            address:
+                            alamat:
                               type: string
                             username:
                               type: string
@@ -2534,9 +2576,9 @@ paths:
               properties:
                 noRekamMedis:
                   type: string
-                adminPuskesmasId:
+                idAdminPuskesmas:
                   type: integer
-                userId:
+                penggunaId:
                   type: integer
                 beratBadan:
                   type: integer
@@ -2558,8 +2600,8 @@ paths:
                   type: string
               required:
                 - noRekamMedis
-                - adminPuskesmasId
-                - userId
+                - idAdminPuskesmas
+                - penggunaId
                 - beratBadan
                 - tinggiBadan
                 - tekananDarah
@@ -2642,24 +2684,24 @@ paths:
                             type: integer
                           namaPuskesmas:
                             type: string
-                          phone:
+                          telepon:
                             type: string
-                          address:
+                          alamat:
                             type: string
                           username:
                             type: string
-                      user:
+                      pengguna:
                         type: object
                         properties:
                           id:
                             type: integer
-                          fullName:
+                          namaLengkap:
                             type: string
-                          phone:
+                          telepon:
                             type: string
-                          familyPhone:
+                          teleponKeluarga:
                             type: string
-                          address:
+                          alamat:
                             type: string
                           username:
                             type: string
@@ -2732,9 +2774,9 @@ paths:
               properties:
                 noRekamMedis:
                   type: string
-                adminPuskesmasId:
+                idAdminPuskesmas:
                   type: integer
-                userId:
+                penggunaId:
                   type: integer
                 beratBadan:
                   type: integer
@@ -2756,8 +2798,8 @@ paths:
                   type: string
               required:
                 - noRekamMedis
-                - adminPuskesmasId
-                - userId
+                - idAdminPuskesmas
+                - penggunaId
                 - beratBadan
                 - tinggiBadan
                 - tekananDarah
@@ -2930,24 +2972,24 @@ paths:
                                   type: integer
                                 namaPuskesmas:
                                   type: string
-                                phone:
+                                telepon:
                                   type: string
-                                address:
+                                alamat:
                                   type: string
                                 username:
                                   type: string
-                            user:
+                            pengguna:
                               type: object
                               properties:
                                 id:
                                   type: integer
-                                fullName:
+                                namaLengkap:
                                   type: string
-                                phone:
+                                telepon:
                                   type: string
-                                familyPhone:
+                                teleponKeluarga:
                                   type: string
-                                address:
+                                alamat:
                                   type: string
                                 username:
                                   type: string
@@ -3015,7 +3057,7 @@ paths:
             schema:
               type: object
               properties:
-                pasienId:
+                idPasien:
                   type: integer
                 tanggalKontrol:
                   type: integer
@@ -3023,7 +3065,7 @@ paths:
                   type: string
               required:
                 - status
-                - pasienId
+                - idPasien
                 - tanggalKontrol
       responses:
         '201':
@@ -3106,24 +3148,24 @@ paths:
                                 type: integer
                               namaPuskesmas:
                                 type: string
-                              phone:
+                              telepon:
                                 type: string
-                              address:
+                              alamat:
                                 type: string
                               username:
                                 type: string
-                          user:
+                          pengguna:
                             type: object
                             properties:
                               id:
                                 type: integer
-                              fullName:
+                              namaLengkap:
                                 type: string
-                              phone:
+                              telepon:
                                 type: string
-                              familyPhone:
+                              teleponKeluarga:
                                 type: string
-                              address:
+                              alamat:
                                 type: string
                               username:
                                 type: string
@@ -3197,7 +3239,7 @@ paths:
             schema:
               type: object
               properties:
-                pasienId:
+                idPasien:
                   type: integer
                 tanggalKontrol:
                   type: integer
@@ -3205,7 +3247,7 @@ paths:
                   type: string
               required:
                 - status
-                - pasienId
+                - idPasien
                 - tanggalKontrol
       responses:
         '200':
@@ -3351,19 +3393,6 @@ paths:
                           type: integer
                         resi:
                           type: string
-                        adminApotek:
-                          type: object
-                          properties:
-                            id:
-                              type: integer
-                            namaApotek:
-                              type: string
-                            phone:
-                              type: string
-                            address:
-                              type: string
-                            username:
-                              type: string
                         obat:
                           type: object
                           properties:
@@ -3373,6 +3402,19 @@ paths:
                               type: string
                             jumlah:
                               type: integer
+                            adminApotek:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                namaApotek:
+                                  type: string
+                                telepon:
+                                  type: string
+                                alamat:
+                                  type: string
+                                username:
+                                  type: string
                         pasien:
                           type: object
                           properties:
@@ -3387,24 +3429,24 @@ paths:
                                   type: integer
                                 namaPuskesmas:
                                   type: string
-                                phone:
+                                telepon:
                                   type: string
-                                address:
+                                alamat:
                                   type: string
                                 username:
                                   type: string
-                            user:
+                            pengguna:
                               type: object
                               properties:
                                 id:
                                   type: integer
-                                fullName:
+                                namaLengkap:
                                   type: string
-                                phone:
+                                telepon:
                                   type: string
-                                familyPhone:
+                                teleponKeluarga:
                                   type: string
-                                address:
+                                alamat:
                                   type: string
                                 username:
                                   type: string
@@ -3474,11 +3516,9 @@ paths:
             schema:
               type: object
               properties:
-                adminApotekId:
+                idObat:
                   type: integer
-                obatId:
-                  type: integer
-                pasienId:
+                idPasien:
                   type: integer
                 jumlah:
                   type: integer
@@ -3487,11 +3527,11 @@ paths:
                 status:
                   type: string
               required:
-                - pasienId
+                - idPasien
                 - status
                 - jumlah
-                - adminApotekId
-                - obatId
+                - idAdminApotek
+                - idObat
                 - tanggalPengambilan
       responses:
         '201':
@@ -3562,19 +3602,6 @@ paths:
                         type: integer
                       resi:
                         type: string
-                      adminApotek:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          namaApotek:
-                            type: string
-                          phone:
-                            type: string
-                          address:
-                            type: string
-                          username:
-                            type: string
                       obat:
                         type: object
                         properties:
@@ -3584,6 +3611,19 @@ paths:
                             type: string
                           jumlah:
                             type: integer
+                          adminApotek:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              namaApotek:
+                                type: string
+                              telepon:
+                                type: string
+                              alamat:
+                                type: string
+                              username:
+                                type: string
                       pasien:
                         type: object
                         properties:
@@ -3598,24 +3638,24 @@ paths:
                                 type: integer
                               namaPuskesmas:
                                 type: string
-                              phone:
+                              telepon:
                                 type: string
-                              address:
+                              alamat:
                                 type: string
                               username:
                                 type: string
-                          user:
+                          pengguna:
                             type: object
                             properties:
                               id:
                                 type: integer
-                              fullName:
+                              namaLengkap:
                                 type: string
-                              phone:
+                              telepon:
                                 type: string
-                              familyPhone:
+                              teleponKeluarga:
                                 type: string
-                              address:
+                              alamat:
                                 type: string
                               username:
                                 type: string
@@ -3691,11 +3731,9 @@ paths:
             schema:
               type: object
               properties:
-                adminApotekId:
+                idObat:
                   type: integer
-                obatId:
-                  type: integer
-                pasienId:
+                idPasien:
                   type: integer
                 jumlah:
                   type: integer
@@ -3704,11 +3742,11 @@ paths:
                 status:
                   type: string
               required:
-                - pasienId
+                - idPasien
                 - status
                 - jumlah
-                - adminApotekId
-                - obatId
+                - idAdminApotek
+                - idObat
                 - tanggalPengambilan
       responses:
         '200':

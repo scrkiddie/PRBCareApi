@@ -3,8 +3,8 @@ package entity
 type Pasien struct {
 	ID               int            `gorm:"column:id;primaryKey;type:integer;autoIncrement;not null"`
 	NoRekamMedis     string         `gorm:"column:no_rekam_medis;type:varchar(50);not null"`
-	IDUser           int            `gorm:"column:id_user;type:integer;not null"`
-	User             User           `gorm:"foreignKey:IDUser"`
+	IDPengguna       int            `gorm:"column:id_pengguna;type:integer;not null"`
+	Pengguna         Pengguna       `gorm:"foreignKey:IDPengguna"`
 	IDAdminPuskesmas int            `gorm:"column:id_admin_puskesmas;type:integer;not null"`
 	AdminPuskesmas   AdminPuskesmas `gorm:"foreignKey:IDAdminPuskesmas"`
 	BeratBadan       float64        `gorm:"column:berat_badan;type:numeric(5,2);not null"`

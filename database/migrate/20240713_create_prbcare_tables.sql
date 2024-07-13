@@ -13,8 +13,8 @@ CREATE TABLE admin_puskesmas
 (
     id             SERIAL PRIMARY KEY,
     nama_puskesmas VARCHAR(100) NOT NULL,
-    phone        VARCHAR(15)  NOT NULL UNIQUE,
-    address      TEXT         NOT NULL,
+    telepon        VARCHAR(15)  NOT NULL UNIQUE,
+    alamat         TEXT         NOT NULL,
     username       VARCHAR(50)  NOT NULL UNIQUE,
     password       VARCHAR(255) NOT NULL
 );
@@ -23,35 +23,36 @@ CREATE TABLE admin_apotek
 (
     id          SERIAL PRIMARY KEY,
     nama_apotek VARCHAR(100) NOT NULL,
-    phone        VARCHAR(15)  NOT NULL UNIQUE,
-    address      TEXT         NOT NULL,
+    telepon     VARCHAR(15)  NOT NULL UNIQUE,
+    alamat      TEXT         NOT NULL,
     username    VARCHAR(50)  NOT NULL UNIQUE,
     password    VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE users
+CREATE TABLE pengguna
 (
-    id           SERIAL PRIMARY KEY,
-    full_name    VARCHAR(100) NOT NULL,
-    phone        VARCHAR(15)  NOT NULL UNIQUE,
-    family_phone VARCHAR(15)  NOT NULL,
-    address      TEXT         NOT NULL,
-    username     VARCHAR(50)  NOT NULL UNIQUE,
-    password     VARCHAR(255) NOT NULL
+    id               SERIAL PRIMARY KEY,
+    nama_lengkap     VARCHAR(100) NOT NULL,
+    telepon          VARCHAR(15)  NOT NULL UNIQUE,
+    telepon_keluarga VARCHAR(15)  NOT NULL,
+    alamat           TEXT         NOT NULL,
+    username         VARCHAR(50)  NOT NULL UNIQUE,
+    password         VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE obat
 (
-    id        SERIAL PRIMARY KEY,
-    nama_obat VARCHAR(100) NOT NULL,
-    jumlah    INT          NOT NULL
+    id             SERIAL PRIMARY KEY,
+    id_admin_apotek INT REFERENCES admin_apotek (id) NOT NULL,
+    nama_obat      VARCHAR(100) NOT NULL,
+    jumlah         INT          NOT NULL
 );
 
 CREATE TABLE pasien
 (
     id                 SERIAL PRIMARY KEY,
     no_rekam_medis     VARCHAR(50)                         NOT NULL,
-    id_user            INT REFERENCES users (id)           NOT NULL,
+    id_pengguna        INT REFERENCES pengguna (id)        NOT NULL,
     id_admin_puskesmas INT REFERENCES admin_puskesmas (id) NOT NULL,
     berat_badan        DECIMAL(5, 2)                       NOT NULL,
     tinggi_badan       DECIMAL(5, 2)                       NOT NULL,
@@ -75,7 +76,6 @@ CREATE TABLE pengambilan_obat
 (
     id                  SERIAL PRIMARY KEY,
     resi                VARCHAR(50)                      NOT NULL,
-    id_admin_apotek     INT REFERENCES admin_apotek (id) NOT NULL,
     id_pasien           INT REFERENCES pasien (id)       NOT NULL,
     id_obat             INT REFERENCES obat (id)         NOT NULL,
     jumlah              INT                              NOT NULL,
