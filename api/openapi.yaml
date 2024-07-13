@@ -1,0 +1,3754 @@
+openapi: 3.0.0
+info:
+  title: PRBCare API
+  version: 1.0.0
+components:
+  securitySchemes:
+    jwtAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+tags:
+  - name: Admin Super
+    description: Operasi yang berhubungan dengan admin super
+  - name: Admin Puskesmas
+    description: Operasi yang berhubungan dengan admin puskesmas
+  - name: Admin Apotek
+    description: Operasi yang berhubungan dengan admin apotek
+  - name: User
+    description: Operasi yang berhubungan dengan pengguna
+  - name: Obat
+    description: Operasi yang berhubungan dengan obat
+  - name: Pasien
+    description: Operasi yang berhubungan dengan pasien
+  - name: Kontrol Balik
+    description: Operasi yang berhubungan dengan kontrol balik pasien
+  - name: Pengambilan Obat
+    description: Operasi yang berhubungan dengan pengambilan obat
+
+paths:
+  /api/admin-super/login:
+    post:
+      tags:
+        - Admin Super
+      summary: Login super admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMiIsImV4cCI6MTUxNjIzOTAyMn0.Ipl8G8Qcfp7OWaNfPeHCFEBXRjVcgHWszgmxHDfTps0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username atau password salah
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-super/current/password:
+    patch:
+      tags:
+        - Admin Super
+      summary: Update super admin password
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - currentPassword
+                - newPassword
+                - confirmPassword
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Password updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: Current password is incorrect
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: Internal server error
+
+  /api/admin-puskesmas/login:
+    post:
+      tags:
+        - Admin Puskesmas
+      summary: Login admin puskesmas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMiIsImV4cCI6MTUxNjIzOTAyMn0.Ipl8G8Qcfp7OWaNfPeHCFEBXRjVcgHWszgmxHDfTps0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username atau password salah
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+  /api/admin-puskesmas/current:
+    get:
+      tags:
+        - Admin Puskesmas
+      summary: Get current admin puskesmas
+      security:
+        - jwtAuth: [ ]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  namaPuskesmas:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    patch:
+      tags:
+        - Admin Puskesmas
+      summary: Update current admin puskesmas
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namaPuskesmas:
+                  type: string
+              required:
+                - namaPuskesmas
+      responses:
+        '200':
+          description: Admin puskesmas berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Admin puskesmas berhasil diupdate
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-puskesmas/current/password:
+    post:
+      tags:
+        - Admin Puskesmas
+      summary: Update admin puskesmas password
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - confirmPassword
+                - currentPassword
+                - newPassword
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Password updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Current password is incorrect
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: Current password is incorrect
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-puskesmas:
+    get:
+      tags:
+        - Admin Puskesmas
+      summary: Get all admin puskesmas
+      security:
+        - jwtAuth: [ ]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        namaPuskesmas:
+                          type: string
+                        username:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    post:
+      tags:
+        - Admin Puskesmas
+      summary: Create new admin puskesmas
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namaPuskesmas:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - namaPuskesmas
+                - username
+                - password
+      responses:
+        '201':
+          description: Admin puskesmas berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Admin puskesmas berhasil dibuat
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: Username sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username sudah digunakan
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-puskesmas/{id}:
+    get:
+      tags:
+        - Admin Puskesmas
+      summary: Get admin puskesmas by id
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      namaPuskesmas:
+                        type: string
+                      username:
+                        type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    patch:
+      tags:
+        - Admin Puskesmas
+      summary: Update admin puskesmas
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namaPuskesmas:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                  nullable: true
+              required:
+                - namaPuskesmas
+                - username
+      responses:
+        '200':
+          description: Admin puskesmas berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Admin puskesmas berhasil diupdate
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: Username sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username sudah digunakan
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    delete:
+      tags:
+        - Admin Puskesmas
+      summary: Delete admin puskesmas
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Admin puskesmas berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Admin puskesmas berhasil dihapus
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: Admin puskesmas masih digunakan dan tidak dapat dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Admin puskesmas masih digunakan dan tidak dapat dihapus
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-apotek/login:
+    post:
+      tags:
+        - Admin Apotek
+      summary: Login admin apotek
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMiIsImV4cCI6MTUxNjIzOTAyMn0.Ipl8G8Qcfp7OWaNfPeHCFEBXRjVcgHWszgmxHDfTps0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username atau password salah
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-apotek/current:
+    get:
+      tags:
+        - Admin Apotek
+      summary: Get current admin apotek
+      security:
+        - jwtAuth: [ ]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  namaApotek:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    patch:
+      tags:
+        - Admin Apotek
+      summary: Update current admin apotek
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namaApotek:
+                  type: string
+              required:
+                - namaApotek
+      responses:
+        '200':
+          description: Admin apotek berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Admin apotek berhasil diupdate
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-apotek/current/password:
+    post:
+      tags:
+        - Admin Apotek
+      summary: Update admin apotek password
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - confirmPassword
+                - currentPassword
+                - newPassword
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Password updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Current password is incorrect
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: Current password is incorrect
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-apotek:
+    get:
+      tags:
+        - Admin Apotek
+      summary: Get all admin apotek
+      security:
+        - jwtAuth: [ ]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        namaApotek:
+                          type: string
+                        username:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    post:
+      tags:
+        - Admin Apotek
+      summary: Create new admin apotek
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namaApotek:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - namaApotek
+                - username
+                - password
+      responses:
+        '201':
+          description: Admin apotek berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Admin apotek berhasil dibuat
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: Username sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username sudah digunakan
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/admin-apotek/{id}:
+    get:
+      tags:
+        - Admin Apotek
+      summary: Get admin apotek by id
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      namaApotek:
+                        type: string
+                      username:
+                        type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    patch:
+      tags:
+        - Admin Apotek
+      summary: Update admin apotek
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namaApotek:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                  nullable: true
+              required:
+                - namaApotek
+                - username
+      responses:
+        '200':
+          description: Admin apotek berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Admin apotek berhasil diupdate
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: Username sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username sudah digunakan
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    delete:
+      tags:
+        - Admin Apotek
+      summary: Delete admin apotek
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Admin apotek berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Admin apotek berhasil dihapus
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: Admin apotek masih digunakan dan tidak dapat dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Admin apotek masih digunakan dan tidak dapat dihapus
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/user/login:
+    post:
+      tags:
+        - User
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMiIsImV4cCI6MTUxNjIzOTAyMn0.Ipl8G8Qcfp7OWaNfPeHCFEBXRjVcgHWszgmxHDfTps0
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Username atau password salah
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/user/current:
+    get:
+      tags:
+        - User
+      summary: Get current user
+      security:
+        - jwtAuth: [ ]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      fullName:
+                        type: string
+                      phone:
+                        type: string
+                      familyPhone:
+                        type: string
+                      address:
+                        type: string
+                      username:
+                        type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    patch:
+      tags:
+        - User
+      summary: Update current user
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                phone:
+                  type: string
+                familyPhone:
+                  type: string
+                address:
+                  type: string
+              required:
+                - fullName
+                - phone
+                - familyPhone
+                - address
+                - username
+
+      responses:
+        '200':
+          description: User berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: User berhasil diupdate
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '409':
+          description: No HP sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No HP sudah digunakan
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/user/current/password:
+    post:
+      tags:
+        - User
+      summary: Update user password
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                currentPassword:
+                  type: string
+                newPassword:
+                  type: string
+                confirmPassword:
+                  type: string
+              required:
+                - confirmPassword
+                - currentPassword
+                - newPassword
+
+      responses:
+        '200':
+          description: Password updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Password updated successfully
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Current password is incorrect
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: Current password is incorrect
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/user:
+    get:
+      tags:
+        - User
+      summary: Get all users
+      security:
+        - jwtAuth: [ ]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        fullName:
+                          type: string
+                        phone:
+                          type: string
+                        familyPhone:
+                          type: string
+                        address:
+                          type: string
+                        username:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    post:
+      tags:
+        - User
+      summary: Create or register new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                phone:
+                  type: string
+                familyPhone:
+                  type: string
+                address:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - fullName
+                - phone
+                - familyPhone
+                - address
+                - username
+                - password
+      responses:
+        '201':
+          description: User berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: User berhasil dibuat
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: Username atau No HP sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                usernameUsed:
+                  value:
+                    error: Username sudah digunakan
+                phoneNumberUsed:
+                  value:
+                    error: Nomor hp sudah digunakan
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/user/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user by id
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      fullName:
+                        type: string
+                      phone:
+                        type: string
+                      familyPhone:
+                        type: string
+                      address:
+                        type: string
+                      username:
+                        type: string
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    patch:
+      tags:
+        - User
+      summary: Update user
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                phone:
+                  type: string
+                familyPhone:
+                  type: string
+                address:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+                  nullable: true
+              required:
+                - fullName
+                - phone
+                - familyPhone
+                - address
+                - username
+      responses:
+        '200':
+          description: User berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: User berhasil diupdate
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: Username atau No HP sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                usernameUsed:
+                  value:
+                    error: Username sudah digunakan
+                phoneNumberUsed:
+                  value:
+                    error: Nomor hp sudah digunakan
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: User berhasil dihapus
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '409':
+          description: User masih digunakan dan tidak dapat dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: User masih digunakan dan tidak dapat dihapus
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/obat:
+    get:
+      tags:
+        - Obat
+      summary: Get all obat
+      security:
+        - jwtAuth: [ ]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        namaObat:
+                          type: string
+                        jumlah:
+                          type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    post:
+      tags:
+        - Obat
+      summary: Create new obat
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namaObat:
+                  type: string
+                jumlah:
+                  type: integer
+              required:
+                - namaObat
+                - jumlah
+      responses:
+        '201':
+          description: Obat berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Obat berhasil dibuat
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/obat/{id}:
+    get:
+      tags:
+        - Obat
+      summary: Get obat by id
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      namaObat:
+                        type: string
+                      jumlah:
+                        type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    patch:
+      tags:
+        - Obat
+      summary: Update obat
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                namaObat:
+                  type: string
+                jumlah:
+                  type: integer
+              required:
+                - jumlah
+                - namaObat
+      responses:
+        '200':
+          description: Obat berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Obat berhasil diupdate
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    delete:
+      tags:
+        - Obat
+      summary: Delete obat
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Obat puskesmas berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Obat puskesmas berhasil dihapus
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '409':
+          description: Obat masih digunakan dan tidak dapat dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Obat masih digunakan dan tidak dapat dihapus
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/pasien:
+    get:
+      tags:
+        - Pasien
+      summary: Get all pasien
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter patients by status
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        noRekamMedis:
+                          type: string
+                        adminPuskesmas:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            namaPuskesmas:
+                              type: string
+                            username:
+                              type: string
+                        user:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            fullName:
+                              type: string
+                            phone:
+                              type: string
+                            familyPhone:
+                              type: string
+                            address:
+                              type: string
+                            username:
+                              type: string
+                        beratBadan:
+                          type: integer
+                        tinggiBadan:
+                          type: integer
+                        tekananDarah:
+                          type: string
+                        denyutNadi:
+                          type: integer
+                        hasilLab:
+                          type: string
+                        hasilEkg:
+                          type: string
+                        tanggalPeriksa:
+                          type: integer
+                        status:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+    post:
+      tags:
+        - Pasien
+      summary: Create new pasien
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                noRekamMedis:
+                  type: string
+                adminPuskesmasId:
+                  type: integer
+                userId:
+                  type: integer
+                beratBadan:
+                  type: integer
+                tinggiBadan:
+                  type: integer
+                tekananDarah:
+                  type: string
+                denyutNadi:
+                  type: integer
+                hasilLab:
+                  type: string
+                  nullable: true
+                hasilEkg:
+                  type: string
+                  nullable: true
+                tanggalPeriksa:
+                  type: integer
+                status:
+                  type: string
+              required:
+                - noRekamMedis
+                - adminPuskesmasId
+                - userId
+                - beratBadan
+                - tinggiBadan
+                - tekananDarah
+                - denyutNadi
+                - tanggalPeriksa
+                - status
+      responses:
+        '201':
+          description: Pasien berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pasien berhasil dibuat
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/pasien/{id}:
+    get:
+      tags:
+        - Pasien
+      summary: Get pasien by id
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      noRekamMedis:
+                        type: string
+                      adminPuskesmas:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          namaPuskesmas:
+                            type: string
+                          username:
+                            type: string
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          fullName:
+                            type: string
+                          phone:
+                            type: string
+                          familyPhone:
+                            type: string
+                          address:
+                            type: string
+                          username:
+                            type: string
+                      beratBadan:
+                        type: integer
+                      tinggiBadan:
+                        type: integer
+                      tekananDarah:
+                        type: string
+                      denyutNadi:
+                        type: integer
+                      hasilLab:
+                        type: string
+                      hasilEkg:
+                        type: string
+                      tanggalPeriksa:
+                        type: integer
+                      status:
+                        type: string
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+    patch:
+      tags:
+        - Pasien
+      summary: Update pasien
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                noRekamMedis:
+                  type: string
+                adminPuskesmasId:
+                  type: integer
+                userId:
+                  type: integer
+                beratBadan:
+                  type: integer
+                tinggiBadan:
+                  type: integer
+                tekananDarah:
+                  type: string
+                denyutNadi:
+                  type: integer
+                hasilLab:
+                  type: string
+                  nullable: true
+                hasilEkg:
+                  type: string
+                  nullable: true
+                tanggalPeriksa:
+                  type: integer
+                status:
+                  type: string
+              required:
+                - noRekamMedis
+                - adminPuskesmasId
+                - userId
+                - beratBadan
+                - tinggiBadan
+                - tekananDarah
+                - denyutNadi
+                - tanggalPeriksa
+                - status
+      responses:
+        '200':
+          description: Pasien berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pasien berhasil diupdate
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    delete:
+      tags:
+        - Pasien
+      summary: Delete pasien
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pasien berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pasien berhasil dihapus
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '409':
+          description: Pasien masih digunakan dan tidak dapat dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Pasien masih digunakan dan tidak dapat dihapus
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/kontrol-balik:
+    get:
+      tags:
+        - Kontrol Balik
+      summary: Get all kontrol balik
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter kontrol balik records by status
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        pasien:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            noRekamMedis:
+                              type: string
+                            adminPuskesmas:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                namaPuskesmas:
+                                  type: string
+                                username:
+                                  type: string
+                            user:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                fullName:
+                                  type: string
+                                phone:
+                                  type: string
+                                familyPhone:
+                                  type: string
+                                address:
+                                  type: string
+                                username:
+                                  type: string
+                            beratBadan:
+                              type: integer
+                            tinggiBadan:
+                              type: integer
+                            tekananDarah:
+                              type: string
+                            denyutNadi:
+                              type: integer
+                            hasilLab:
+                              type: string
+                            hasilEkg:
+                              type: string
+                            tanggalPeriksa:
+                              type: integer
+                            status:
+                              type: string
+                        tanggalKontrol:
+                          type: integer
+                        status:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+    post:
+      tags:
+        - Kontrol Balik
+      summary: Create new kontrol balik
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pasienId:
+                  type: integer
+                tanggalKontrol:
+                  type: integer
+                status:
+                  type: string
+              required:
+                - status
+                - pasienId
+                - tanggalKontrol
+      responses:
+        '201':
+          description: Kontrol balik berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Kontrol balik berhasil dibuat
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/kontrol-balik/{id}:
+    get:
+      tags:
+        - Kontrol Balik
+      summary: Get kontrol balik by id
+      security:
+        - jwtAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      pasien:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          noRekamMedis:
+                            type: string
+                          adminPuskesmas:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              namaPuskesmas:
+                                type: string
+                              username:
+                                type: string
+                          user:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              fullName:
+                                type: string
+                              phone:
+                                type: string
+                              familyPhone:
+                                type: string
+                              address:
+                                type: string
+                              username:
+                                type: string
+                          beratBadan:
+                            type: integer
+                          tinggiBadan:
+                            type: integer
+                          tekananDarah:
+                            type: string
+                          denyutNadi:
+                            type: integer
+                          hasilLab:
+                            type: string
+                          hasilEkg:
+                            type: string
+                          tanggalPeriksa:
+                            type: integer
+                          status:
+                            type: string
+                      tanggalKontrol:
+                        type: integer
+                      status:
+                        type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+    patch:
+      tags:
+        - Kontrol Balik
+      summary: Update kontrol balik
+      security:
+        - jwtAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pasienId:
+                  type: integer
+                tanggalKontrol:
+                  type: integer
+                status:
+                  type: string
+              required:
+                - status
+                - pasienId
+                - tanggalKontrol
+      responses:
+        '200':
+          description: Kontrol balik berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Kontrol balik berhasil diupdate
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    delete:
+      tags:
+        - Kontrol Balik
+      summary: Delete kontrol balik
+      security:
+        - jwtAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Kontrol balik berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Kontrol balik berhasil dihapus
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/pengambilan-obat:
+    get:
+      tags:
+        - Pengambilan Obat
+      summary: Get all pengambilan obat
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter pengambilan obat records by status
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        resi:
+                          type: string
+                        adminApotek:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            namaApotek:
+                              type: string
+                            username:
+                              type: string
+                        obat:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            namaObat:
+                              type: string
+                            jumlah:
+                              type: integer
+                        pasien:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            noRekamMedis:
+                              type: string
+                            adminPuskesmas:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                namaPuskesmas:
+                                  type: string
+                                username:
+                                  type: string
+                            user:
+                              type: object
+                              properties:
+                                id:
+                                  type: integer
+                                fullName:
+                                  type: string
+                                phone:
+                                  type: string
+                                familyPhone:
+                                  type: string
+                                address:
+                                  type: string
+                                username:
+                                  type: string
+                            beratBadan:
+                              type: integer
+                            tinggiBadan:
+                              type: integer
+                            tekananDarah:
+                              type: string
+                            denyutNadi:
+                              type: integer
+                            hasilLab:
+                              type: string
+                            hasilEkg:
+                              type: string
+                            tanggalPeriksa:
+                              type: integer
+                            status:
+                              type: string
+                        jumlah:
+                          type: integer
+                        tanggalPengambilan:
+                          type: integer
+                        status:
+                          type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+    post:
+      tags:
+        - Pengambilan Obat
+      summary: Create new pengambilan obat
+      security:
+        - jwtAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                adminApotekId:
+                  type: integer
+                obatId:
+                  type: integer
+                pasienId:
+                  type: integer
+                jumlah:
+                  type: integer
+                tanggalPengambilan:
+                  type: integer
+                status:
+                  type: string
+              required:
+                - pasienId
+                - status
+                - jumlah
+                - adminApotekId
+                - obatId
+                - tanggalPengambilan
+      responses:
+        '201':
+          description: Pengambilan obat berhasil dibuat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pengambilan obat berhasil dibuat
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/pengambilan-obat/{id}:
+    get:
+      tags:
+        - Pengambilan Obat
+      summary: Get pengambilan obat by id
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      resi:
+                        type: string
+                      adminApotek:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          namaApotek:
+                            type: string
+                          username:
+                            type: string
+                      obat:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          namaObat:
+                            type: string
+                          jumlah:
+                            type: integer
+                      pasien:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          noRekamMedis:
+                            type: string
+                          adminPuskesmas:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              namaPuskesmas:
+                                type: string
+                              username:
+                                type: string
+                          user:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              fullName:
+                                type: string
+                              phone:
+                                type: string
+                              familyPhone:
+                                type: string
+                              address:
+                                type: string
+                              username:
+                                type: string
+                          beratBadan:
+                            type: integer
+                          tinggiBadan:
+                            type: integer
+                          tekananDarah:
+                            type: string
+                          denyutNadi:
+                            type: integer
+                          hasilLab:
+                            type: string
+                          hasilEkg:
+                            type: string
+                          tanggalPeriksa:
+                            type: integer
+                          status:
+                            type: string
+                      jumlah:
+                        type: integer
+                      tanggalPengambilan:
+                        type: integer
+                      status:
+                        type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+
+    patch:
+      tags:
+        - Pengambilan Obat
+      summary: Update pengambilan obat
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                adminApotekId:
+                  type: integer
+                obatId:
+                  type: integer
+                pasienId:
+                  type: integer
+                jumlah:
+                  type: integer
+                tanggalPengambilan:
+                  type: integer
+                status:
+                  type: string
+              required:
+                - pasienId
+                - status
+                - jumlah
+                - adminApotekId
+                - obatId
+                - tanggalPengambilan
+      responses:
+        '200':
+          description: Pengambilan obat berhasil diupdate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pengambilan obat berhasil diupdate
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+    delete:
+      tags:
+        - Pengambilan Obat
+      summary: Delete pengambilan obat
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pengambilan obat berhasil dihapus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pengambilan obat berhasil dihapus
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/pengambilan-obat/{id}/pickup:
+    post:
+      tags:
+        - Pengambilan Obat
+      summary: Mark medicine pickup
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pickup marked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pengambilan obat berhasil ditandai sebagai diambil
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
