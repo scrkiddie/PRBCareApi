@@ -243,6 +243,10 @@ paths:
                     type: string
                   namaPuskesmas:
                     type: string
+                  phone:
+                    type: string
+                  address:
+                    type: string
         '401':
           description: Unauthorized
           content:
@@ -278,8 +282,14 @@ paths:
               properties:
                 namaPuskesmas:
                   type: string
+                phone:
+                  type: string
+                address:
+                  type: string
               required:
                 - namaPuskesmas
+                - phone
+                - address
       responses:
         '200':
           description: Admin puskesmas berhasil diupdate
@@ -291,7 +301,16 @@ paths:
                   data:
                     type: string
                     example: Admin puskesmas berhasil diupdate
-
+        '409':
+          description: No HP sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Nomor hp sudah digunakan
         '400':
           description: Bad request
           content:
@@ -433,6 +452,10 @@ paths:
                           type: string
                         username:
                           type: string
+                        phone:
+                          type: string
+                        address:
+                          type: string
         '401':
           description: Unauthorized
           content:
@@ -472,7 +495,13 @@ paths:
                   type: string
                 password:
                   type: string
+                phone:
+                  type: string
+                address:
+                  type: string
               required:
+                - phone
+                - address
                 - namaPuskesmas
                 - username
                 - password
@@ -508,7 +537,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username sudah digunakan
+          description: Username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -516,7 +545,13 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Username sudah digunakan
+              examples:
+                usernameUsed:
+                  value:
+                    error: Username sudah digunakan
+                phoneNumberUsed:
+                  value:
+                    error: Nomor hp sudah digunakan
         '500':
           description: Internal server error
           content:
@@ -556,6 +591,10 @@ paths:
                       namaPuskesmas:
                         type: string
                       username:
+                        type: string
+                      phone:
+                        type: string
+                      address:
                         type: string
         '401':
           description: Unauthorized
@@ -613,7 +652,13 @@ paths:
                 password:
                   type: string
                   nullable: true
+                phone:
+                  type: string
+                address:
+                  type: string
               required:
+                - address
+                - phone
                 - namaPuskesmas
                 - username
       responses:
@@ -648,7 +693,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username sudah digunakan
+          description: Username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -656,7 +701,13 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Username sudah digunakan
+              examples:
+                usernameUsed:
+                  value:
+                    error: Username sudah digunakan
+                phoneNumberUsed:
+                  value:
+                    error: Nomor hp sudah digunakan
         '404':
           description: Not found
           content:
@@ -829,6 +880,10 @@ paths:
                     type: string
                   namaApotek:
                     type: string
+                  phone:
+                    type: string
+                  address:
+                    type: string
         '401':
           description: Unauthorized
           content:
@@ -864,8 +919,14 @@ paths:
               properties:
                 namaApotek:
                   type: string
+                phone:
+                  type: string
+                address:
+                  type: string
               required:
                 - namaApotek
+                - phone
+                - address
       responses:
         '200':
           description: Admin apotek berhasil diupdate
@@ -877,7 +938,16 @@ paths:
                   data:
                     type: string
                     example: Admin apotek berhasil diupdate
-
+        '409':
+          description: No HP sudah digunakan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Nomor hp sudah digunakan
         '400':
           description: Bad request
           content:
@@ -888,6 +958,7 @@ paths:
                   error:
                     type: string
                     example: Bad request
+
         '401':
           description: Unauthorized
           content:
@@ -918,6 +989,7 @@ paths:
                   error:
                     type: string
                     example: Internal server error
+
   /api/admin-apotek/current/password:
     post:
       tags:
@@ -1019,6 +1091,10 @@ paths:
                           type: string
                         username:
                           type: string
+                        phone:
+                          type: string
+                        address:
+                          type: string
         '401':
           description: Unauthorized
           content:
@@ -1058,10 +1134,16 @@ paths:
                   type: string
                 password:
                   type: string
+                phone:
+                  type: string
+                address:
+                  type: string
               required:
                 - namaApotek
                 - username
                 - password
+                - phone
+                - address
       responses:
         '201':
           description: Admin apotek berhasil dibuat
@@ -1094,7 +1176,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username sudah digunakan
+          description: Username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -1102,7 +1184,13 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Username sudah digunakan
+              examples:
+                usernameUsed:
+                  value:
+                    error: Username sudah digunakan
+                phoneNumberUsed:
+                  value:
+                    error: Nomor hp sudah digunakan
         '500':
           description: Internal server error
           content:
@@ -1142,6 +1230,10 @@ paths:
                       namaApotek:
                         type: string
                       username:
+                        type: string
+                      phone:
+                        type: string
+                      address:
                         type: string
         '401':
           description: Unauthorized
@@ -1199,9 +1291,15 @@ paths:
                 password:
                   type: string
                   nullable: true
+                phone:
+                  type: string
+                address:
+                  type: string
               required:
                 - namaApotek
                 - username
+                - phone
+                - address
       responses:
         '200':
           description: Admin apotek berhasil diupdate
@@ -1234,7 +1332,7 @@ paths:
                     type: string
                     example: Unauthorized
         '409':
-          description: Username sudah digunakan
+          description: Username atau No HP sudah digunakan
           content:
             application/json:
               schema:
@@ -1242,7 +1340,13 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Username sudah digunakan
+              examples:
+                usernameUsed:
+                  value:
+                    error: Username sudah digunakan
+                phoneNumberUsed:
+                  value:
+                    error: Nomor hp sudah digunakan
         '404':
           description: Not found
           content:
@@ -2251,7 +2355,7 @@ paths:
             type: integer
       responses:
         '200':
-          description: Obat puskesmas berhasil dihapus
+          description: Obat berhasil dihapus
           content:
             application/json:
               schema:
@@ -2259,7 +2363,7 @@ paths:
                 properties:
                   data:
                     type: string
-                    example: Obat puskesmas berhasil dihapus
+                    example: Obat berhasil dihapus
         '400':
           description: Bad request
           content:
@@ -2346,6 +2450,10 @@ paths:
                             id:
                               type: integer
                             namaPuskesmas:
+                              type: string
+                            phone:
+                              type: string
+                            address:
                               type: string
                             username:
                               type: string
@@ -2533,6 +2641,10 @@ paths:
                           id:
                             type: integer
                           namaPuskesmas:
+                            type: string
+                          phone:
+                            type: string
+                          address:
                             type: string
                           username:
                             type: string
@@ -2818,6 +2930,10 @@ paths:
                                   type: integer
                                 namaPuskesmas:
                                   type: string
+                                phone:
+                                  type: string
+                                address:
+                                  type: string
                                 username:
                                   type: string
                             user:
@@ -2989,6 +3105,10 @@ paths:
                               id:
                                 type: integer
                               namaPuskesmas:
+                                type: string
+                              phone:
+                                type: string
+                              address:
                                 type: string
                               username:
                                 type: string
@@ -3238,6 +3358,10 @@ paths:
                               type: integer
                             namaApotek:
                               type: string
+                            phone:
+                              type: string
+                            address:
+                              type: string
                             username:
                               type: string
                         obat:
@@ -3262,6 +3386,10 @@ paths:
                                 id:
                                   type: integer
                                 namaPuskesmas:
+                                  type: string
+                                phone:
+                                  type: string
+                                address:
                                   type: string
                                 username:
                                   type: string
@@ -3441,6 +3569,10 @@ paths:
                             type: integer
                           namaApotek:
                             type: string
+                          phone:
+                            type: string
+                          address:
+                            type: string
                           username:
                             type: string
                       obat:
@@ -3465,6 +3597,10 @@ paths:
                               id:
                                 type: integer
                               namaPuskesmas:
+                                type: string
+                              phone:
+                                type: string
+                              address:
                                 type: string
                               username:
                                 type: string

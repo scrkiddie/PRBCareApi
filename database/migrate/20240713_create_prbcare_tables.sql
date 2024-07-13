@@ -13,6 +13,8 @@ CREATE TABLE admin_puskesmas
 (
     id             SERIAL PRIMARY KEY,
     nama_puskesmas VARCHAR(100) NOT NULL,
+    phone        VARCHAR(15)  NOT NULL UNIQUE,
+    address      TEXT         NOT NULL,
     username       VARCHAR(50)  NOT NULL UNIQUE,
     password       VARCHAR(255) NOT NULL
 );
@@ -21,6 +23,8 @@ CREATE TABLE admin_apotek
 (
     id          SERIAL PRIMARY KEY,
     nama_apotek VARCHAR(100) NOT NULL,
+    phone        VARCHAR(15)  NOT NULL UNIQUE,
+    address      TEXT         NOT NULL,
     username    VARCHAR(50)  NOT NULL UNIQUE,
     password    VARCHAR(255) NOT NULL
 );
