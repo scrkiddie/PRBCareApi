@@ -1,0 +1,16 @@
+{
+  "jwt": {
+    "secret": "YOUR_SECRET_JWT",
+    "exp": 24
+  },
+  "web": {
+    "port": 3000
+  },
+  "database": {
+    "username": "YOUR_DB_USERNAME",
+    "password": "YOUR_DB_PASSWORD",
+    "host": "YOUR_DB_HOST",
+    "port": 5432,
+    "name": "YOUR_DB_NAME"
+  }
+}

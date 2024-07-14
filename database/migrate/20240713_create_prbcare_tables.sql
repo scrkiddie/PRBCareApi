@@ -32,6 +32,7 @@ CREATE TABLE admin_apotek
 CREATE TABLE pengguna
 (
     id               SERIAL PRIMARY KEY,
+    token_perangkat  VARCHAR(255),
     nama_lengkap     VARCHAR(100) NOT NULL,
     telepon          VARCHAR(15)  NOT NULL UNIQUE,
     telepon_keluarga VARCHAR(15)  NOT NULL,
