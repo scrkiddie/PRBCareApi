@@ -24,15 +24,24 @@ type BootstrapConfig struct {
 func Bootstrap(config *BootstrapConfig) {
 
 	adminSuperRepository := repository.NewAdminSuperRepository()
+	adminPuskesmasRepository := repository.NewAdminPuskesmasRepository()
 
 	adminSuperService := service.NewAdminSuperService(config.DB, adminSuperRepository, config.Validate, config.Config)
+	adminPuskesmasService := service.NewAdminPuskesmasService(config.DB, adminPuskesmasRepository, config.Validate, config.Config)
 
 	adminSuperController := controller.NewAdminSuperController(adminSuperService)
+	adminPuskesmasController := controller.NewAdminPuskesmasController(adminPuskesmasService, config.Modifier)
 
 	adminSuperMiddleware := middleware.AdminSuperAuth(adminSuperService)
+	adminPuskesmasMiddleware := middleware.AdminPuskesmasAuth(adminPuskesmasService)
 
 	route := route.RouteConfig{
-		config.App, adminSuperController, adminSuperMiddleware, config.Config,
+		config.App,
+		adminSuperController,
+		adminSuperMiddleware,
+		adminPuskesmasController,
+		adminPuskesmasMiddleware,
+		config.Config,
 	}
 	route.Setup()
 

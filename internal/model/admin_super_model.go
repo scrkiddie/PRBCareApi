@@ -13,6 +13,6 @@ type AdminSuperPasswordUpdateRequest struct {
 	NewPassword     string `json:"newPassword" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 	ConfirmPassword string `json:"confirmPassword" validate:"required,min=6,max=255,eqfield=NewPassword"`
 }
-type VerifyUserRequest struct {
+type VerifyAdminSuperRequest struct {
 	Token string
 }

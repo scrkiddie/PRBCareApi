@@ -112,7 +112,7 @@ func (s *AdminSuperService) PasswordUpdate(ctx context.Context, request *model.A
 	return nil
 }
 
-func (s *AdminSuperService) Verify(ctx context.Context, request *model.VerifyUserRequest) (*model.Auth, error) {
+func (s *AdminSuperService) Verify(ctx context.Context, request *model.VerifyAdminSuperRequest) (*model.Auth, error) {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -157,8 +157,8 @@ func (s *AdminSuperService) Verify(ctx context.Context, request *model.VerifyUse
 		return nil, fiber.ErrUnauthorized
 	}
 
-	user := new(entity.AdminSuper)
-	if err := s.AdminSuperRepository.FindById(tx, user, id); err != nil {
+	adminSuper := new(entity.AdminSuper)
+	if err := s.AdminSuperRepository.FindById(tx, adminSuper, id); err != nil {
 		log.Println(err.Error())
 		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
@@ -168,5 +168,5 @@ func (s *AdminSuperService) Verify(ctx context.Context, request *model.VerifyUse
 		return nil, fiber.ErrInternalServerError
 	}
 
-	return &model.Auth{ID: user.ID}, nil
+	return &model.Auth{ID: adminSuper.ID, Role: role}, nil
 }

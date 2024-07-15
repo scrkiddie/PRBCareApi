@@ -1,0 +1,50 @@
+package model
+
+type AdminPuskesmasResponse struct {
+	ID            int    `json:"id,omitempty"`
+	NamaPuskesmas string `json:"namaPuskesmas"`
+	Telepon       string `json:"telepon"`
+	Alamat        string `json:"alamat"`
+	Username      string `json:"username,omitempty"`
+	Token         string `json:"token,omitempty"`
+}
+type AdminPuskesmasLoginRequest struct {
+	Username string `json:"username" validate:"required,min=6,max=50,not_contain_space"`
+	Password string `json:"password" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
+}
+type AdminPuskesmasPasswordUpdateRequest struct {
+	ID              int    `validate:"required,numeric"`
+	CurrentPassword string `json:"currentPassword" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
+	NewPassword     string `json:"newPassword" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
+	ConfirmPassword string `json:"confirmPassword" validate:"required,min=6,max=255,eqfield=NewPassword"`
+}
+type AdminPuskesmasProfileUpdateRequest struct {
+	ID            int    `json:"id" validate:"required,numeric"`
+	NamaPuskesmas string `json:"namaPuskesmas" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	Telepon       string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
+	Alamat        string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+}
+type VerifyAdminPuskesmasRequest struct {
+	Token string
+}
+type AdminPuskesmasGetRequest struct {
+	ID int `json:"id" validate:"required,numeric"`
+}
+type AdminPuskesmasCreateRequest struct {
+	NamaPuskesmas string `json:"namaPuskesmas" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	Telepon       string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
+	Alamat        string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	Username      string `json:"username" validate:"required,min=6,max=50,not_contain_space"`
+	Password      string `json:"password" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
+}
+type AdminPuskesmasUpdateRequest struct {
+	ID            int    `json:"id" validate:"required,numeric"`
+	NamaPuskesmas string `json:"namaPuskesmas" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	Telepon       string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
+	Alamat        string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	Username      string `json:"username" validate:"required,min=6,max=50,not_contain_space"`
+	Password      string `json:"password" validate:"omitempty,min=6,max=255,is_password_format,not_contain_space"`
+}
+type AdminPuskesmasDeleteRequest struct {
+	ID int `json:"id" validate:"required,numeric"`
+}

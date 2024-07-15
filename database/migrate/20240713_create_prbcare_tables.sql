@@ -44,7 +44,7 @@ CREATE TABLE pengguna
 CREATE TABLE obat
 (
     id             SERIAL PRIMARY KEY,
-    id_admin_apotek INT REFERENCES admin_apotek (id) NOT NULL,
+    id_admin_apotek INT REFERENCES admin_apotek (id) ON DELETE CASCADE NOT NULL,
     nama_obat      VARCHAR(100) NOT NULL,
     jumlah         INT          NOT NULL
 );
@@ -53,8 +53,8 @@ CREATE TABLE pasien
 (
     id                 SERIAL PRIMARY KEY,
     no_rekam_medis     VARCHAR(50)                         NOT NULL,
-    id_pengguna        INT REFERENCES pengguna (id)        NOT NULL,
-    id_admin_puskesmas INT REFERENCES admin_puskesmas (id) NOT NULL,
+    id_pengguna        INT REFERENCES pengguna (id) ON DELETE CASCADE NOT NULL,
+    id_admin_puskesmas INT REFERENCES admin_puskesmas (id) ON DELETE CASCADE NOT NULL,
     berat_badan        DECIMAL(5, 2)                       NOT NULL,
     tinggi_badan       DECIMAL(5, 2)                       NOT NULL,
     tekanan_darah      VARCHAR(20)                         NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE pasien
 CREATE TABLE kontrol_balik
 (
     id              SERIAL PRIMARY KEY,
-    id_pasien       INT REFERENCES pasien (id) NOT NULL,
+    id_pasien       INT REFERENCES pasien (id) ON DELETE CASCADE NOT NULL,
     tanggal_kontrol BIGINT                     NOT NULL,
     status          status_kontrol_balik_enum  NOT NULL
 );
@@ -77,8 +77,8 @@ CREATE TABLE pengambilan_obat
 (
     id                  SERIAL PRIMARY KEY,
     resi                VARCHAR(50)                      NOT NULL,
-    id_pasien           INT REFERENCES pasien (id)       NOT NULL,
-    id_obat             INT REFERENCES obat (id)         NOT NULL,
+    id_pasien           INT REFERENCES pasien (id) ON DELETE CASCADE NOT NULL,
+    id_obat             INT REFERENCES obat (id) ON DELETE CASCADE NOT NULL,
     jumlah              INT                              NOT NULL,
     tanggal_pengambilan BIGINT                           NOT NULL,
     status              status_pengambilan_obat_enum     NOT NULL

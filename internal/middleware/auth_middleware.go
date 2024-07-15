@@ -9,7 +9,7 @@ import (
 
 func AdminSuperAuth(adminSuperService *service.AdminSuperService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		request := &model.VerifyUserRequest{Token: ctx.Get("Authorization", "NOT_FOUND")}
+		request := &model.VerifyAdminSuperRequest{Token: ctx.Get("Authorization", "NOT_FOUND")}
 		log.Printf("Authorization : %s", request.Token)
 
 		auth, err := adminSuperService.Verify(ctx.UserContext(), request)
@@ -24,5 +24,25 @@ func AdminSuperAuth(adminSuperService *service.AdminSuperService) fiber.Handler 
 	}
 }
 func GetAdminSuperAuth(ctx fiber.Ctx) *model.Auth {
+	return ctx.Locals("auth").(*model.Auth)
+}
+
+func AdminPuskesmasAuth(adminPuskesmasService *service.AdminPuskesmasService) fiber.Handler {
+	return func(ctx fiber.Ctx) error {
+		request := &model.VerifyAdminPuskesmasRequest{Token: ctx.Get("Authorization", "NOT_FOUND")}
+		log.Printf("Authorization : %s", request.Token)
+
+		auth, err := adminPuskesmasService.Verify(ctx.UserContext(), request)
+		if err != nil {
+			log.Printf(err.Error())
+			return fiber.ErrUnauthorized
+		}
+
+		log.Printf("user : %+v", auth.ID)
+		ctx.Locals("auth", auth)
+		return ctx.Next()
+	}
+}
+func GetAdminPuskesmasAuth(ctx fiber.Ctx) *model.Auth {
 	return ctx.Locals("auth").(*model.Auth)
 }
