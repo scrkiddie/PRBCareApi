@@ -1494,8 +1494,6 @@ paths:
                   data:
                     type: object
                     properties:
-                      id:
-                        type: integer
                       namaLengkap:
                         type: string
                       telepon:
@@ -3856,11 +3854,11 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /user/current/perangkat:
+  /api/pengguna/current/perangkat:
     patch:
       tags:
         - Pengguna
-      summary: Update tokenPengguna
+      summary: Update tokenPerangkat
       security:
         - jwtAuth: [ ]
       requestBody:
@@ -3870,13 +3868,13 @@ paths:
             schema:
               type: object
               properties:
-                tokenPengguna:
+                tokenPerangkat:
                   type: string
               required:
-                - tokenPengguna
+                - tokenPerangkat
       responses:
         '200':
-          description: Token pengguna berhasil diupdate
+          description: Token perangkat pengguna berhasil diupdate
           content:
             application/json:
               schema:
@@ -3884,7 +3882,7 @@ paths:
                 properties:
                   data:
                     type: string
-                    example: Token pengguna berhasil diupdate
+                    example: Token perangkat pengguna berhasil diupdate
         '400':
           description: Bad request
           content:

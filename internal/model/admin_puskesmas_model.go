@@ -25,7 +25,7 @@ type AdminPuskesmasProfileUpdateRequest struct {
 	Alamat        string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 }
 type VerifyAdminPuskesmasRequest struct {
-	Token string
+	Token string `validate:"required"`
 }
 type AdminPuskesmasGetRequest struct {
 	ID int `json:"id" validate:"required,numeric"`

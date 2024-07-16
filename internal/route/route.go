@@ -14,9 +14,13 @@ type RouteConfig struct {
 	AdminPuskesmasController *controller.AdminPuskesmasController
 	AdminPuskesmasMiddleware fiber.Handler
 
-	AdminApotekController           *controller.AdminApotekController
-	AdminApotekMiddleware           fiber.Handler
+	AdminApotekController *controller.AdminApotekController
+	AdminApotekMiddleware fiber.Handler
+
 	AdminSuperOrPuskesmasMiddleware fiber.Handler
+
+	PenggunaController *controller.PenggunaController
+	PenggunaMiddleware fiber.Handler
 
 	Config *viper.Viper
 }
@@ -25,6 +29,8 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.App.Post("/api/admin-super/login", c.AdminSuperController.Login)
 	c.App.Post("/api/admin-puskesmas/login", c.AdminPuskesmasController.Login)
 	c.App.Post("/api/admin-apotek/login", c.AdminApotekController.Login)
+	c.App.Post("/api/pengguna/login", c.PenggunaController.Login)
+	c.App.Post("/api/pengguna", c.PenggunaController.Create)
 }
 
 func (c *RouteConfig) SetupAuthRoute() {
@@ -56,6 +62,21 @@ func (c *RouteConfig) SetupAuthRoute() {
 	c.App.Post("/api/admin-apotek", c.AdminApotekController.Create)
 	c.App.Patch("/api/admin-apotek/:id", c.AdminApotekController.Update)
 	c.App.Delete("/api/admin-apotek/:id", c.AdminApotekController.Delete)
+
+	c.App.Use("/api/pengguna/current", c.PenggunaMiddleware)
+	c.App.Get("/api/pengguna/current", c.PenggunaController.Current)
+	c.App.Patch("/api/pengguna/current", c.PenggunaController.CurrentProfileUpdate)
+	c.App.Patch("/api/pengguna/current/password", c.PenggunaController.CurrentPasswordUpdate)
+	c.App.Patch("/api/pengguna/current/perangkat", c.PenggunaController.CurrentTokenPerangkatUpdate)
+
+	c.App.Use("/api/pengguna", c.AdminSuperOrPuskesmasMiddleware)
+	c.App.Get("/api/pengguna", c.PenggunaController.List)
+
+	c.App.Use("/api/pengguna", c.AdminSuperMiddleware)
+	c.App.Get("/api/pengguna/:id", c.PenggunaController.Get)
+	c.App.Post("/api/pengguna", c.PenggunaController.Create)
+	c.App.Patch("/api/pengguna/:id", c.PenggunaController.Update)
+	c.App.Delete("/api/pengguna/:id", c.PenggunaController.Delete)
 }
 
 func (c *RouteConfig) Setup() {

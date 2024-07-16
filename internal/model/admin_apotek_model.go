@@ -25,7 +25,7 @@ type AdminApotekProfileUpdateRequest struct {
 	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 }
 type VerifyAdminApotekRequest struct {
-	Token string
+	Token string `validate:"required"`
 }
 type AdminApotekGetRequest struct {
 	ID int `json:"id" validate:"required,numeric"`

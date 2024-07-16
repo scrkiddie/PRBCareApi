@@ -40,7 +40,6 @@ func (r *AdminPuskesmasRepository) CountByTelepon(db *gorm.DB, telepon any) (int
 	}
 	return count, nil
 }
-
 func (r *AdminPuskesmasRepository) FindAll(db *gorm.DB, adminPuskesmas *[]entity.AdminPuskesmas) error {
 	return db.Find(adminPuskesmas).Error
 }

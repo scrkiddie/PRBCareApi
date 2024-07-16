@@ -14,5 +14,5 @@ type AdminSuperPasswordUpdateRequest struct {
 	ConfirmPassword string `json:"confirmPassword" validate:"required,min=6,max=255,eqfield=NewPassword"`
 }
 type VerifyAdminSuperRequest struct {
-	Token string
+	Token string `validate:"required"`
 }
