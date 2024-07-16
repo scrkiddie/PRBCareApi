@@ -16,37 +16,37 @@ import (
 	"time"
 )
 
-type AdminPuskesmasService struct {
-	DB                       *gorm.DB
-	AdminPuskesmasRepository *repository.AdminPuskesmasRepository
-	Validator                *validator.Validate
-	Config                   *viper.Viper
+type AdminApotekService struct {
+	DB                    *gorm.DB
+	AdminApotekRepository *repository.AdminApotekRepository
+	Validator             *validator.Validate
+	Config                *viper.Viper
 }
 
-func NewAdminPuskesmasService(db *gorm.DB,
-	adminPuskesmasRepository *repository.AdminPuskesmasRepository,
+func NewAdminApotekService(db *gorm.DB,
+	adminApotekRepository *repository.AdminApotekRepository,
 	validator *validator.Validate,
-	config *viper.Viper) *AdminPuskesmasService {
-	return &AdminPuskesmasService{db, adminPuskesmasRepository, validator, config}
+	config *viper.Viper) *AdminApotekService {
+	return &AdminApotekService{db, adminApotekRepository, validator, config}
 }
 
-func (s *AdminPuskesmasService) List(ctx context.Context) (*[]model.AdminPuskesmasResponse, error) {
+func (s *AdminApotekService) List(ctx context.Context) (*[]model.AdminApotekResponse, error) {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
-	adminPuskesmas := new([]entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindAll(tx, adminPuskesmas); err != nil {
+	adminApotek := new([]entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindAll(tx, adminApotek); err != nil {
 		log.Println(err.Error())
 		return nil, fiber.ErrInternalServerError
 	}
 
-	var response []model.AdminPuskesmasResponse
-	for _, admin := range *adminPuskesmas {
-		response = append(response, model.AdminPuskesmasResponse{
-			ID:            admin.ID,
-			NamaPuskesmas: admin.NamaPuskesmas,
-			Telepon:       admin.Telepon,
-			Alamat:        admin.Alamat,
+	var response []model.AdminApotekResponse
+	for _, admin := range *adminApotek {
+		response = append(response, model.AdminApotekResponse{
+			ID:         admin.ID,
+			NamaApotek: admin.NamaApotek,
+			Telepon:    admin.Telepon,
+			Alamat:     admin.Alamat,
 		})
 	}
 
@@ -58,7 +58,7 @@ func (s *AdminPuskesmasService) List(ctx context.Context) (*[]model.AdminPuskesm
 	return &response, nil
 }
 
-func (s *AdminPuskesmasService) Get(ctx context.Context, request *model.AdminPuskesmasGetRequest) (*model.AdminPuskesmasResponse, error) {
+func (s *AdminApotekService) Get(ctx context.Context, request *model.AdminApotekGetRequest) (*model.AdminApotekResponse, error) {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -67,8 +67,8 @@ func (s *AdminPuskesmasService) Get(ctx context.Context, request *model.AdminPus
 		return nil, fiber.ErrBadRequest
 	}
 
-	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
+	adminApotek := new(entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
 		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
@@ -78,17 +78,17 @@ func (s *AdminPuskesmasService) Get(ctx context.Context, request *model.AdminPus
 		return nil, fiber.ErrInternalServerError
 	}
 
-	adminPuskesmasResponse := new(model.AdminPuskesmasResponse)
-	adminPuskesmasResponse.ID = adminPuskesmas.ID
-	adminPuskesmasResponse.Username = adminPuskesmas.Username
-	adminPuskesmasResponse.NamaPuskesmas = adminPuskesmas.NamaPuskesmas
-	adminPuskesmasResponse.Alamat = adminPuskesmas.Alamat
-	adminPuskesmasResponse.Telepon = adminPuskesmas.Telepon
+	adminApotekResponse := new(model.AdminApotekResponse)
+	adminApotekResponse.ID = adminApotek.ID
+	adminApotekResponse.Username = adminApotek.Username
+	adminApotekResponse.NamaApotek = adminApotek.NamaApotek
+	adminApotekResponse.Alamat = adminApotek.Alamat
+	adminApotekResponse.Telepon = adminApotek.Telepon
 
-	return adminPuskesmasResponse, nil
+	return adminApotekResponse, nil
 }
 
-func (s *AdminPuskesmasService) Create(ctx context.Context, request *model.AdminPuskesmasCreateRequest) error {
+func (s *AdminApotekService) Create(ctx context.Context, request *model.AdminApotekCreateRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -97,7 +97,7 @@ func (s *AdminPuskesmasService) Create(ctx context.Context, request *model.Admin
 		return fiber.ErrBadRequest
 	}
 
-	total, err := s.AdminPuskesmasRepository.CountByUsername(tx, request.Username)
+	total, err := s.AdminApotekRepository.CountByUsername(tx, request.Username)
 	if err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
@@ -106,7 +106,7 @@ func (s *AdminPuskesmasService) Create(ctx context.Context, request *model.Admin
 		return fiber.NewError(fiber.StatusConflict, "Username sudah digunakan")
 	}
 
-	total, err = s.AdminPuskesmasRepository.CountByTelepon(tx, request.Telepon)
+	total, err = s.AdminApotekRepository.CountByTelepon(tx, request.Telepon)
 	if err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
@@ -121,14 +121,14 @@ func (s *AdminPuskesmasService) Create(ctx context.Context, request *model.Admin
 		return fiber.ErrInternalServerError
 	}
 
-	adminPuskesmasEnity := new(entity.AdminPuskesmas)
-	adminPuskesmasEnity.Username = request.Username
-	adminPuskesmasEnity.NamaPuskesmas = request.NamaPuskesmas
-	adminPuskesmasEnity.Alamat = request.Alamat
-	adminPuskesmasEnity.Telepon = request.Telepon
-	adminPuskesmasEnity.Password = string(password)
+	adminApotekEnity := new(entity.AdminApotek)
+	adminApotekEnity.Username = request.Username
+	adminApotekEnity.NamaApotek = request.NamaApotek
+	adminApotekEnity.Alamat = request.Alamat
+	adminApotekEnity.Telepon = request.Telepon
+	adminApotekEnity.Password = string(password)
 
-	if err := s.AdminPuskesmasRepository.Create(tx, adminPuskesmasEnity); err != nil {
+	if err := s.AdminApotekRepository.Create(tx, adminApotekEnity); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
@@ -141,7 +141,7 @@ func (s *AdminPuskesmasService) Create(ctx context.Context, request *model.Admin
 	return nil
 }
 
-func (s *AdminPuskesmasService) Update(ctx context.Context, request *model.AdminPuskesmasUpdateRequest) error {
+func (s *AdminApotekService) Update(ctx context.Context, request *model.AdminApotekUpdateRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -150,27 +150,27 @@ func (s *AdminPuskesmasService) Update(ctx context.Context, request *model.Admin
 		return fiber.ErrBadRequest
 	}
 
-	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
+	adminApotek := new(entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
 
-	total, err := s.AdminPuskesmasRepository.CountByUsername(tx, request.Username)
+	total, err := s.AdminApotekRepository.CountByUsername(tx, request.Username)
 	if err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
-	if total > 0 && adminPuskesmas.Username != request.Username {
+	if total > 0 && adminApotek.Username != request.Username {
 		return fiber.NewError(fiber.StatusConflict, "Username sudah digunakan")
 	}
 
-	total, err = s.AdminPuskesmasRepository.CountByTelepon(tx, request.Telepon)
+	total, err = s.AdminApotekRepository.CountByTelepon(tx, request.Telepon)
 	if err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
-	if total > 0 && adminPuskesmas.Telepon != request.Telepon {
+	if total > 0 && adminApotek.Telepon != request.Telepon {
 		return fiber.NewError(fiber.StatusConflict, "Telepon sudah digunakan")
 	}
 
@@ -183,15 +183,15 @@ func (s *AdminPuskesmasService) Update(ctx context.Context, request *model.Admin
 		}
 	}
 
-	adminPuskesmas.Username = request.Username
-	adminPuskesmas.NamaPuskesmas = request.NamaPuskesmas
-	adminPuskesmas.Alamat = request.Alamat
-	adminPuskesmas.Telepon = request.Telepon
+	adminApotek.Username = request.Username
+	adminApotek.NamaApotek = request.NamaApotek
+	adminApotek.Alamat = request.Alamat
+	adminApotek.Telepon = request.Telepon
 	if string(password) != "" {
-		adminPuskesmas.Password = string(password)
+		adminApotek.Password = string(password)
 	}
 
-	if err := s.AdminPuskesmasRepository.Update(tx, adminPuskesmas); err != nil {
+	if err := s.AdminApotekRepository.Update(tx, adminApotek); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
@@ -204,7 +204,7 @@ func (s *AdminPuskesmasService) Update(ctx context.Context, request *model.Admin
 	return nil
 }
 
-func (s *AdminPuskesmasService) Delete(ctx context.Context, request *model.AdminPuskesmasDeleteRequest) error {
+func (s *AdminApotekService) Delete(ctx context.Context, request *model.AdminApotekDeleteRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -213,13 +213,13 @@ func (s *AdminPuskesmasService) Delete(ctx context.Context, request *model.Admin
 		return fiber.ErrBadRequest
 	}
 
-	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
+	adminApotek := new(entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
 
-	if err := s.AdminPuskesmasRepository.Delete(tx, adminPuskesmas); err != nil {
+	if err := s.AdminApotekRepository.Delete(tx, adminApotek); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
@@ -232,7 +232,7 @@ func (s *AdminPuskesmasService) Delete(ctx context.Context, request *model.Admin
 	return nil
 }
 
-func (s *AdminPuskesmasService) Login(ctx context.Context, request *model.AdminPuskesmasLoginRequest) (*model.AdminPuskesmasResponse, error) {
+func (s *AdminApotekService) Login(ctx context.Context, request *model.AdminApotekLoginRequest) (*model.AdminApotekResponse, error) {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -241,13 +241,13 @@ func (s *AdminPuskesmasService) Login(ctx context.Context, request *model.AdminP
 		return nil, fiber.ErrBadRequest
 	}
 
-	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindByUsername(tx, adminPuskesmas, request.Username); err != nil {
+	adminApotek := new(entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindByUsername(tx, adminApotek, request.Username); err != nil {
 		log.Println(err.Error())
 		return nil, fiber.NewError(fiber.StatusUnauthorized, "Username atau password salah")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(adminPuskesmas.Password), []byte(request.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(adminApotek.Password), []byte(request.Password)); err != nil {
 		log.Println(err.Error())
 		return nil, fiber.NewError(fiber.StatusUnauthorized, "Username atau password salah")
 	}
@@ -255,8 +255,8 @@ func (s *AdminPuskesmasService) Login(ctx context.Context, request *model.AdminP
 	key := s.Config.GetString("jwt.secret")
 	exp := s.Config.GetInt("jwt.exp")
 	claims := jwt.MapClaims{
-		"sub":  adminPuskesmas.ID,
-		"role": constant.RoleAdminPuskesmas,
+		"sub":  adminApotek.ID,
+		"role": constant.RoleAdminApotek,
 		"exp":  time.Now().Add(time.Duration(exp) * time.Hour).Unix(),
 	}
 
@@ -271,10 +271,10 @@ func (s *AdminPuskesmasService) Login(ctx context.Context, request *model.AdminP
 		return nil, fiber.ErrInternalServerError
 	}
 
-	return &model.AdminPuskesmasResponse{Token: token}, nil
+	return &model.AdminApotekResponse{Token: token}, nil
 }
 
-func (s *AdminPuskesmasService) Verify(ctx context.Context, request *model.VerifyAdminPuskesmasRequest) (*model.Auth, error) {
+func (s *AdminApotekService) Verify(ctx context.Context, request *model.VerifyAdminApotekRequest) (*model.Auth, error) {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -315,12 +315,12 @@ func (s *AdminPuskesmasService) Verify(ctx context.Context, request *model.Verif
 		return nil, fiber.ErrUnauthorized
 	}
 
-	if role != constant.RoleAdminPuskesmas {
+	if role != constant.RoleAdminApotek {
 		return nil, fiber.ErrUnauthorized
 	}
 
-	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, id); err != nil {
+	adminApotek := new(entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindById(tx, adminApotek, id); err != nil {
 		log.Println(err.Error())
 		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
@@ -330,10 +330,10 @@ func (s *AdminPuskesmasService) Verify(ctx context.Context, request *model.Verif
 		return nil, fiber.ErrInternalServerError
 	}
 
-	return &model.Auth{ID: adminPuskesmas.ID, Role: role}, nil
+	return &model.Auth{ID: adminApotek.ID, Role: role}, nil
 }
 
-func (s *AdminPuskesmasService) Current(ctx context.Context, request *model.AdminPuskesmasGetRequest) (*model.AdminPuskesmasResponse, error) {
+func (s *AdminApotekService) Current(ctx context.Context, request *model.AdminApotekGetRequest) (*model.AdminApotekResponse, error) {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -342,8 +342,8 @@ func (s *AdminPuskesmasService) Current(ctx context.Context, request *model.Admi
 		return nil, fiber.ErrBadRequest
 	}
 
-	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
+	adminApotek := new(entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
 		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
@@ -353,16 +353,16 @@ func (s *AdminPuskesmasService) Current(ctx context.Context, request *model.Admi
 		return nil, fiber.ErrInternalServerError
 	}
 
-	adminPuskesmasResponse := new(model.AdminPuskesmasResponse)
-	adminPuskesmasResponse.Username = adminPuskesmas.Username
-	adminPuskesmasResponse.NamaPuskesmas = adminPuskesmas.NamaPuskesmas
-	adminPuskesmasResponse.Alamat = adminPuskesmas.Alamat
-	adminPuskesmasResponse.Telepon = adminPuskesmas.Telepon
+	adminApotekResponse := new(model.AdminApotekResponse)
+	adminApotekResponse.Username = adminApotek.Username
+	adminApotekResponse.NamaApotek = adminApotek.NamaApotek
+	adminApotekResponse.Alamat = adminApotek.Alamat
+	adminApotekResponse.Telepon = adminApotek.Telepon
 
-	return adminPuskesmasResponse, nil
+	return adminApotekResponse, nil
 }
 
-func (s *AdminPuskesmasService) CurrentProfileUpdate(ctx context.Context, request *model.AdminPuskesmasProfileUpdateRequest) error {
+func (s *AdminApotekService) CurrentProfileUpdate(ctx context.Context, request *model.AdminApotekProfileUpdateRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -371,26 +371,26 @@ func (s *AdminPuskesmasService) CurrentProfileUpdate(ctx context.Context, reques
 		return fiber.ErrBadRequest
 	}
 
-	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
+	adminApotek := new(entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
 
-	total, err := s.AdminPuskesmasRepository.CountByTelepon(tx, request.Telepon)
+	total, err := s.AdminApotekRepository.CountByTelepon(tx, request.Telepon)
 	if err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
-	if total > 0 && adminPuskesmas.Telepon != request.Telepon {
+	if total > 0 && adminApotek.Telepon != request.Telepon {
 		return fiber.NewError(fiber.StatusConflict, "Telepon sudah digunakan")
 	}
 
-	adminPuskesmas.NamaPuskesmas = request.NamaPuskesmas
-	adminPuskesmas.Alamat = request.Alamat
-	adminPuskesmas.Telepon = request.Telepon
+	adminApotek.NamaApotek = request.NamaApotek
+	adminApotek.Alamat = request.Alamat
+	adminApotek.Telepon = request.Telepon
 
-	if err := s.AdminPuskesmasRepository.Update(tx, adminPuskesmas); err != nil {
+	if err := s.AdminApotekRepository.Update(tx, adminApotek); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
@@ -403,7 +403,7 @@ func (s *AdminPuskesmasService) CurrentProfileUpdate(ctx context.Context, reques
 	return nil
 }
 
-func (s *AdminPuskesmasService) CurrentPasswordUpdate(ctx context.Context, request *model.AdminPuskesmasPasswordUpdateRequest) error {
+func (s *AdminApotekService) CurrentPasswordUpdate(ctx context.Context, request *model.AdminApotekPasswordUpdateRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
@@ -412,13 +412,13 @@ func (s *AdminPuskesmasService) CurrentPasswordUpdate(ctx context.Context, reque
 		return fiber.ErrBadRequest
 	}
 
-	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
+	adminApotek := new(entity.AdminApotek)
+	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(adminPuskesmas.Password), []byte(request.CurrentPassword)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(adminApotek.Password), []byte(request.CurrentPassword)); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusUnauthorized, "Password saat ini salah")
 	}
@@ -428,9 +428,9 @@ func (s *AdminPuskesmasService) CurrentPasswordUpdate(ctx context.Context, reque
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
-	adminPuskesmas.Password = string(password)
+	adminApotek.Password = string(password)
 
-	if err := s.AdminPuskesmasRepository.Update(tx, adminPuskesmas); err != nil {
+	if err := s.AdminApotekRepository.Update(tx, adminApotek); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}

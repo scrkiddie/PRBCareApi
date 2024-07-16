@@ -25,15 +25,20 @@ func Bootstrap(config *BootstrapConfig) {
 
 	adminSuperRepository := repository.NewAdminSuperRepository()
 	adminPuskesmasRepository := repository.NewAdminPuskesmasRepository()
+	adminApotekRepository := repository.NewAdminApotekRepository()
 
 	adminSuperService := service.NewAdminSuperService(config.DB, adminSuperRepository, config.Validate, config.Config)
 	adminPuskesmasService := service.NewAdminPuskesmasService(config.DB, adminPuskesmasRepository, config.Validate, config.Config)
+	adminApotekService := service.NewAdminApotekService(config.DB, adminApotekRepository, config.Validate, config.Config)
 
 	adminSuperController := controller.NewAdminSuperController(adminSuperService)
 	adminPuskesmasController := controller.NewAdminPuskesmasController(adminPuskesmasService, config.Modifier)
+	adminApotekController := controller.NewAdminApotekController(adminApotekService, config.Modifier)
 
 	adminSuperMiddleware := middleware.AdminSuperAuth(adminSuperService)
 	adminPuskesmasMiddleware := middleware.AdminPuskesmasAuth(adminPuskesmasService)
+	adminApotekMiddleware := middleware.AdminApotekAuth(adminApotekService)
+	adminSuperOrPuskesmasMiddleware := middleware.AdminSuperOrPuskesmasAuth(adminSuperService, adminPuskesmasService)
 
 	route := route.RouteConfig{
 		config.App,
@@ -41,6 +46,9 @@ func Bootstrap(config *BootstrapConfig) {
 		adminSuperMiddleware,
 		adminPuskesmasController,
 		adminPuskesmasMiddleware,
+		adminApotekController,
+		adminApotekMiddleware,
+		adminSuperOrPuskesmasMiddleware,
 		config.Config,
 	}
 	route.Setup()

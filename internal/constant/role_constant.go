@@ -4,4 +4,5 @@ const (
 	RoleAdminSuper     = "super"
 	RoleAdminApotek    = "apotek"
 	RoleAdminPuskesmas = "puskesmas"
+	RolePengguna       = "pengguna"
 )

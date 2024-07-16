@@ -47,7 +47,7 @@ func (c *AdminPuskesmasController) Current(ctx fiber.Ctx) error {
 		"data": response})
 }
 
-func (c *AdminPuskesmasController) ProfileUpdate(ctx fiber.Ctx) error {
+func (c *AdminPuskesmasController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAdminPuskesmasAuth(ctx)
 	request := new(model.AdminPuskesmasProfileUpdateRequest)
 	request.ID = auth.ID
@@ -59,7 +59,7 @@ func (c *AdminPuskesmasController) ProfileUpdate(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
 	}
-	if err := c.AdminPuskesmasService.ProfileUpdate(ctx.UserContext(), request); err != nil {
+	if err := c.AdminPuskesmasService.CurrentProfileUpdate(ctx.UserContext(), request); err != nil {
 		log.Println(err)
 		return err
 	}
@@ -67,7 +67,7 @@ func (c *AdminPuskesmasController) ProfileUpdate(ctx fiber.Ctx) error {
 		"data": "Admin puskesmas berhasil diupdate"})
 }
 
-func (c *AdminPuskesmasController) PasswordUpdate(ctx fiber.Ctx) error {
+func (c *AdminPuskesmasController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAdminPuskesmasAuth(ctx)
 	request := new(model.AdminPuskesmasPasswordUpdateRequest)
 	request.ID = auth.ID
@@ -75,7 +75,7 @@ func (c *AdminPuskesmasController) PasswordUpdate(ctx fiber.Ctx) error {
 		log.Println(err)
 		return fiber.ErrBadRequest
 	}
-	if err := c.AdminPuskesmasService.PasswordUpdate(ctx.UserContext(), request); err != nil {
+	if err := c.AdminPuskesmasService.CurrentPasswordUpdate(ctx.UserContext(), request); err != nil {
 		log.Println(err)
 		return err
 	}
