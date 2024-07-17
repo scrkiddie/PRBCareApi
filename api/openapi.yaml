@@ -2520,7 +2520,7 @@ paths:
                   type: string
                 idAdminPuskesmas:
                   type: integer
-                penggunaId:
+                idPengguna:
                   type: integer
                 beratBadan:
                   type: integer
@@ -2543,7 +2543,7 @@ paths:
               required:
                 - noRekamMedis
                 - idAdminPuskesmas
-                - penggunaId
+                - idPengguna
                 - beratBadan
                 - tinggiBadan
                 - tekananDarah
@@ -2718,7 +2718,7 @@ paths:
                   type: string
                 idAdminPuskesmas:
                   type: integer
-                penggunaId:
+                idPengguna:
                   type: integer
                 beratBadan:
                   type: integer
@@ -2741,7 +2741,7 @@ paths:
               required:
                 - noRekamMedis
                 - idAdminPuskesmas
-                - penggunaId
+                - idPengguna
                 - beratBadan
                 - tinggiBadan
                 - tekananDarah

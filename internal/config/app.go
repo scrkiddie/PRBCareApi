@@ -28,18 +28,21 @@ func Bootstrap(config *BootstrapConfig) {
 	adminApotekRepository := repository.NewAdminApotekRepository()
 	penggunaRepository := repository.NewPenggunaRepository()
 	obatRepository := repository.NewObatRepository()
+	pasienRepository := repository.NewPasienRepository()
 
 	adminSuperService := service.NewAdminSuperService(config.DB, adminSuperRepository, config.Validate, config.Config)
 	adminPuskesmasService := service.NewAdminPuskesmasService(config.DB, adminPuskesmasRepository, config.Validate, config.Config)
 	adminApotekService := service.NewAdminApotekService(config.DB, adminApotekRepository, config.Validate, config.Config)
 	penggunaService := service.NewPenggunaService(config.DB, penggunaRepository, config.Validate, config.Config)
-	obatService := service.NewObatService(config.DB, obatRepository, config.Validate, adminApotekRepository, config.Config)
+	obatService := service.NewObatService(config.DB, obatRepository, adminApotekRepository, config.Validate)
+	pasienService := service.NewPasienService(config.DB, pasienRepository, adminPuskesmasRepository, penggunaRepository, config.Validate)
 
 	adminSuperController := controller.NewAdminSuperController(adminSuperService)
 	adminPuskesmasController := controller.NewAdminPuskesmasController(adminPuskesmasService, config.Modifier)
 	adminApotekController := controller.NewAdminApotekController(adminApotekService, config.Modifier)
 	penggunaController := controller.NewPenggunaController(penggunaService, config.Modifier)
 	obatController := controller.NewObatController(obatService, config.Modifier)
+	pasienController := controller.NewPasienController(pasienService, config.Modifier)
 
 	adminSuperMiddleware := middleware.AdminSuperAuth(adminSuperService)
 	adminPuskesmasMiddleware := middleware.AdminPuskesmasAuth(adminPuskesmasService)
@@ -48,6 +51,7 @@ func Bootstrap(config *BootstrapConfig) {
 	adminSuperOrPuskesmasMiddleware := middleware.AdminSuperOrPuskesmasAuth(adminSuperService, adminPuskesmasService)
 	adminSuperOrApotekMiddleware := middleware.AdminSuperOrApotekAuth(adminSuperService, adminApotekService)
 	adminSuperOrPuskesmasOrApotekMiddleware := middleware.AdminSuperOrPuskesmasOrApotekAuth(adminSuperService, adminPuskesmasService, adminApotekService)
+	adminSuperOrPuskesmasOrPengguna := middleware.AdminSuperOrPuskesmasOrPenggunaAuth(adminSuperService, adminPuskesmasService, penggunaService)
 
 	route := route.RouteConfig{
 		config.App,
@@ -63,6 +67,8 @@ func Bootstrap(config *BootstrapConfig) {
 		adminSuperOrPuskesmasOrApotekMiddleware,
 		adminSuperOrApotekMiddleware,
 		obatController,
+		pasienController,
+		adminSuperOrPuskesmasOrPengguna,
 		config.Config,
 	}
 	route.Setup()

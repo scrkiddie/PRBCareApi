@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
-	"github.com/spf13/viper"
 	"gorm.io/gorm"
 	"log"
 	"prbcare_be/internal/entity"
@@ -18,19 +17,24 @@ type ObatService struct {
 	ObatRepository        *repository.ObatRepository
 	AdminApotekRepository *repository.AdminApotekRepository
 	Validator             *validator.Validate
-	Config                *viper.Viper
 }
 
-func NewObatService(db *gorm.DB,
+func NewObatService(
+	db *gorm.DB,
 	obatRepository *repository.ObatRepository,
-	validator *validator.Validate, adminApotekRepository *repository.AdminApotekRepository,
-	config *viper.Viper) *ObatService {
-	return &ObatService{db, obatRepository, adminApotekRepository, validator, config}
+	adminApotekRepository *repository.AdminApotekRepository,
+	validator *validator.Validate) *ObatService {
+	return &ObatService{db, obatRepository, adminApotekRepository, validator}
 }
 
 func (s *ObatService) List(ctx context.Context, request *model.ObatListRequest) (*[]model.ObatResponse, error) {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
+
+	if err := s.Validator.Struct(request); err != nil {
+		log.Println(err.Error())
+		return nil, fiber.ErrBadRequest
+	}
 
 	obat := new([]entity.Obat)
 

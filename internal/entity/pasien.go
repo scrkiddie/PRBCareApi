@@ -12,7 +12,7 @@ type Pasien struct {
 	TekananDarah     string         `gorm:"column:tekanan_darah;type:varchar(20);not null"`
 	DenyutNadi       int            `gorm:"column:denyut_nadi;type:integer;not null"`
 	HasilLab         string         `gorm:"column:hasil_lab;type:text"`
-	HasilEKG         string         `gorm:"column:hasil_ekg;type:text"`
+	HasilEkg         string         `gorm:"column:hasil_ekg;type:text"`
 	TanggalPeriksa   int64          `gorm:"column:tanggal_periksa;type:bigint;not null"`
 	Status           string         `gorm:"column:status;type:status_pasien_enum;not null"`
 }
