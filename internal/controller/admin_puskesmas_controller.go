@@ -35,7 +35,7 @@ func (c *AdminPuskesmasController) Login(ctx fiber.Ctx) error {
 }
 
 func (c *AdminPuskesmasController) Current(ctx fiber.Ctx) error {
-	auth := middleware.GetAdminPuskesmasAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.AdminPuskesmasGetRequest)
 	request.ID = auth.ID
 	response, err := c.AdminPuskesmasService.Current(ctx.Context(), request)
@@ -48,7 +48,7 @@ func (c *AdminPuskesmasController) Current(ctx fiber.Ctx) error {
 }
 
 func (c *AdminPuskesmasController) CurrentProfileUpdate(ctx fiber.Ctx) error {
-	auth := middleware.GetAdminPuskesmasAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.AdminPuskesmasProfileUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -68,7 +68,7 @@ func (c *AdminPuskesmasController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 }
 
 func (c *AdminPuskesmasController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
-	auth := middleware.GetAdminPuskesmasAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.AdminPuskesmasPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {

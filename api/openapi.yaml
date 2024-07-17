@@ -239,8 +239,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  username:
-                    type: string
                   namaPuskesmas:
                     type: string
                   telepon:
@@ -864,8 +862,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  username:
-                    type: string
                   namaApotek:
                     type: string
                   telepon:
@@ -1501,8 +1497,6 @@ paths:
                       teleponKeluarga:
                         type: string
                       alamat:
-                        type: string
-                      username:
                         type: string
         '401':
           description: Unauthorized

@@ -354,7 +354,6 @@ func (s *AdminApotekService) Current(ctx context.Context, request *model.AdminAp
 	}
 
 	adminApotekResponse := new(model.AdminApotekResponse)
-	adminApotekResponse.Username = adminApotek.Username
 	adminApotekResponse.NamaApotek = adminApotek.NamaApotek
 	adminApotekResponse.Alamat = adminApotek.Alamat
 	adminApotekResponse.Telepon = adminApotek.Telepon

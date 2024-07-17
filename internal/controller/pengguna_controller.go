@@ -35,7 +35,7 @@ func (c *PenggunaController) Login(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) Current(ctx fiber.Ctx) error {
-	auth := middleware.GetPenggunaAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.PenggunaGetRequest)
 	request.ID = auth.ID
 	response, err := c.PenggunaService.Current(ctx.Context(), request)
@@ -48,7 +48,7 @@ func (c *PenggunaController) Current(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) CurrentProfileUpdate(ctx fiber.Ctx) error {
-	auth := middleware.GetPenggunaAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.PenggunaProfileUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -68,7 +68,7 @@ func (c *PenggunaController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) CurrentTokenPerangkatUpdate(ctx fiber.Ctx) error {
-	auth := middleware.GetPenggunaAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.PenggunaTokenPerangkatUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -84,7 +84,7 @@ func (c *PenggunaController) CurrentTokenPerangkatUpdate(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
-	auth := middleware.GetPenggunaAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.PenggunaPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {

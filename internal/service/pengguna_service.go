@@ -359,7 +359,6 @@ func (s *PenggunaService) Current(ctx context.Context, request *model.PenggunaGe
 	}
 
 	penggunaResponse := new(model.PenggunaResponse)
-	penggunaResponse.Username = pengguna.Username
 	penggunaResponse.NamaLengkap = pengguna.NamaLengkap
 	penggunaResponse.Alamat = pengguna.Alamat
 	penggunaResponse.Telepon = pengguna.Telepon

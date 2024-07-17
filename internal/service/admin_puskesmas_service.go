@@ -354,7 +354,6 @@ func (s *AdminPuskesmasService) Current(ctx context.Context, request *model.Admi
 	}
 
 	adminPuskesmasResponse := new(model.AdminPuskesmasResponse)
-	adminPuskesmasResponse.Username = adminPuskesmas.Username
 	adminPuskesmasResponse.NamaPuskesmas = adminPuskesmas.NamaPuskesmas
 	adminPuskesmasResponse.Alamat = adminPuskesmas.Alamat
 	adminPuskesmasResponse.Telepon = adminPuskesmas.Telepon

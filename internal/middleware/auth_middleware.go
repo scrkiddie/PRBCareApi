@@ -23,9 +23,6 @@ func AdminSuperAuth(adminSuperService *service.AdminSuperService) fiber.Handler 
 		return ctx.Next()
 	}
 }
-func GetAdminSuperAuth(ctx fiber.Ctx) *model.Auth {
-	return ctx.Locals("auth").(*model.Auth)
-}
 
 func AdminPuskesmasAuth(adminPuskesmasService *service.AdminPuskesmasService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
@@ -43,9 +40,6 @@ func AdminPuskesmasAuth(adminPuskesmasService *service.AdminPuskesmasService) fi
 		return ctx.Next()
 	}
 }
-func GetAdminPuskesmasAuth(ctx fiber.Ctx) *model.Auth {
-	return ctx.Locals("auth").(*model.Auth)
-}
 
 func AdminApotekAuth(adminApotekService *service.AdminApotekService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
@@ -62,9 +56,6 @@ func AdminApotekAuth(adminApotekService *service.AdminApotekService) fiber.Handl
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
-}
-func GetAdminApotekAuth(ctx fiber.Ctx) *model.Auth {
-	return ctx.Locals("auth").(*model.Auth)
 }
 
 func AdminSuperOrPuskesmasAuth(adminSuperService *service.AdminSuperService, adminPuskesmasService *service.AdminPuskesmasService) fiber.Handler {
@@ -94,10 +85,6 @@ func AdminSuperOrPuskesmasAuth(adminSuperService *service.AdminSuperService, adm
 	}
 }
 
-func GetAdminSuperOrPuskesmasAuth(ctx fiber.Ctx) *model.Auth {
-	return ctx.Locals("auth").(*model.Auth)
-}
-
 func PenggunaAuth(adminApotekService *service.PenggunaService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
 		request := &model.VerifyPenggunaRequest{Token: ctx.Get("Authorization", "")}
@@ -114,6 +101,67 @@ func PenggunaAuth(adminApotekService *service.PenggunaService) fiber.Handler {
 		return ctx.Next()
 	}
 }
-func GetPenggunaAuth(ctx fiber.Ctx) *model.Auth {
+
+func AdminSuperOrPuskesmasOrApotekAuth(adminSuperService *service.AdminSuperService, adminPuskesmasService *service.AdminPuskesmasService, adminApotekService *service.AdminApotekService) fiber.Handler {
+	return func(ctx fiber.Ctx) error {
+		token := ctx.Get("Authorization", "")
+		log.Printf("Authorization: %s", token)
+
+		requestSuper := &model.VerifyAdminSuperRequest{Token: token}
+		authSuper, errSuper := adminSuperService.Verify(ctx.UserContext(), requestSuper)
+		if errSuper == nil {
+			log.Printf("Authenticated as AdminSuper: %+v", authSuper.ID)
+			ctx.Locals("auth", authSuper)
+			return ctx.Next()
+		}
+
+		requestPuskesmas := &model.VerifyAdminPuskesmasRequest{Token: token}
+		authPuskesmas, errPuskesmas := adminPuskesmasService.Verify(ctx.UserContext(), requestPuskesmas)
+		if errPuskesmas == nil {
+			log.Printf("Authenticated as AdminPuskesmas: %+v", authPuskesmas.ID)
+			ctx.Locals("auth", authPuskesmas)
+			return ctx.Next()
+		}
+
+		requestApotek := &model.VerifyAdminApotekRequest{Token: token}
+		authApotek, errApotek := adminApotekService.Verify(ctx.UserContext(), requestApotek)
+		if errApotek == nil {
+			log.Printf("Authenticated as AdminApotek: %+v", authApotek.ID)
+			ctx.Locals("auth", authApotek)
+			return ctx.Next()
+		}
+
+		log.Printf("Unauthorized: SuperAdmin error: %v, Puskesmas error: %v, Apotek error: %v", errSuper, errPuskesmas, errApotek)
+		return fiber.ErrUnauthorized
+	}
+}
+
+func AdminSuperOrApotekAuth(adminSuperService *service.AdminSuperService, adminApotekService *service.AdminApotekService) fiber.Handler {
+	return func(ctx fiber.Ctx) error {
+		token := ctx.Get("Authorization", "")
+		log.Printf("Authorization: %s", token)
+
+		requestSuper := &model.VerifyAdminSuperRequest{Token: token}
+		authSuper, errSuper := adminSuperService.Verify(ctx.UserContext(), requestSuper)
+		if errSuper == nil {
+			log.Printf("Authenticated as AdminSuper: %+v", authSuper.ID)
+			ctx.Locals("auth", authSuper)
+			return ctx.Next()
+		}
+
+		requestApotek := &model.VerifyAdminApotekRequest{Token: token}
+		authApotek, errApotek := adminApotekService.Verify(ctx.UserContext(), requestApotek)
+		if errApotek == nil {
+			log.Printf("Authenticated as AdminApotek: %+v", authApotek.ID)
+			ctx.Locals("auth", authApotek)
+			return ctx.Next()
+		}
+
+		log.Printf("Unauthorized: SuperAdmin error: %v, Apotek error: %v", errSuper, errApotek)
+		return fiber.ErrUnauthorized
+	}
+}
+
+func GetAuth(ctx fiber.Ctx) *model.Auth {
 	return ctx.Locals("auth").(*model.Auth)
 }

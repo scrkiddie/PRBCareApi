@@ -35,7 +35,7 @@ func (c *AdminApotekController) Login(ctx fiber.Ctx) error {
 }
 
 func (c *AdminApotekController) Current(ctx fiber.Ctx) error {
-	auth := middleware.GetAdminApotekAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.AdminApotekGetRequest)
 	request.ID = auth.ID
 	response, err := c.AdminApotekService.Current(ctx.Context(), request)
@@ -48,7 +48,7 @@ func (c *AdminApotekController) Current(ctx fiber.Ctx) error {
 }
 
 func (c *AdminApotekController) CurrentProfileUpdate(ctx fiber.Ctx) error {
-	auth := middleware.GetAdminApotekAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.AdminApotekProfileUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -68,7 +68,7 @@ func (c *AdminApotekController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 }
 
 func (c *AdminApotekController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
-	auth := middleware.GetAdminApotekAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.AdminApotekPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {

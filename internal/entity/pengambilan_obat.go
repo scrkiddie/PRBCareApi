@@ -3,10 +3,10 @@ package entity
 type PengambilanObat struct {
 	ID                 int    `gorm:"column:id;primaryKey;type:integer;autoIncrement;not null"`
 	Resi               string `gorm:"column:resi;type:varchar(50);not null"`
-	IDPasien           int    `gorm:"column:id_pasien;type:integer;not null"`
-	Pasien             Pasien `gorm:"foreignKey:IDPasien"`
-	IDObat             int    `gorm:"column:id_obat;type:integer;not null"`
-	Obat               Obat   `gorm:"foreignKey:IDObat"`
+	IdPasien           int    `gorm:"column:id_pasien;type:integer;not null"`
+	Pasien             Pasien `gorm:"foreignKey:IdPasien"`
+	IdObat             int    `gorm:"column:id_obat;type:integer;not null"`
+	Obat               Obat   `gorm:"foreignKey:IdObat"`
 	Jumlah             int    `gorm:"column:jumlah;type:integer;not null"`
 	TanggalPengambilan int64  `gorm:"column:tanggal_pengambilan;type:bigint;not null"`
 	Status             string `gorm:"column:status;type:status_pengambilan_obat_enum;not null"`

@@ -22,6 +22,10 @@ type RouteConfig struct {
 	PenggunaController *controller.PenggunaController
 	PenggunaMiddleware fiber.Handler
 
+	AdminSuperOrPuskesmasOrApotekMiddleware fiber.Handler
+	AdminSuperOrApotekMiddleware            fiber.Handler
+	ObatController                          *controller.ObatController
+
 	Config *viper.Viper
 }
 
@@ -77,6 +81,15 @@ func (c *RouteConfig) SetupAuthRoute() {
 	c.App.Post("/api/pengguna", c.PenggunaController.Create)
 	c.App.Patch("/api/pengguna/:id", c.PenggunaController.Update)
 	c.App.Delete("/api/pengguna/:id", c.PenggunaController.Delete)
+
+	c.App.Use("/api/obat", c.AdminSuperOrPuskesmasOrApotekMiddleware)
+	c.App.Get("/api/obat", c.ObatController.List)
+
+	c.App.Use("/api/obat", c.AdminSuperOrApotekMiddleware)
+	c.App.Get("/api/obat/:id", c.ObatController.Get)
+	c.App.Post("/api/obat", c.ObatController.Create)
+	c.App.Patch("/api/obat/:id", c.ObatController.Update)
+	c.App.Delete("/api/obat/:id", c.ObatController.Delete)
 }
 
 func (c *RouteConfig) Setup() {

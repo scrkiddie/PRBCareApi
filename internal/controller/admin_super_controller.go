@@ -32,7 +32,7 @@ func (c *AdminSuperController) Login(ctx fiber.Ctx) error {
 }
 
 func (c *AdminSuperController) PasswordUpdate(ctx fiber.Ctx) error {
-	auth := middleware.GetAdminSuperAuth(ctx)
+	auth := middleware.GetAuth(ctx)
 	request := new(model.AdminSuperPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
