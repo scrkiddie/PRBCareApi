@@ -54,7 +54,7 @@ func (s *ObatService) List(ctx context.Context, request *model.ObatListRequest) 
 			ID:       perObat.ID,
 			NamaObat: perObat.NamaObat,
 			Jumlah:   perObat.Jumlah,
-			AdminApotek: model.AdminApotekResponse{
+			AdminApotek: &model.AdminApotekResponse{
 				ID:         perObat.AdminApotek.ID,
 				NamaApotek: perObat.AdminApotek.NamaApotek,
 				Telepon:    perObat.AdminApotek.Telepon,
@@ -100,12 +100,7 @@ func (s *ObatService) Get(ctx context.Context, request *model.ObatGetRequest) (*
 	obatResponse.ID = obat.ID
 	obatResponse.NamaObat = obat.NamaObat
 	obatResponse.Jumlah = obat.Jumlah
-	obatResponse.AdminApotek = model.AdminApotekResponse{
-		ID:         obat.AdminApotek.ID,
-		NamaApotek: obat.AdminApotek.NamaApotek,
-		Telepon:    obat.AdminApotek.Telepon,
-		Alamat:     obat.AdminApotek.Alamat,
-	}
+	obatResponse.IdAdminApotek = obat.IdAdminApotek
 
 	return obatResponse, nil
 }

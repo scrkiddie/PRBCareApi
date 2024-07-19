@@ -1,10 +1,11 @@
 package model
 
 type ObatResponse struct {
-	ID          int                 `json:"id,omitempty"`
-	AdminApotek AdminApotekResponse `json:"adminApotek"`
-	NamaObat    string              `json:"namaObat"`
-	Jumlah      int                 `json:"jumlah"`
+	ID            int                  `json:"id"`
+	IdAdminApotek int                  `json:"idAdminApotek,omitempty"`
+	AdminApotek   *AdminApotekResponse `json:"adminApotek,omitempty"`
+	NamaObat      string               `json:"namaObat"`
+	Jumlah        int                  `json:"jumlah"`
 }
 
 type ObatListRequest struct {

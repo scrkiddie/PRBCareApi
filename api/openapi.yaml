@@ -2214,19 +2214,9 @@ paths:
                         type: string
                       jumlah:
                         type: integer
-                      adminApotek:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          namaApotek:
-                            type: string
-                          telepon:
-                            type: string
-                          alamat:
-                            type: string
-                          username:
-                            type: string
+                      idAdminApotek:
+                        type: integer
+
         '401':
           description: Unauthorized
           content:
@@ -2454,8 +2444,6 @@ paths:
                               type: string
                             alamat:
                               type: string
-                            username:
-                              type: string
                         beratBadan:
                           type: integer
                         tinggiBadan:
@@ -2506,7 +2494,7 @@ paths:
     post:
       tags:
         - Pasien
-      summary: Create new pasien
+      summary: Create new pasien aktif
       security:
         - jwtAuth: [ ]
       requestBody:
@@ -2538,8 +2526,6 @@ paths:
                   nullable: true
                 tanggalPeriksa:
                   type: integer
-                status:
-                  type: string
               required:
                 - noRekamMedis
                 - idAdminPuskesmas
@@ -2549,7 +2535,6 @@ paths:
                 - tekananDarah
                 - denyutNadi
                 - tanggalPeriksa
-                - status
       responses:
         '201':
           description: Pasien berhasil dibuat
@@ -2595,7 +2580,7 @@ paths:
     get:
       tags:
         - Pasien
-      summary: Get pasien by id
+      summary: Get pasien aktif by id
       security:
         - jwtAuth: [ ]
       parameters:
@@ -2619,34 +2604,10 @@ paths:
                         type: integer
                       noRekamMedis:
                         type: string
-                      adminPuskesmas:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          namaPuskesmas:
-                            type: string
-                          telepon:
-                            type: string
-                          alamat:
-                            type: string
-                          username:
-                            type: string
-                      pengguna:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          namaLengkap:
-                            type: string
-                          telepon:
-                            type: string
-                          teleponKeluarga:
-                            type: string
-                          alamat:
-                            type: string
-                          username:
-                            type: string
+                      idAdminPuskesmas:
+                        type: integer
+                      idPengguna:
+                        type: integer
                       beratBadan:
                         type: integer
                       tinggiBadan:
@@ -2661,8 +2622,6 @@ paths:
                         type: string
                       tanggalPeriksa:
                         type: integer
-                      status:
-                        type: string
 
         '401':
           description: Unauthorized
@@ -2698,7 +2657,7 @@ paths:
     patch:
       tags:
         - Pasien
-      summary: Update pasien
+      summary: Update pasien aktif
       security:
         - jwtAuth: [ ]
       parameters:
@@ -2736,8 +2695,6 @@ paths:
                   nullable: true
                 tanggalPeriksa:
                   type: integer
-                status:
-                  type: string
               required:
                 - noRekamMedis
                 - idAdminPuskesmas
@@ -2747,7 +2704,6 @@ paths:
                 - tekananDarah
                 - denyutNadi
                 - tanggalPeriksa
-                - status
       responses:
         '200':
           description: Pasien berhasil diupdate
@@ -2802,7 +2758,7 @@ paths:
     delete:
       tags:
         - Pasien
-      summary: Delete pasien
+      summary: Delete pasien selesai
       security:
         - jwtAuth: [ ]
       parameters:
@@ -2832,6 +2788,80 @@ paths:
                   error:
                     type: string
                     example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/pasien/{id}/selesai:
+    patch:
+      tags:
+        - Pasien
+      summary: Tandai pasien aktif sebagai selesai
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pasien berhasil ditandai selesai
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pasien berhasil ditandai selesai
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '409':
+          description: Pasien masih memiliki kontrol balik
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Pasien masih memiliki kontrol balik yang harus dilakukan
         '401':
           description: Unauthorized
           content:
@@ -2975,7 +3005,7 @@ paths:
     post:
       tags:
         - Kontrol Balik
-      summary: Create new kontrol balik
+      summary: Create new kontrol balik menunggu
       security:
         - jwtAuth: [ ]
       requestBody:
@@ -3040,7 +3070,7 @@ paths:
     get:
       tags:
         - Kontrol Balik
-      summary: Get kontrol balik by id
+      summary: Get kontrol balik menunggu by id
       security:
         - jwtAuth: []
       parameters:
@@ -3062,61 +3092,10 @@ paths:
                     properties:
                       id:
                         type: integer
-                      pasien:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          noRekamMedis:
-                            type: string
-                          adminPuskesmas:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                              namaPuskesmas:
-                                type: string
-                              telepon:
-                                type: string
-                              alamat:
-                                type: string
-                              username:
-                                type: string
-                          pengguna:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                              namaLengkap:
-                                type: string
-                              telepon:
-                                type: string
-                              teleponKeluarga:
-                                type: string
-                              alamat:
-                                type: string
-                              username:
-                                type: string
-                          beratBadan:
-                            type: integer
-                          tinggiBadan:
-                            type: integer
-                          tekananDarah:
-                            type: string
-                          denyutNadi:
-                            type: integer
-                          hasilLab:
-                            type: string
-                          hasilEkg:
-                            type: string
-                          tanggalPeriksa:
-                            type: integer
-                          status:
-                            type: string
+                      idPasien:
+                        type: integer
                       tanggalKontrol:
                         type: integer
-                      status:
-                        type: string
         '401':
           description: Unauthorized
           content:
@@ -3151,7 +3130,7 @@ paths:
     patch:
       tags:
         - Kontrol Balik
-      summary: Update kontrol balik
+      summary: Update kontrol balik menunggu
       security:
         - jwtAuth: []
       parameters:
@@ -3231,7 +3210,7 @@ paths:
     delete:
       tags:
         - Kontrol Balik
-      summary: Delete kontrol balik
+      summary: Delete kontrol balik selesai atau batal
       security:
         - jwtAuth: []
       parameters:
@@ -3251,6 +3230,134 @@ paths:
                   data:
                     type: string
                     example: Kontrol balik berhasil dihapus
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/kontrol-balik/{id}/selesai:
+    patch:
+      tags:
+        - Kontrol Balik
+      summary: Tandai kontrol balik menunggu sebagai selesai
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Kontrol balik berhasil ditandai selesai
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pasien berhasil ditandai selesai
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/kontrol-balik/{id}/batal:
+    patch:
+      tags:
+        - Kontrol Balik
+      summary: Tandai kontrol balik menunggu sebagai batal
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Kontrol balik berhasil ditandai batal
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Kontrol balik berhasil ditandai batal
         '400':
           description: Bad request
           content:
@@ -3544,8 +3651,6 @@ paths:
                                 type: string
                               alamat:
                                 type: string
-                              username:
-                                type: string
                       pasien:
                         type: object
                         properties:
@@ -3564,8 +3669,6 @@ paths:
                                 type: string
                               alamat:
                                 type: string
-                              username:
-                                type: string
                           pengguna:
                             type: object
                             properties:
@@ -3578,8 +3681,6 @@ paths:
                               teleponKeluarga:
                                 type: string
                               alamat:
-                                type: string
-                              username:
                                 type: string
                           beratBadan:
                             type: integer
@@ -3784,8 +3885,8 @@ paths:
                   error:
                     type: string
                     example: Internal server error
-  /api/pengambilan-obat/{id}/pickup:
-    post:
+  /api/pengambilan-obat/{id}/diambil:
+    patch:
       tags:
         - Pengambilan Obat
       summary: Mark medicine pickup

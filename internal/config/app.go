@@ -29,13 +29,15 @@ func Bootstrap(config *BootstrapConfig) {
 	penggunaRepository := repository.NewPenggunaRepository()
 	obatRepository := repository.NewObatRepository()
 	pasienRepository := repository.NewPasienRepository()
+	kontrolBalikRepository := repository.NewKontrolBalikRepository()
 
 	adminSuperService := service.NewAdminSuperService(config.DB, adminSuperRepository, config.Validate, config.Config)
 	adminPuskesmasService := service.NewAdminPuskesmasService(config.DB, adminPuskesmasRepository, config.Validate, config.Config)
 	adminApotekService := service.NewAdminApotekService(config.DB, adminApotekRepository, config.Validate, config.Config)
 	penggunaService := service.NewPenggunaService(config.DB, penggunaRepository, config.Validate, config.Config)
 	obatService := service.NewObatService(config.DB, obatRepository, adminApotekRepository, config.Validate)
-	pasienService := service.NewPasienService(config.DB, pasienRepository, adminPuskesmasRepository, penggunaRepository, config.Validate)
+	pasienService := service.NewPasienService(config.DB, pasienRepository, adminPuskesmasRepository, penggunaRepository, kontrolBalikRepository, config.Validate)
+	kontrolBalikService := service.NewKontrolBalikService(config.DB, kontrolBalikRepository, pasienRepository, config.Validate)
 
 	adminSuperController := controller.NewAdminSuperController(adminSuperService)
 	adminPuskesmasController := controller.NewAdminPuskesmasController(adminPuskesmasService, config.Modifier)
@@ -43,6 +45,7 @@ func Bootstrap(config *BootstrapConfig) {
 	penggunaController := controller.NewPenggunaController(penggunaService, config.Modifier)
 	obatController := controller.NewObatController(obatService, config.Modifier)
 	pasienController := controller.NewPasienController(pasienService, config.Modifier)
+	kontrolBalikController := controller.NewKontrolBalikController(kontrolBalikService)
 
 	adminSuperMiddleware := middleware.AdminSuperAuth(adminSuperService)
 	adminPuskesmasMiddleware := middleware.AdminPuskesmasAuth(adminPuskesmasService)
@@ -69,6 +72,7 @@ func Bootstrap(config *BootstrapConfig) {
 		obatController,
 		pasienController,
 		adminSuperOrPuskesmasOrPengguna,
+		kontrolBalikController,
 		config.Config,
 	}
 	route.Setup()

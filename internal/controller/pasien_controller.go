@@ -141,3 +141,25 @@ func (c *PasienController) Delete(ctx fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Pasien berhasil dihapus"})
 }
+
+func (c *PasienController) Selesai(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+
+	request := new(model.PasienSelesaiRequest)
+	if auth.Role == constant.RoleAdminPuskesmas {
+		request.IdAdminPuskesmas = auth.ID
+	}
+	id, err := strconv.Atoi(ctx.Params("id"))
+	if err != nil {
+		log.Println(err.Error())
+		return fiber.ErrBadRequest
+	}
+	request.ID = id
+
+	if err := c.PasienService.Selesai(ctx.UserContext(), request); err != nil {
+		log.Println(err.Error())
+		return err
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Pasien berhasil ditandai selesai"})
+}

@@ -1,18 +1,20 @@
 package model
 
 type PasienResponse struct {
-	ID             int                    `json:"id,omitempty"`
-	NoRekamMedis   string                 `json:"noRekamMedis"`
-	Pengguna       PenggunaResponse       `json:"pengguna"`
-	AdminPuskesmas AdminPuskesmasResponse `json:"adminPuskesmas"`
-	BeratBadan     float64                `json:"beratBadan"`
-	TinggiBadan    float64                `json:"tinggiBadan"`
-	TekananDarah   string                 `json:"tekananDarah"`
-	DenyutNadi     int                    `json:"denyutNadi"`
-	HasilLab       string                 `json:"hasilLab"`
-	HasilEkg       string                 `json:"hasilEkg"`
-	TanggalPeriksa int64                  `json:"tanggalPeriksa"`
-	Status         string                 `json:"status"`
+	ID               int                     `json:"id"`
+	NoRekamMedis     string                  `json:"noRekamMedis"`
+	Pengguna         *PenggunaResponse       `json:"pengguna,omitempty"`
+	IdPengguna       int                     `json:"idPengguna,omitempty"`
+	AdminPuskesmas   *AdminPuskesmasResponse `json:"adminPuskesmas,omitempty"`
+	IdAdminPuskesmas int                     `json:"idAdminPuskesmas,omitempty"`
+	BeratBadan       float64                 `json:"beratBadan"`
+	TinggiBadan      float64                 `json:"tinggiBadan"`
+	TekananDarah     string                  `json:"tekananDarah"`
+	DenyutNadi       int                     `json:"denyutNadi"`
+	HasilLab         string                  `json:"hasilLab"`
+	HasilEkg         string                  `json:"hasilEkg"`
+	TanggalPeriksa   int64                   `json:"tanggalPeriksa"`
+	Status           string                  `json:"status,omitempty"`
 }
 
 type PasienSearchRequest struct {
@@ -36,7 +38,6 @@ type PasienCreateRequest struct {
 	HasilLab         string  `json:"hasilLab" mod:"normalize_spaces"`
 	HasilEkg         string  `json:"hasilEkg" mod:"normalize_spaces"`
 	TanggalPeriksa   int64   `json:"tanggalPeriksa" validate:"required,numeric"`
-	Status           string  `json:"status" validate:"required,oneof=aktif selesai"`
 }
 type PasienUpdateRequest struct {
 	ID                    int     `json:"id" validate:"required,numeric"`
@@ -51,9 +52,13 @@ type PasienUpdateRequest struct {
 	HasilLab              string  `json:"hasilLab" mod:"normalize_spaces"`
 	HasilEkg              string  `json:"hasilEkg" mod:"normalize_spaces"`
 	TanggalPeriksa        int64   `json:"tanggalPeriksa" validate:"required,numeric"`
-	Status                string  `json:"status" validate:"required,oneof=aktif selesai"`
 }
 type PasienDeleteRequest struct {
+	ID               int `json:"id" validate:"required,numeric"`
+	IdAdminPuskesmas int `validate:"omitempty,numeric"`
+}
+
+type PasienSelesaiRequest struct {
 	ID               int `json:"id" validate:"required,numeric"`
 	IdAdminPuskesmas int `validate:"omitempty,numeric"`
 }

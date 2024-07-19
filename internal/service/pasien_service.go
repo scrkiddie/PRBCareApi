@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"gorm.io/gorm"
 	"log"
+	"prbcare_be/internal/constant"
 	"prbcare_be/internal/entity"
 	"prbcare_be/internal/model"
 	"prbcare_be/internal/repository"
@@ -16,6 +17,7 @@ type PasienService struct {
 	PasienRepository         *repository.PasienRepository
 	AdminPuskesmasRepository *repository.AdminPuskesmasRepository
 	PenggunaRepository       *repository.PenggunaRepository
+	KontrolBalikRepository   *repository.KontrolBalikRepository
 	Validator                *validator.Validate
 }
 
@@ -24,9 +26,10 @@ func NewPasienService(
 	pasienRepository *repository.PasienRepository,
 	adminPuskesmasRepository *repository.AdminPuskesmasRepository,
 	penggunaRepository *repository.PenggunaRepository,
+	kontrolBalikRepository *repository.KontrolBalikRepository,
 	validator *validator.Validate,
 ) *PasienService {
-	return &PasienService{db, pasienRepository, adminPuskesmasRepository, penggunaRepository, validator}
+	return &PasienService{db, pasienRepository, adminPuskesmasRepository, penggunaRepository, kontrolBalikRepository, validator}
 }
 
 func (s *PasienService) Search(ctx context.Context, request *model.PasienSearchRequest) (*[]model.PasienResponse, error) {
@@ -69,14 +72,14 @@ func (s *PasienService) Search(ctx context.Context, request *model.PasienSearchR
 			HasilEkg:       perPasien.HasilEkg,
 			TanggalPeriksa: perPasien.TanggalPeriksa,
 			Status:         perPasien.Status,
-			Pengguna: model.PenggunaResponse{
+			Pengguna: &model.PenggunaResponse{
 				ID:              perPasien.Pengguna.ID,
 				NamaLengkap:     perPasien.Pengguna.NamaLengkap,
 				Telepon:         perPasien.Pengguna.Telepon,
 				TeleponKeluarga: perPasien.Pengguna.TeleponKeluarga,
 				Alamat:          perPasien.Pengguna.Alamat,
 			},
-			AdminPuskesmas: model.AdminPuskesmasResponse{
+			AdminPuskesmas: &model.AdminPuskesmasResponse{
 				ID:            perPasien.AdminPuskesmas.ID,
 				NamaPuskesmas: perPasien.AdminPuskesmas.NamaPuskesmas,
 				Telepon:       perPasien.AdminPuskesmas.Telepon,
@@ -104,11 +107,11 @@ func (s *PasienService) Get(ctx context.Context, request *model.PasienGetRequest
 
 	pasien := new(entity.Pasien)
 	if request.IdAdminPuskesmas > 0 {
-		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmas(tx, pasien, request.ID, request.IdAdminPuskesmas); err != nil {
+		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pasien, request.ID, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
 			return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
 		}
-	} else if err := s.PasienRepository.FindById(tx, pasien, request.ID); err != nil {
+	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienAktif); err != nil {
 		log.Println(err.Error())
 		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
@@ -128,20 +131,8 @@ func (s *PasienService) Get(ctx context.Context, request *model.PasienGetRequest
 	pasienResponse.HasilLab = pasien.HasilLab
 	pasienResponse.HasilEkg = pasien.HasilEkg
 	pasienResponse.TanggalPeriksa = pasien.TanggalPeriksa
-	pasienResponse.Status = pasien.Status
-	pasienResponse.Pengguna = model.PenggunaResponse{
-		ID:              pasien.Pengguna.ID,
-		NamaLengkap:     pasien.Pengguna.NamaLengkap,
-		Alamat:          pasien.Pengguna.Alamat,
-		Telepon:         pasien.Pengguna.Telepon,
-		TeleponKeluarga: pasien.Pengguna.TeleponKeluarga,
-	}
-	pasienResponse.AdminPuskesmas = model.AdminPuskesmasResponse{
-		ID:            pasien.AdminPuskesmas.ID,
-		NamaPuskesmas: pasien.AdminPuskesmas.NamaPuskesmas,
-		Telepon:       pasien.AdminPuskesmas.Telepon,
-		Alamat:        pasien.AdminPuskesmas.Alamat,
-	}
+	pasienResponse.IdAdminPuskesmas = pasien.IdAdminPuskesmas
+	pasienResponse.IdPengguna = pasien.IdPengguna
 
 	return pasienResponse, nil
 }
@@ -176,7 +167,7 @@ func (s *PasienService) Create(ctx context.Context, request *model.PasienCreateR
 	pasienEntity.HasilLab = request.HasilLab
 	pasienEntity.HasilEkg = request.HasilEkg
 	pasienEntity.TanggalPeriksa = request.TanggalPeriksa
-	pasienEntity.Status = request.Status
+	pasienEntity.Status = constant.StatusPasienAktif
 
 	if err := s.PasienRepository.Create(tx, pasienEntity); err != nil {
 		log.Println(err.Error())
@@ -202,11 +193,11 @@ func (s *PasienService) Update(ctx context.Context, request *model.PasienUpdateR
 
 	pasien := new(entity.Pasien)
 	if request.CurrentAdminPuskesmas {
-		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmas(tx, pasien, request.ID, request.IdAdminPuskesmas); err != nil {
+		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pasien, request.ID, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
 			return fiber.NewError(fiber.StatusNotFound, "Not found")
 		}
-	} else if err := s.PasienRepository.FindById(tx, pasien, request.ID); err != nil {
+	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienAktif); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
@@ -219,6 +210,7 @@ func (s *PasienService) Update(ctx context.Context, request *model.PasienUpdateR
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
+
 	pasien.NoRekamMedis = request.NoRekamMedis
 	pasien.IdPengguna = request.IdPengguna
 	pasien.IdAdminPuskesmas = request.IdAdminPuskesmas
@@ -229,7 +221,6 @@ func (s *PasienService) Update(ctx context.Context, request *model.PasienUpdateR
 	pasien.HasilLab = request.HasilLab
 	pasien.HasilEkg = request.HasilEkg
 	pasien.TanggalPeriksa = request.TanggalPeriksa
-	pasien.Status = request.Status
 	pasien.Pengguna = entity.Pengguna{}
 	pasien.AdminPuskesmas = entity.AdminPuskesmas{}
 
@@ -246,6 +237,44 @@ func (s *PasienService) Update(ctx context.Context, request *model.PasienUpdateR
 	return nil
 }
 
+func (s *PasienService) Selesai(ctx context.Context, request *model.PasienSelesaiRequest) error {
+	tx := s.DB.WithContext(ctx).Begin()
+	defer tx.Rollback()
+
+	if err := s.Validator.Struct(request); err != nil {
+		log.Println(err.Error())
+		return fiber.ErrBadRequest
+	}
+	pasien := new(entity.Pasien)
+	if request.IdAdminPuskesmas > 0 {
+		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pasien, request.ID, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
+			log.Println(err.Error())
+			return fiber.NewError(fiber.StatusNotFound, "Not found")
+		}
+	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienAktif); err != nil {
+		log.Println(err.Error())
+		return fiber.NewError(fiber.StatusNotFound, "Not found")
+	}
+	if err := s.KontrolBalikRepository.FindByIdPasienAndStatus(tx, &entity.KontrolBalik{}, request.ID, constant.StatusKontrolBalikMenunggu); err == nil {
+		return fiber.NewError(fiber.StatusConflict, "Pasien masih memiliki kontrol balik yang harus dilakukan")
+	}
+	//tambahkan pengambilan obat
+	pasien.Status = constant.StatusPasienSelesai
+
+	if err := s.PasienRepository.Update(tx, pasien); err != nil {
+		log.Println(err.Error())
+		return fiber.ErrInternalServerError
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		log.Println(err.Error())
+		return fiber.ErrInternalServerError
+	}
+
+	return nil
+
+}
+
 func (s *PasienService) Delete(ctx context.Context, request *model.PasienDeleteRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
@@ -257,11 +286,11 @@ func (s *PasienService) Delete(ctx context.Context, request *model.PasienDeleteR
 
 	pasien := new(entity.Pasien)
 	if request.IdAdminPuskesmas > 0 {
-		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmas(tx, pasien, request.ID, request.IdAdminPuskesmas); err != nil {
+		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pasien, request.ID, request.IdAdminPuskesmas, constant.StatusPasienSelesai); err != nil {
 			log.Println(err.Error())
 			return fiber.NewError(fiber.StatusNotFound, "Not found")
 		}
-	} else if err := s.PasienRepository.FindById(tx, pasien, request.ID); err != nil {
+	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienSelesai); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
 	}

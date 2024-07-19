@@ -28,7 +28,10 @@ type RouteConfig struct {
 
 	PasienController                          *controller.PasienController
 	AdminSuperOrPuskesmasOrPenggunaMiddleware fiber.Handler
-	Config                                    *viper.Viper
+
+	KontrolBalikController *controller.KontrolBalikController
+
+	Config *viper.Viper
 }
 
 func (c *RouteConfig) SetupGuestRoute() {
@@ -101,6 +104,18 @@ func (c *RouteConfig) SetupAuthRoute() {
 	c.App.Post("/api/pasien", c.PasienController.Create)
 	c.App.Patch("/api/pasien/:id", c.PasienController.Update)
 	c.App.Delete("/api/pasien/:id", c.PasienController.Delete)
+	c.App.Patch("/api/pasien/:id/selesai", c.PasienController.Selesai)
+
+	c.App.Use("/api/kontrol-balik", c.AdminSuperOrPuskesmasOrPenggunaMiddleware)
+	c.App.Get("/api/kontrol-balik", c.KontrolBalikController.Search)
+
+	c.App.Use("/api/kontrol-balik", c.AdminSuperOrPuskesmasMiddleware)
+	c.App.Get("/api/kontrol-balik/:id", c.KontrolBalikController.Get)
+	c.App.Post("/api/kontrol-balik", c.KontrolBalikController.Create)
+	c.App.Patch("/api/kontrol-balik/:id", c.KontrolBalikController.Update)
+	c.App.Delete("/api/kontrol-balik/:id", c.KontrolBalikController.Delete)
+	c.App.Patch("/api/kontrol-balik/:id/selesai", c.KontrolBalikController.Selesai)
+	c.App.Patch("/api/kontrol-balik/:id/batal", c.KontrolBalikController.Batal)
 
 }
 
