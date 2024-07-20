@@ -2,42 +2,35 @@ package route
 
 import (
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"github.com/spf13/viper"
-	"prbcare_be/internal/controller"
+	"prb_care_api/internal/controller"
 )
 
-type RouteConfig struct {
-	App                  *fiber.App
-	AdminSuperController *controller.AdminSuperController
-	AdminSuperMiddleware fiber.Handler
-
-	AdminPuskesmasController *controller.AdminPuskesmasController
-	AdminPuskesmasMiddleware fiber.Handler
-
-	AdminApotekController *controller.AdminApotekController
-	AdminApotekMiddleware fiber.Handler
-
-	AdminSuperOrPuskesmasMiddleware fiber.Handler
-
-	PenggunaController *controller.PenggunaController
-	PenggunaMiddleware fiber.Handler
-
-	AdminSuperOrPuskesmasOrApotekMiddleware fiber.Handler
-	AdminSuperOrApotekMiddleware            fiber.Handler
-	ObatController                          *controller.ObatController
-
-	PasienController                          *controller.PasienController
-	AdminSuperOrPuskesmasOrPenggunaMiddleware fiber.Handler
-
-	KontrolBalikController *controller.KontrolBalikController
-
+type Config struct {
+	App                                         *fiber.App
+	AdminSuperController                        *controller.AdminSuperController
+	AdminSuperMiddleware                        fiber.Handler
+	AdminPuskesmasController                    *controller.AdminPuskesmasController
+	AdminPuskesmasMiddleware                    fiber.Handler
+	AdminApotekController                       *controller.AdminApotekController
+	AdminApotekMiddleware                       fiber.Handler
+	AdminSuperOrPuskesmasMiddleware             fiber.Handler
+	PenggunaController                          *controller.PenggunaController
+	PenggunaMiddleware                          fiber.Handler
+	AdminSuperOrPuskesmasOrApotekMiddleware     fiber.Handler
+	AdminSuperOrApotekMiddleware                fiber.Handler
+	ObatController                              *controller.ObatController
+	PasienController                            *controller.PasienController
+	AdminSuperOrPuskesmasOrPenggunaMiddleware   fiber.Handler
+	KontrolBalikController                      *controller.KontrolBalikController
 	AdminSuperOrPuskesmasOrApotekOrPenggunaAuth fiber.Handler
 	PengambilanObatController                   *controller.PengambilanObatController
-
-	Config *viper.Viper
+	Config                                      *viper.Viper
 }
 
-func (c *RouteConfig) SetupGuestRoute() {
+func (c *Config) SetupGuestRoute() {
+	c.App.Use(cors.New())
 	c.App.Post("/api/admin-super/login", c.AdminSuperController.Login)
 	c.App.Post("/api/admin-puskesmas/login", c.AdminPuskesmasController.Login)
 	c.App.Post("/api/admin-apotek/login", c.AdminApotekController.Login)
@@ -45,7 +38,7 @@ func (c *RouteConfig) SetupGuestRoute() {
 	c.App.Post("/api/pengguna", c.PenggunaController.Create)
 }
 
-func (c *RouteConfig) SetupAuthRoute() {
+func (c *Config) SetupAuthRoute() {
 	c.App.Use("/api/admin-super/current", c.AdminSuperMiddleware)
 	c.App.Patch("/api/admin-super/current/password", c.AdminSuperController.PasswordUpdate)
 
@@ -135,7 +128,7 @@ func (c *RouteConfig) SetupAuthRoute() {
 
 }
 
-func (c *RouteConfig) Setup() {
+func (c *Config) Setup() {
 	c.SetupGuestRoute()
 	c.SetupAuthRoute()
 }

@@ -6,9 +6,9 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"gorm.io/gorm"
 	"log"
-	"prbcare_be/internal/entity"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/repository"
+	"prb_care_api/internal/entity"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/repository"
 )
 
 type ObatService struct {
@@ -85,11 +85,11 @@ func (s *ObatService) Get(ctx context.Context, request *model.ObatGetRequest) (*
 	if request.IdAdminApotek > 0 {
 		if err := s.ObatRepository.FindByIdAndIdAdminApotek(tx, obat, request.ID, request.IdAdminApotek); err != nil {
 			log.Println(err.Error())
-			return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+			return nil, fiber.NewError(fiber.StatusNotFound)
 		}
 	} else if err := s.ObatRepository.FindById(tx, obat, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+		return nil, fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -117,7 +117,7 @@ func (s *ObatService) Create(ctx context.Context, request *model.ObatCreateReque
 
 	if err := s.AdminApotekRepository.FindById(tx, &entity.AdminApotek{}, request.IdAdminApotek); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	obatEnity := new(entity.Obat)
@@ -151,16 +151,16 @@ func (s *ObatService) Update(ctx context.Context, request *model.ObatUpdateReque
 	if request.CurrentAdminApotek {
 		if err := s.ObatRepository.FindByIdAndIdAdminApotek(tx, obat, request.ID, request.IdAdminApotek); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound, "Not found")
+			return fiber.NewError(fiber.StatusNotFound)
 		}
 	} else if err := s.ObatRepository.FindById(tx, obat, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := s.AdminApotekRepository.FindById(tx, &entity.AdminApotek{}, request.IdAdminApotek); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	obat.IdAdminApotek = request.IdAdminApotek
@@ -193,11 +193,11 @@ func (s *ObatService) Delete(ctx context.Context, request *model.ObatDeleteReque
 	if request.IdAdminApotek > 0 {
 		if err := s.ObatRepository.FindByIdAndIdAdminApotek(tx, obat, request.ID, request.IdAdminApotek); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound, "Not found")
+			return fiber.NewError(fiber.StatusNotFound)
 		}
 	} else if err := s.ObatRepository.FindById(tx, obat, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := s.PengambilanObatRepository.FindByIdObat(tx, &entity.PengambilanObat{}, request.ID); err == nil {

@@ -3,14 +3,26 @@ package middleware
 import (
 	"github.com/gofiber/fiber/v3"
 	"log"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/service"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/service"
+	"strings"
 )
 
 func AdminSuperAuth(adminSuperService *service.AdminSuperService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		request := &model.VerifyAdminSuperRequest{Token: ctx.Get("Authorization", "")}
-		log.Printf("Authorization : %s", request.Token)
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
+
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+		token := parts[1]
+
+		request := &model.VerifyAdminSuperRequest{Token: token}
+		log.Printf("Token: %s", request.Token)
 
 		auth, err := adminSuperService.Verify(ctx.UserContext(), request)
 		if err != nil {
@@ -18,7 +30,7 @@ func AdminSuperAuth(adminSuperService *service.AdminSuperService) fiber.Handler 
 			return fiber.ErrUnauthorized
 		}
 
-		log.Printf("user : %+v", auth.ID)
+		log.Printf("user: %+v", auth.ID)
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
@@ -26,8 +38,19 @@ func AdminSuperAuth(adminSuperService *service.AdminSuperService) fiber.Handler 
 
 func AdminPuskesmasAuth(adminPuskesmasService *service.AdminPuskesmasService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		request := &model.VerifyAdminPuskesmasRequest{Token: ctx.Get("Authorization", "")}
-		log.Printf("Authorization : %s", request.Token)
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
+
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+		token := parts[1]
+
+		request := &model.VerifyAdminPuskesmasRequest{Token: token}
+		log.Printf("Token: %s", request.Token)
 
 		auth, err := adminPuskesmasService.Verify(ctx.UserContext(), request)
 		if err != nil {
@@ -35,7 +58,7 @@ func AdminPuskesmasAuth(adminPuskesmasService *service.AdminPuskesmasService) fi
 			return fiber.ErrUnauthorized
 		}
 
-		log.Printf("user : %+v", auth.ID)
+		log.Printf("user: %+v", auth.ID)
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
@@ -43,16 +66,26 @@ func AdminPuskesmasAuth(adminPuskesmasService *service.AdminPuskesmasService) fi
 
 func AdminApotekAuth(adminApotekService *service.AdminApotekService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		request := &model.VerifyAdminApotekRequest{Token: ctx.Get("Authorization", "")}
-		log.Printf("Authorization : %s", request.Token)
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
 
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+		token := parts[1]
+		log.Printf("Token: %s", token)
+
+		request := &model.VerifyAdminApotekRequest{Token: token}
 		auth, err := adminApotekService.Verify(ctx.UserContext(), request)
 		if err != nil {
 			log.Printf(err.Error())
 			return fiber.ErrUnauthorized
 		}
 
-		log.Printf("user : %+v", auth.ID)
+		log.Printf("user: %+v", auth.ID)
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
@@ -60,12 +93,19 @@ func AdminApotekAuth(adminApotekService *service.AdminApotekService) fiber.Handl
 
 func AdminSuperOrPuskesmasAuth(adminSuperService *service.AdminSuperService, adminPuskesmasService *service.AdminPuskesmasService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		token := ctx.Get("Authorization", "")
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
+
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+		token := parts[1]
+		log.Printf("Token: %s", token)
+
 		requestSuper := &model.VerifyAdminSuperRequest{Token: token}
-		requestPuskesmas := &model.VerifyAdminPuskesmasRequest{Token: token}
-
-		log.Printf("Authorization : %s", token)
-
 		authSuper, errSuper := adminSuperService.Verify(ctx.UserContext(), requestSuper)
 		if errSuper == nil {
 			log.Printf("Authenticated as AdminSuper: %+v", authSuper.ID)
@@ -73,6 +113,7 @@ func AdminSuperOrPuskesmasAuth(adminSuperService *service.AdminSuperService, adm
 			return ctx.Next()
 		}
 
+		requestPuskesmas := &model.VerifyAdminPuskesmasRequest{Token: token}
 		authPuskesmas, errPuskesmas := adminPuskesmasService.Verify(ctx.UserContext(), requestPuskesmas)
 		if errPuskesmas == nil {
 			log.Printf("Authenticated as AdminPuskesmas: %+v", authPuskesmas.ID)
@@ -87,25 +128,44 @@ func AdminSuperOrPuskesmasAuth(adminSuperService *service.AdminSuperService, adm
 
 func PenggunaAuth(adminApotekService *service.PenggunaService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		request := &model.VerifyPenggunaRequest{Token: ctx.Get("Authorization", "")}
-		log.Printf("Authorization : %s", request.Token)
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
 
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+		token := parts[1]
+		log.Printf("Token: %s", token)
+
+		request := &model.VerifyPenggunaRequest{Token: token}
 		auth, err := adminApotekService.Verify(ctx.UserContext(), request)
 		if err != nil {
 			log.Printf(err.Error())
 			return fiber.ErrUnauthorized
 		}
 
-		log.Printf("user : %+v", auth.ID)
+		log.Printf("user: %+v", auth.ID)
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
 }
-
 func AdminSuperOrPuskesmasOrApotekAuth(adminSuperService *service.AdminSuperService, adminPuskesmasService *service.AdminPuskesmasService, adminApotekService *service.AdminApotekService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		token := ctx.Get("Authorization", "")
-		log.Printf("Authorization: %s", token)
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
+
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+
+		token := parts[1]
+		log.Printf("Token: %s", token)
 
 		requestSuper := &model.VerifyAdminSuperRequest{Token: token}
 		authSuper, errSuper := adminSuperService.Verify(ctx.UserContext(), requestSuper)
@@ -131,15 +191,24 @@ func AdminSuperOrPuskesmasOrApotekAuth(adminSuperService *service.AdminSuperServ
 			return ctx.Next()
 		}
 
-		log.Printf("Unauthorized: SuperAdmin error: %v, Puskesmas error: %v, Apotek error: %v", errSuper, errPuskesmas, errApotek)
+		log.Printf("Unauthorized: AdminSuper error: %v, Puskesmas error: %v, Apotek error: %v", errSuper, errPuskesmas, errApotek)
 		return fiber.ErrUnauthorized
 	}
 }
-
 func AdminSuperOrApotekAuth(adminSuperService *service.AdminSuperService, adminApotekService *service.AdminApotekService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		token := ctx.Get("Authorization", "")
-		log.Printf("Authorization: %s", token)
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
+
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+
+		token := parts[1]
+		log.Printf("Token: %s", token)
 
 		requestSuper := &model.VerifyAdminSuperRequest{Token: token}
 		authSuper, errSuper := adminSuperService.Verify(ctx.UserContext(), requestSuper)
@@ -157,14 +226,24 @@ func AdminSuperOrApotekAuth(adminSuperService *service.AdminSuperService, adminA
 			return ctx.Next()
 		}
 
-		log.Printf("Unauthorized: SuperAdmin error: %v, Apotek error: %v", errSuper, errApotek)
+		log.Printf("Unauthorized: AdminSuper error: %v, Apotek error: %v", errSuper, errApotek)
 		return fiber.ErrUnauthorized
 	}
 }
 func AdminSuperOrPuskesmasOrPenggunaAuth(adminSuperService *service.AdminSuperService, adminPuskesmasService *service.AdminPuskesmasService, penggunaService *service.PenggunaService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		token := ctx.Get("Authorization", "")
-		log.Printf("Authorization: %s", token)
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
+
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+
+		token := parts[1]
+		log.Printf("Token: %s", token)
 
 		requestSuper := &model.VerifyAdminSuperRequest{Token: token}
 		authSuper, errSuper := adminSuperService.Verify(ctx.UserContext(), requestSuper)
@@ -190,15 +269,23 @@ func AdminSuperOrPuskesmasOrPenggunaAuth(adminSuperService *service.AdminSuperSe
 			return ctx.Next()
 		}
 
-		log.Printf("Unauthorized: SuperAdmin error: %v, Puskesmas error: %v, Pengguna error: %v", errSuper, errPuskesmas, errPengguna)
+		log.Printf("Unauthorized: AdminSuper error: %v, Puskesmas error: %v, Pengguna error: %v", errSuper, errPuskesmas, errPengguna)
 		return fiber.ErrUnauthorized
 	}
 }
-
 func AdminSuperOrPuskesmasOrApotekOrPenggunaAuth(adminSuperService *service.AdminSuperService, adminPuskesmasService *service.AdminPuskesmasService, adminApotekService *service.AdminApotekService, penggunaService *service.PenggunaService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
-		token := ctx.Get("Authorization", "")
-		log.Printf("Authorization: %s", token)
+		tokenWithBearer := ctx.Get("Authorization")
+		if tokenWithBearer == "" {
+			return fiber.ErrUnauthorized
+		}
+
+		parts := strings.Split(tokenWithBearer, " ")
+		if len(parts) != 2 || parts[0] != "Bearer" {
+			return fiber.ErrUnauthorized
+		}
+		token := parts[1]
+		log.Printf("Token: %s", token)
 
 		requestSuper := &model.VerifyAdminSuperRequest{Token: token}
 		authSuper, errSuper := adminSuperService.Verify(ctx.UserContext(), requestSuper)
@@ -232,7 +319,7 @@ func AdminSuperOrPuskesmasOrApotekOrPenggunaAuth(adminSuperService *service.Admi
 			return ctx.Next()
 		}
 
-		log.Printf("Unauthorized: SuperAdmin error: %v, Puskesmas error: %v, Apotek error: %v, Pengguna error: %v", errSuper, errPuskesmas, errApotek, errPengguna)
+		log.Printf("Unauthorized: AdminSuper error: %v, Puskesmas error: %v, Apotek error: %v, Pengguna error: %v", errSuper, errPuskesmas, errApotek, errPengguna)
 		return fiber.ErrUnauthorized
 	}
 }

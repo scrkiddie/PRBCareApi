@@ -2,10 +2,11 @@ package repository
 
 import (
 	"gorm.io/gorm"
-	"prbcare_be/internal/entity"
+	"prb_care_api/internal/entity"
 )
 
 type PasienRepository struct {
+	Repository[entity.Pasien]
 }
 
 func NewPasienRepository() *PasienRepository {
@@ -33,27 +34,15 @@ func (r *PasienRepository) SearchAsPengguna(db *gorm.DB, pasien *[]entity.Pasien
 	}
 	return query.Find(pasien).Error
 }
-
 func (r *PasienRepository) FindByIdAndStatus(db *gorm.DB, pasien *entity.Pasien, id int, status string) error {
 	return db.Where("id = ?", id).Where("status = ?", status).First(pasien).Error
 }
 func (r *PasienRepository) FindByIdAndIdAdminPuskesmasAndStatus(db *gorm.DB, pasien *entity.Pasien, id int, idAdminPuskesmas int, status string) error {
 	return db.Where("id = ?", id).Where("id_admin_puskesmas = ?", idAdminPuskesmas).Where("status = ?", status).First(pasien).Error
 }
-
 func (r *PasienRepository) FindByIdAdminPuskesmas(db *gorm.DB, pasien *entity.Pasien, idAdminPuskesmas int) error {
 	return db.Where("id_admin_puskesmas = ?", idAdminPuskesmas).First(pasien).Error
 }
 func (r *PasienRepository) FindByIdPengguna(db *gorm.DB, pasien *entity.Pasien, idPengguna int) error {
 	return db.Where("id_pengguna = ?", idPengguna).First(pasien).Error
-}
-
-func (r *PasienRepository) Update(db *gorm.DB, pasien *entity.Pasien) error {
-	return db.Save(pasien).Error
-}
-func (r *PasienRepository) Delete(db *gorm.DB, pasien *entity.Pasien) error {
-	return db.Delete(pasien).Error
-}
-func (r *PasienRepository) Create(db *gorm.DB, pasien *entity.Pasien) error {
-	return db.Create(pasien).Error
 }

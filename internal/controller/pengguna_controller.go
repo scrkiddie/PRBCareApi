@@ -4,9 +4,9 @@ import (
 	"github.com/go-playground/mold/v4"
 	"github.com/gofiber/fiber/v3"
 	"log"
-	"prbcare_be/internal/middleware"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/service"
+	"prb_care_api/internal/middleware"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/service"
 	"strconv"
 )
 
@@ -22,12 +22,12 @@ func NewPenggunaController(apotekService *service.PenggunaService, modifier *mol
 func (c *PenggunaController) Login(ctx fiber.Ctx) error {
 	request := new(model.PenggunaLoginRequest)
 	if err := ctx.Bind().JSON(request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
 	response, err := c.PenggunaService.Login(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -40,7 +40,7 @@ func (c *PenggunaController) Current(ctx fiber.Ctx) error {
 	request.ID = auth.ID
 	response, err := c.PenggunaService.Current(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -52,7 +52,7 @@ func (c *PenggunaController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 	request := new(model.PenggunaProfileUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
 	if err := c.Modifier.Struct(ctx.UserContext(), request); err != nil {
@@ -60,7 +60,7 @@ func (c *PenggunaController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 		return fiber.ErrInternalServerError
 	}
 	if err := c.PenggunaService.CurrentProfileUpdate(ctx.UserContext(), request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -72,11 +72,11 @@ func (c *PenggunaController) CurrentTokenPerangkatUpdate(ctx fiber.Ctx) error {
 	request := new(model.PenggunaTokenPerangkatUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
 	if err := c.PenggunaService.CurrentTokenPerangkatUpdate(ctx.UserContext(), request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -88,11 +88,11 @@ func (c *PenggunaController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 	request := new(model.PenggunaPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
 	if err := c.PenggunaService.CurrentPasswordUpdate(ctx.UserContext(), request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -102,7 +102,7 @@ func (c *PenggunaController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 func (c *PenggunaController) List(ctx fiber.Ctx) error {
 	response, err := c.PenggunaService.List(ctx.Context())
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -119,7 +119,7 @@ func (c *PenggunaController) Get(ctx fiber.Ctx) error {
 	request.ID = id
 	response, err := c.PenggunaService.Get(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{

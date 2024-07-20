@@ -10,10 +10,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"log"
-	"prbcare_be/internal/constant"
-	"prbcare_be/internal/entity"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/repository"
+	"prb_care_api/internal/constant"
+	"prb_care_api/internal/entity"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/repository"
 	"time"
 )
 
@@ -74,7 +74,7 @@ func (s *PenggunaService) Get(ctx context.Context, request *model.PenggunaGetReq
 	pengguna := new(entity.Pengguna)
 	if err := s.PenggunaRepository.FindById(tx, pengguna, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+		return nil, fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -159,7 +159,7 @@ func (s *PenggunaService) Update(ctx context.Context, request *model.PenggunaUpd
 	pengguna := new(entity.Pengguna)
 	if err := s.PenggunaRepository.FindById(tx, pengguna, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	total, err := s.PenggunaRepository.CountByUsername(tx, request.Username)
@@ -223,7 +223,7 @@ func (s *PenggunaService) Delete(ctx context.Context, request *model.PenggunaDel
 	pengguna := new(entity.Pengguna)
 	if err := s.PenggunaRepository.FindById(tx, pengguna, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := s.PasienRepository.FindByIdPengguna(tx, &entity.Pasien{}, request.ID); err == nil {
@@ -298,14 +298,14 @@ func (s *PenggunaService) Verify(ctx context.Context, request *model.VerifyPengg
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			log.Printf("unexpected signing method: %v", token.Header["alg"])
+			log.Println("Unexpected signing method:", token.Header["alg"])
 			return nil, fiber.ErrInternalServerError
 		}
 		return []byte(s.Config.GetString("jwt.secret")), nil
 	})
 
 	if err != nil {
-		log.Println("error parsing token:", err.Error())
+		log.Println("Error parsing token:", err.Error())
 		return nil, fiber.ErrUnauthorized
 	}
 
@@ -333,7 +333,7 @@ func (s *PenggunaService) Verify(ctx context.Context, request *model.VerifyPengg
 	pengguna := new(entity.Pengguna)
 	if err := s.PenggunaRepository.FindById(tx, pengguna, id); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+		return nil, fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -356,7 +356,7 @@ func (s *PenggunaService) Current(ctx context.Context, request *model.PenggunaGe
 	pengguna := new(entity.Pengguna)
 	if err := s.PenggunaRepository.FindById(tx, pengguna, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+		return nil, fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -385,7 +385,7 @@ func (s *PenggunaService) CurrentProfileUpdate(ctx context.Context, request *mod
 	pengguna := new(entity.Pengguna)
 	if err := s.PenggunaRepository.FindById(tx, pengguna, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	total, err := s.PenggunaRepository.CountByTelepon(tx, request.Telepon)
@@ -428,7 +428,7 @@ func (s *PenggunaService) CurrentPasswordUpdate(ctx context.Context, request *mo
 	pengguna := new(entity.Pengguna)
 	if err := s.PenggunaRepository.FindById(tx, pengguna, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(pengguna.Password), []byte(request.CurrentPassword)); err != nil {
@@ -468,7 +468,7 @@ func (s *PenggunaService) CurrentTokenPerangkatUpdate(ctx context.Context, reque
 	pengguna := new(entity.Pengguna)
 	if err := s.PenggunaRepository.FindById(tx, pengguna, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	pengguna.TokenPerangkat = request.TokenPerangkat

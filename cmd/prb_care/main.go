@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"prbcare_be/internal/config"
+	"prb_care_api/internal/config"
 )
 
 func main() {

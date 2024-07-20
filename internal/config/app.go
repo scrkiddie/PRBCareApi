@@ -6,11 +6,11 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"
-	"prbcare_be/internal/controller"
-	"prbcare_be/internal/middleware"
-	"prbcare_be/internal/repository"
-	"prbcare_be/internal/route"
-	"prbcare_be/internal/service"
+	"prb_care_api/internal/controller"
+	"prb_care_api/internal/middleware"
+	"prb_care_api/internal/repository"
+	"prb_care_api/internal/route"
+	"prb_care_api/internal/service"
 )
 
 type BootstrapConfig struct {
@@ -60,26 +60,26 @@ func Bootstrap(config *BootstrapConfig) {
 	adminSuperOrPuskesmasOrPengguna := middleware.AdminSuperOrPuskesmasOrPenggunaAuth(adminSuperService, adminPuskesmasService, penggunaService)
 	adminSuperOrPuskesmasOrApotekOrPengguna := middleware.AdminSuperOrPuskesmasOrApotekOrPenggunaAuth(adminSuperService, adminPuskesmasService, adminApotekService, penggunaService)
 
-	route := route.RouteConfig{
-		config.App,
-		adminSuperController,
-		adminSuperMiddleware,
-		adminPuskesmasController,
-		adminPuskesmasMiddleware,
-		adminApotekController,
-		adminApotekMiddleware,
-		adminSuperOrPuskesmasMiddleware,
-		penggunaController,
-		penggunaMiddleware,
-		adminSuperOrPuskesmasOrApotekMiddleware,
-		adminSuperOrApotekMiddleware,
-		obatController,
-		pasienController,
-		adminSuperOrPuskesmasOrPengguna,
-		kontrolBalikController,
-		adminSuperOrPuskesmasOrApotekOrPengguna,
-		pengambilanObatController,
-		config.Config,
+	route := route.Config{
+		App:                                         config.App,
+		AdminSuperController:                        adminSuperController,
+		AdminSuperMiddleware:                        adminSuperMiddleware,
+		AdminPuskesmasController:                    adminPuskesmasController,
+		AdminPuskesmasMiddleware:                    adminPuskesmasMiddleware,
+		AdminApotekController:                       adminApotekController,
+		AdminApotekMiddleware:                       adminApotekMiddleware,
+		AdminSuperOrPuskesmasMiddleware:             adminSuperOrPuskesmasMiddleware,
+		PenggunaController:                          penggunaController,
+		PenggunaMiddleware:                          penggunaMiddleware,
+		AdminSuperOrPuskesmasOrApotekMiddleware:     adminSuperOrPuskesmasOrApotekMiddleware,
+		AdminSuperOrApotekMiddleware:                adminSuperOrApotekMiddleware,
+		ObatController:                              obatController,
+		PasienController:                            pasienController,
+		AdminSuperOrPuskesmasOrPenggunaMiddleware:   adminSuperOrPuskesmasOrPengguna,
+		KontrolBalikController:                      kontrolBalikController,
+		AdminSuperOrPuskesmasOrApotekOrPenggunaAuth: adminSuperOrPuskesmasOrApotekOrPengguna,
+		PengambilanObatController:                   pengambilanObatController,
+		Config:                                      config.Config,
 	}
 	route.Setup()
 

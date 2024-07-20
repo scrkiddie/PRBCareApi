@@ -4,10 +4,10 @@ import (
 	"github.com/go-playground/mold/v4"
 	"github.com/gofiber/fiber/v3"
 	"log"
-	"prbcare_be/internal/constant"
-	"prbcare_be/internal/middleware"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/service"
+	"prb_care_api/internal/constant"
+	"prb_care_api/internal/middleware"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/service"
 	"strconv"
 )
 
@@ -27,7 +27,7 @@ func (c *ObatController) List(ctx fiber.Ctx) error {
 	}
 	response, err := c.ObatService.List(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -48,7 +48,7 @@ func (c *ObatController) Get(ctx fiber.Ctx) error {
 	request.ID = id
 	response, err := c.ObatService.Get(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{

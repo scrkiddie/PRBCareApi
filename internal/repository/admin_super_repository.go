@@ -2,21 +2,20 @@ package repository
 
 import (
 	"gorm.io/gorm"
-	"prbcare_be/internal/entity"
+	"prb_care_api/internal/entity"
 )
 
 type AdminSuperRepository struct {
+	Repository[entity.AdminSuper]
 }
 
 func NewAdminSuperRepository() *AdminSuperRepository {
 	return &AdminSuperRepository{}
 }
+
 func (r *AdminSuperRepository) FindByUsername(db *gorm.DB, adminSuper *entity.AdminSuper, username string) error {
-	return db.Where("username = ?", username).Find(adminSuper).Error
+	return db.Where("username = ?", username).First(adminSuper).Error
 }
 func (r *AdminSuperRepository) FindById(db *gorm.DB, adminSuper *entity.AdminSuper, id int) error {
-	return db.Where("id = ?", id).Find(adminSuper).Error
-}
-func (r *AdminSuperRepository) Update(db *gorm.DB, adminSuper *entity.AdminSuper) error {
-	return db.Save(adminSuper).Error
+	return db.Where("id = ?", id).First(adminSuper).Error
 }

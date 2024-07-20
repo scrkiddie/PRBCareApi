@@ -6,10 +6,10 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"gorm.io/gorm"
 	"log"
-	"prbcare_be/internal/constant"
-	"prbcare_be/internal/entity"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/repository"
+	"prb_care_api/internal/constant"
+	"prb_care_api/internal/entity"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/repository"
 )
 
 type PasienService struct {
@@ -111,11 +111,11 @@ func (s *PasienService) Get(ctx context.Context, request *model.PasienGetRequest
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pasien, request.ID, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+			return nil, fiber.NewError(fiber.StatusNotFound)
 		}
 	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienAktif); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+		return nil, fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -150,12 +150,12 @@ func (s *PasienService) Create(ctx context.Context, request *model.PasienCreateR
 
 	if err := s.AdminPuskesmasRepository.FindById(tx, &entity.AdminPuskesmas{}, request.IdAdminPuskesmas); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := s.PenggunaRepository.FindById(tx, &entity.Pengguna{}, request.IdPengguna); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	pasienEntity := new(entity.Pasien)
@@ -197,20 +197,20 @@ func (s *PasienService) Update(ctx context.Context, request *model.PasienUpdateR
 	if request.CurrentAdminPuskesmas {
 		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pasien, request.ID, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound, "Not found")
+			return fiber.NewError(fiber.StatusNotFound)
 		}
 	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienAktif); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := s.AdminPuskesmasRepository.FindById(tx, &entity.AdminPuskesmas{}, request.IdAdminPuskesmas); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 	if err := s.PenggunaRepository.FindById(tx, &entity.Pengguna{}, request.IdPengguna); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	pasien.NoRekamMedis = request.NoRekamMedis
@@ -249,11 +249,11 @@ func (s *PasienService) Selesai(ctx context.Context, request *model.PasienSelesa
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pasien, request.ID, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound, "Not found")
+			return fiber.NewError(fiber.StatusNotFound)
 		}
 	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienAktif); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 	//cek kontrol balik
 	if err := s.KontrolBalikRepository.FindByIdPasienAndStatus(tx, &entity.KontrolBalik{}, request.ID, constant.StatusKontrolBalikMenunggu); err == nil {
@@ -293,11 +293,11 @@ func (s *PasienService) Delete(ctx context.Context, request *model.PasienDeleteR
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pasien, request.ID, request.IdAdminPuskesmas, constant.StatusPasienSelesai); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound, "Not found")
+			return fiber.NewError(fiber.StatusNotFound)
 		}
 	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienSelesai); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := s.KontrolBalikRepository.FindByIdPasien(tx, &entity.KontrolBalik{}, request.ID); err == nil {

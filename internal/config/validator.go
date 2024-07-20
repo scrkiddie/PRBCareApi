@@ -12,7 +12,6 @@ import (
 
 func NewValidator() *validator.Validate {
 	v := validator.New(validator.WithRequiredStructEnabled())
-
 	if err := v.RegisterValidation("not_contain_space", ValidateNotContainSpace); err != nil {
 		log.Fatalln(err)
 	}

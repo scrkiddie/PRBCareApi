@@ -1,4 +1,4 @@
-module prbcare_be
+module prb_care_api
 
 go 1.22.1
 

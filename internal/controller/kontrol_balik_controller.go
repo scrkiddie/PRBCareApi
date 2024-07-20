@@ -3,10 +3,10 @@ package controller
 import (
 	"github.com/gofiber/fiber/v3"
 	"log"
-	"prbcare_be/internal/constant"
-	"prbcare_be/internal/middleware"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/service"
+	"prb_care_api/internal/constant"
+	"prb_care_api/internal/middleware"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/service"
 	"strconv"
 )
 
@@ -29,7 +29,7 @@ func (c *KontrolBalikController) Search(ctx fiber.Ctx) error {
 	request.Status = ctx.Query("status")
 	response, err := c.KontrolBalikService.Search(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": response})
@@ -49,7 +49,7 @@ func (c *KontrolBalikController) Get(ctx fiber.Ctx) error {
 	request.ID = id
 	response, err := c.KontrolBalikService.Get(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": response})

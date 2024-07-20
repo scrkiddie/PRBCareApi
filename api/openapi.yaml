@@ -5,9 +5,9 @@ info:
 components:
   securitySchemes:
     jwtAuth:
-      type: apiKey
-      in: header
-      name: Authorization
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 tags:
   - name: Admin Super
     description: Operasi yang berhubungan dengan admin super

@@ -4,9 +4,9 @@ import (
 	"github.com/go-playground/mold/v4"
 	"github.com/gofiber/fiber/v3"
 	"log"
-	"prbcare_be/internal/middleware"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/service"
+	"prb_care_api/internal/middleware"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/service"
 	"strconv"
 )
 
@@ -22,12 +22,12 @@ func NewAdminPuskesmasController(puskesmasService *service.AdminPuskesmasService
 func (c *AdminPuskesmasController) Login(ctx fiber.Ctx) error {
 	request := new(model.AdminPuskesmasLoginRequest)
 	if err := ctx.Bind().JSON(request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
 	response, err := c.AdminPuskesmasService.Login(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -40,7 +40,7 @@ func (c *AdminPuskesmasController) Current(ctx fiber.Ctx) error {
 	request.ID = auth.ID
 	response, err := c.AdminPuskesmasService.Current(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -52,7 +52,7 @@ func (c *AdminPuskesmasController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 	request := new(model.AdminPuskesmasProfileUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
 	if err := c.Modifier.Struct(ctx.UserContext(), request); err != nil {
@@ -60,7 +60,7 @@ func (c *AdminPuskesmasController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 		return fiber.ErrInternalServerError
 	}
 	if err := c.AdminPuskesmasService.CurrentProfileUpdate(ctx.UserContext(), request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -72,11 +72,11 @@ func (c *AdminPuskesmasController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 	request := new(model.AdminPuskesmasPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
 	if err := c.AdminPuskesmasService.CurrentPasswordUpdate(ctx.UserContext(), request); err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -86,7 +86,7 @@ func (c *AdminPuskesmasController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 func (c *AdminPuskesmasController) List(ctx fiber.Ctx) error {
 	response, err := c.AdminPuskesmasService.List(ctx.Context())
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -103,7 +103,7 @@ func (c *AdminPuskesmasController) Get(ctx fiber.Ctx) error {
 	request.ID = id
 	response, err := c.AdminPuskesmasService.Get(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{

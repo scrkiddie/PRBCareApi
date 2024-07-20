@@ -6,10 +6,10 @@ import (
 
 	"github.com/go-playground/mold/v4"
 	"github.com/gofiber/fiber/v3"
-	"prbcare_be/internal/constant"
-	"prbcare_be/internal/middleware"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/service"
+	"prb_care_api/internal/constant"
+	"prb_care_api/internal/middleware"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/service"
 )
 
 type PasienController struct {
@@ -32,7 +32,7 @@ func (c *PasienController) Search(ctx fiber.Ctx) error {
 	request.Status = ctx.Query("status")
 	response, err := c.PasienService.Search(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{
@@ -53,7 +53,7 @@ func (c *PasienController) Get(ctx fiber.Ctx) error {
 	request.ID = id
 	response, err := c.PasienService.Get(ctx.Context(), request)
 	if err != nil {
-		log.Println(err)
+		log.Println(err.Error())
 		return err
 	}
 	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{

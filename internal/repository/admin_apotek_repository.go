@@ -2,10 +2,11 @@ package repository
 
 import (
 	"gorm.io/gorm"
-	"prbcare_be/internal/entity"
+	"prb_care_api/internal/entity"
 )
 
 type AdminApotekRepository struct {
+	Repository[entity.AdminApotek]
 }
 
 func NewAdminApotekRepository() *AdminApotekRepository {
@@ -17,15 +18,6 @@ func (r *AdminApotekRepository) FindByUsername(db *gorm.DB, adminApotek *entity.
 }
 func (r *AdminApotekRepository) FindById(db *gorm.DB, adminApotek *entity.AdminApotek, id int) error {
 	return db.Where("id = ?", id).First(adminApotek).Error
-}
-func (r *AdminApotekRepository) Update(db *gorm.DB, adminApotek *entity.AdminApotek) error {
-	return db.Save(adminApotek).Error
-}
-func (r *AdminApotekRepository) Delete(db *gorm.DB, adminApotek *entity.AdminApotek) error {
-	return db.Delete(adminApotek).Error
-}
-func (r *AdminApotekRepository) Create(db *gorm.DB, adminApotek *entity.AdminApotek) error {
-	return db.Create(adminApotek).Error
 }
 func (r *AdminApotekRepository) CountByUsername(db *gorm.DB, username any) (int64, error) {
 	var count int64

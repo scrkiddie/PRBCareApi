@@ -9,10 +9,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"log"
-	"prbcare_be/internal/constant"
-	"prbcare_be/internal/entity"
-	"prbcare_be/internal/model"
-	"prbcare_be/internal/repository"
+	"prb_care_api/internal/constant"
+	"prb_care_api/internal/entity"
+	"prb_care_api/internal/model"
+	"prb_care_api/internal/repository"
 	"time"
 )
 
@@ -72,7 +72,7 @@ func (s *AdminApotekService) Get(ctx context.Context, request *model.AdminApotek
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+		return nil, fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -155,7 +155,7 @@ func (s *AdminApotekService) Update(ctx context.Context, request *model.AdminApo
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	total, err := s.AdminApotekRepository.CountByUsername(tx, request.Username)
@@ -218,7 +218,7 @@ func (s *AdminApotekService) Delete(ctx context.Context, request *model.AdminApo
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := s.ObatRepository.FindByIdAdminApotek(tx, &entity.Obat{}, request.ID); err == nil {
@@ -293,14 +293,14 @@ func (s *AdminApotekService) Verify(ctx context.Context, request *model.VerifyAd
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			log.Printf("unexpected signing method: %v", token.Header["alg"])
+			log.Println("Unexpected signing method:", token.Header["alg"])
 			return nil, fiber.ErrInternalServerError
 		}
 		return []byte(s.Config.GetString("jwt.secret")), nil
 	})
 
 	if err != nil {
-		log.Println("error parsing token:", err.Error())
+		log.Println("Error parsing token:", err.Error())
 		return nil, fiber.ErrUnauthorized
 	}
 
@@ -328,7 +328,7 @@ func (s *AdminApotekService) Verify(ctx context.Context, request *model.VerifyAd
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, id); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+		return nil, fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -351,7 +351,7 @@ func (s *AdminApotekService) Current(ctx context.Context, request *model.AdminAp
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound, "Not found")
+		return nil, fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -379,7 +379,7 @@ func (s *AdminApotekService) CurrentProfileUpdate(ctx context.Context, request *
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	total, err := s.AdminApotekRepository.CountByTelepon(tx, request.Telepon)
@@ -420,7 +420,7 @@ func (s *AdminApotekService) CurrentPasswordUpdate(ctx context.Context, request 
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound, "Not found")
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(adminApotek.Password), []byte(request.CurrentPassword)); err != nil {
