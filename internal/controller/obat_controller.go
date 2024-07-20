@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/go-playground/mold/v4"
 	"github.com/gofiber/fiber/v3"
 	"log"
@@ -95,12 +94,9 @@ func (c *ObatController) Update(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	fmt.Println(request.IdAdminApotek)
 	if auth.Role == constant.RoleAdminApotek {
 		request.IdAdminApotek = auth.ID
 		request.CurrentAdminApotek = true
-		fmt.Println("ini apotek")
-		fmt.Println(request.IdAdminApotek)
 	}
 
 	if err := c.Modifier.Struct(ctx.UserContext(), request); err != nil {

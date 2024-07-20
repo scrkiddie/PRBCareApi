@@ -13,12 +13,13 @@ import (
 )
 
 type PasienService struct {
-	DB                       *gorm.DB
-	PasienRepository         *repository.PasienRepository
-	AdminPuskesmasRepository *repository.AdminPuskesmasRepository
-	PenggunaRepository       *repository.PenggunaRepository
-	KontrolBalikRepository   *repository.KontrolBalikRepository
-	Validator                *validator.Validate
+	DB                        *gorm.DB
+	PasienRepository          *repository.PasienRepository
+	AdminPuskesmasRepository  *repository.AdminPuskesmasRepository
+	PenggunaRepository        *repository.PenggunaRepository
+	KontrolBalikRepository    *repository.KontrolBalikRepository
+	PengambilanObatRepository *repository.PengambilanObatRepository
+	Validator                 *validator.Validate
 }
 
 func NewPasienService(
@@ -27,9 +28,10 @@ func NewPasienService(
 	adminPuskesmasRepository *repository.AdminPuskesmasRepository,
 	penggunaRepository *repository.PenggunaRepository,
 	kontrolBalikRepository *repository.KontrolBalikRepository,
+	pengambilanObatRepository *repository.PengambilanObatRepository,
 	validator *validator.Validate,
 ) *PasienService {
-	return &PasienService{db, pasienRepository, adminPuskesmasRepository, penggunaRepository, kontrolBalikRepository, validator}
+	return &PasienService{db, pasienRepository, adminPuskesmasRepository, penggunaRepository, kontrolBalikRepository, pengambilanObatRepository, validator}
 }
 
 func (s *PasienService) Search(ctx context.Context, request *model.PasienSearchRequest) (*[]model.PasienResponse, error) {
@@ -221,8 +223,6 @@ func (s *PasienService) Update(ctx context.Context, request *model.PasienUpdateR
 	pasien.HasilLab = request.HasilLab
 	pasien.HasilEkg = request.HasilEkg
 	pasien.TanggalPeriksa = request.TanggalPeriksa
-	pasien.Pengguna = entity.Pengguna{}
-	pasien.AdminPuskesmas = entity.AdminPuskesmas{}
 
 	if err := s.PasienRepository.Update(tx, pasien); err != nil {
 		log.Println(err.Error())
@@ -255,10 +255,15 @@ func (s *PasienService) Selesai(ctx context.Context, request *model.PasienSelesa
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
 	}
+	//cek kontrol balik
 	if err := s.KontrolBalikRepository.FindByIdPasienAndStatus(tx, &entity.KontrolBalik{}, request.ID, constant.StatusKontrolBalikMenunggu); err == nil {
 		return fiber.NewError(fiber.StatusConflict, "Pasien masih memiliki kontrol balik yang harus dilakukan")
 	}
-	//tambahkan pengambilan obat
+	//cek pengambilan obat
+	if err := s.PengambilanObatRepository.FindByIdPasienAndStatus(tx, &entity.PengambilanObat{}, request.ID, constant.StatusKontrolBalikMenunggu); err == nil {
+		return fiber.NewError(fiber.StatusConflict, "Pasien masih memiliki pengambilan obat yang harus dilakukan")
+	}
+
 	pasien.Status = constant.StatusPasienSelesai
 
 	if err := s.PasienRepository.Update(tx, pasien); err != nil {
@@ -293,6 +298,13 @@ func (s *PasienService) Delete(ctx context.Context, request *model.PasienDeleteR
 	} else if err := s.PasienRepository.FindByIdAndStatus(tx, pasien, request.ID, constant.StatusPasienSelesai); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
+	}
+
+	if err := s.KontrolBalikRepository.FindByIdPasien(tx, &entity.KontrolBalik{}, request.ID); err == nil {
+		return fiber.NewError(fiber.StatusConflict, "Pasien masih terkait dengan data kontrol balik yang ada")
+	}
+	if err := s.PengambilanObatRepository.FindByIdPasien(tx, &entity.PengambilanObat{}, request.ID); err == nil {
+		return fiber.NewError(fiber.StatusConflict, "Pasien masih terkait dengan data pengambilan obat yang ada")
 	}
 
 	if err := s.PasienRepository.Delete(tx, pasien); err != nil {

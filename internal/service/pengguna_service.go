@@ -20,15 +20,17 @@ import (
 type PenggunaService struct {
 	DB                 *gorm.DB
 	PenggunaRepository *repository.PenggunaRepository
+	PasienRepository   *repository.PasienRepository
 	Validator          *validator.Validate
 	Config             *viper.Viper
 }
 
 func NewPenggunaService(db *gorm.DB,
 	penggunaRepository *repository.PenggunaRepository,
+	pasienRepository *repository.PasienRepository,
 	validator *validator.Validate,
 	config *viper.Viper) *PenggunaService {
-	return &PenggunaService{db, penggunaRepository, validator, config}
+	return &PenggunaService{db, penggunaRepository, pasienRepository, validator, config}
 }
 
 func (s *PenggunaService) List(ctx context.Context) (*[]model.PenggunaResponse, error) {
@@ -222,6 +224,10 @@ func (s *PenggunaService) Delete(ctx context.Context, request *model.PenggunaDel
 	if err := s.PenggunaRepository.FindById(tx, pengguna, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
+	}
+
+	if err := s.PasienRepository.FindByIdPengguna(tx, &entity.Pasien{}, request.ID); err == nil {
+		return fiber.NewError(fiber.StatusConflict, "Pengguna masih terkait dengan data pasien yang ada")
 	}
 
 	if err := s.PenggunaRepository.Delete(tx, pengguna); err != nil {

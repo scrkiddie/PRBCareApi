@@ -19,15 +19,17 @@ import (
 type AdminApotekService struct {
 	DB                    *gorm.DB
 	AdminApotekRepository *repository.AdminApotekRepository
+	ObatRepository        *repository.ObatRepository
 	Validator             *validator.Validate
 	Config                *viper.Viper
 }
 
 func NewAdminApotekService(db *gorm.DB,
 	adminApotekRepository *repository.AdminApotekRepository,
+	obatRepository *repository.ObatRepository,
 	validator *validator.Validate,
 	config *viper.Viper) *AdminApotekService {
-	return &AdminApotekService{db, adminApotekRepository, validator, config}
+	return &AdminApotekService{db, adminApotekRepository, obatRepository, validator, config}
 }
 
 func (s *AdminApotekService) List(ctx context.Context) (*[]model.AdminApotekResponse, error) {
@@ -217,6 +219,10 @@ func (s *AdminApotekService) Delete(ctx context.Context, request *model.AdminApo
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
+	}
+
+	if err := s.ObatRepository.FindByIdAdminApotek(tx, &entity.Obat{}, request.ID); err == nil {
+		return fiber.NewError(fiber.StatusConflict, "Admin apotek masih terkait dengan data obat yang ada")
 	}
 
 	if err := s.AdminApotekRepository.Delete(tx, adminApotek); err != nil {

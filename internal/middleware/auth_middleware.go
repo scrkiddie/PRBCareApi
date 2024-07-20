@@ -195,6 +195,47 @@ func AdminSuperOrPuskesmasOrPenggunaAuth(adminSuperService *service.AdminSuperSe
 	}
 }
 
+func AdminSuperOrPuskesmasOrApotekOrPenggunaAuth(adminSuperService *service.AdminSuperService, adminPuskesmasService *service.AdminPuskesmasService, adminApotekService *service.AdminApotekService, penggunaService *service.PenggunaService) fiber.Handler {
+	return func(ctx fiber.Ctx) error {
+		token := ctx.Get("Authorization", "")
+		log.Printf("Authorization: %s", token)
+
+		requestSuper := &model.VerifyAdminSuperRequest{Token: token}
+		authSuper, errSuper := adminSuperService.Verify(ctx.UserContext(), requestSuper)
+		if errSuper == nil {
+			log.Printf("Authenticated as AdminSuper: %+v", authSuper.ID)
+			ctx.Locals("auth", authSuper)
+			return ctx.Next()
+		}
+
+		requestPuskesmas := &model.VerifyAdminPuskesmasRequest{Token: token}
+		authPuskesmas, errPuskesmas := adminPuskesmasService.Verify(ctx.UserContext(), requestPuskesmas)
+		if errPuskesmas == nil {
+			log.Printf("Authenticated as AdminPuskesmas: %+v", authPuskesmas.ID)
+			ctx.Locals("auth", authPuskesmas)
+			return ctx.Next()
+		}
+
+		requestApotek := &model.VerifyAdminApotekRequest{Token: token}
+		authApotek, errApotek := adminApotekService.Verify(ctx.UserContext(), requestApotek)
+		if errApotek == nil {
+			log.Printf("Authenticated as AdminApotek: %+v", authApotek.ID)
+			ctx.Locals("auth", authApotek)
+			return ctx.Next()
+		}
+
+		requestPengguna := &model.VerifyPenggunaRequest{Token: token}
+		authPengguna, errPengguna := penggunaService.Verify(ctx.UserContext(), requestPengguna)
+		if errPengguna == nil {
+			log.Printf("Authenticated as Pengguna: %+v", authPengguna.ID)
+			ctx.Locals("auth", authPengguna)
+			return ctx.Next()
+		}
+
+		log.Printf("Unauthorized: SuperAdmin error: %v, Puskesmas error: %v, Apotek error: %v, Pengguna error: %v", errSuper, errPuskesmas, errApotek, errPengguna)
+		return fiber.ErrUnauthorized
+	}
+}
 func GetAuth(ctx fiber.Ctx) *model.Auth {
 	return ctx.Locals("auth").(*model.Auth)
 }

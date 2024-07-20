@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"gorm.io/gorm"
@@ -13,18 +12,20 @@ import (
 )
 
 type ObatService struct {
-	DB                    *gorm.DB
-	ObatRepository        *repository.ObatRepository
-	AdminApotekRepository *repository.AdminApotekRepository
-	Validator             *validator.Validate
+	DB                        *gorm.DB
+	ObatRepository            *repository.ObatRepository
+	AdminApotekRepository     *repository.AdminApotekRepository
+	PengambilanObatRepository *repository.PengambilanObatRepository
+	Validator                 *validator.Validate
 }
 
 func NewObatService(
 	db *gorm.DB,
 	obatRepository *repository.ObatRepository,
 	adminApotekRepository *repository.AdminApotekRepository,
+	pengambilanObatRepository *repository.PengambilanObatRepository,
 	validator *validator.Validate) *ObatService {
-	return &ObatService{db, obatRepository, adminApotekRepository, validator}
+	return &ObatService{db, obatRepository, adminApotekRepository, pengambilanObatRepository, validator}
 }
 
 func (s *ObatService) List(ctx context.Context, request *model.ObatListRequest) (*[]model.ObatResponse, error) {
@@ -147,7 +148,6 @@ func (s *ObatService) Update(ctx context.Context, request *model.ObatUpdateReque
 	}
 
 	obat := new(entity.Obat)
-	fmt.Println(request.CurrentAdminApotek)
 	if request.CurrentAdminApotek {
 		if err := s.ObatRepository.FindByIdAndIdAdminApotek(tx, obat, request.ID, request.IdAdminApotek); err != nil {
 			log.Println(err.Error())
@@ -166,8 +166,7 @@ func (s *ObatService) Update(ctx context.Context, request *model.ObatUpdateReque
 	obat.IdAdminApotek = request.IdAdminApotek
 	obat.NamaObat = request.NamaObat
 	obat.Jumlah = request.Jumlah
-	obat.AdminApotek = entity.AdminApotek{}
-	fmt.Println(request.IdAdminApotek)
+
 	if err := s.ObatRepository.Update(tx, obat); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrInternalServerError
@@ -199,6 +198,10 @@ func (s *ObatService) Delete(ctx context.Context, request *model.ObatDeleteReque
 	} else if err := s.ObatRepository.FindById(tx, obat, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
+	}
+
+	if err := s.PengambilanObatRepository.FindByIdObat(tx, &entity.PengambilanObat{}, request.ID); err == nil {
+		return fiber.NewError(fiber.StatusConflict, "Obat masih terkait dengan data pengambilan obat yang ada")
 	}
 
 	if err := s.ObatRepository.Delete(tx, obat); err != nil {

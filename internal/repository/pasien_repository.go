@@ -19,17 +19,15 @@ func (r *PasienRepository) Search(db *gorm.DB, pasien *[]entity.Pasien, status s
 	}
 	return query.Find(pasien).Error
 }
-
-func (r *PasienRepository) SearchAsAdminPuskesmas(db *gorm.DB, pasien *[]entity.Pasien, id_admin_puskesmas int, status string) error {
-	query := db.Where("id_admin_puskesmas = ?", id_admin_puskesmas).Preload("AdminPuskesmas").Preload("Pengguna")
+func (r *PasienRepository) SearchAsAdminPuskesmas(db *gorm.DB, pasien *[]entity.Pasien, idAdminPuskesmas int, status string) error {
+	query := db.Where("id_admin_puskesmas = ?", idAdminPuskesmas).Preload("AdminPuskesmas").Preload("Pengguna")
 	if status != "" {
 		query = query.Where("status = ?", status)
 	}
 	return query.Find(pasien).Error
 }
-
-func (r *PasienRepository) SearchAsPengguna(db *gorm.DB, pasien *[]entity.Pasien, id_pengguna int, status string) error {
-	query := db.Where("id_pengguna = ?", id_pengguna).Preload("AdminPuskesmas").Preload("Pengguna")
+func (r *PasienRepository) SearchAsPengguna(db *gorm.DB, pasien *[]entity.Pasien, idPengguna int, status string) error {
+	query := db.Where("id_pengguna = ?", idPengguna).Preload("AdminPuskesmas").Preload("Pengguna")
 	if status != "" {
 		query = query.Where("status = ?", status)
 	}
@@ -37,11 +35,17 @@ func (r *PasienRepository) SearchAsPengguna(db *gorm.DB, pasien *[]entity.Pasien
 }
 
 func (r *PasienRepository) FindByIdAndStatus(db *gorm.DB, pasien *entity.Pasien, id int, status string) error {
-	return db.Where("id = ?", id).Preload("AdminPuskesmas").Where("status = ?", status).Preload("Pengguna").First(pasien).Error
+	return db.Where("id = ?", id).Where("status = ?", status).First(pasien).Error
+}
+func (r *PasienRepository) FindByIdAndIdAdminPuskesmasAndStatus(db *gorm.DB, pasien *entity.Pasien, id int, idAdminPuskesmas int, status string) error {
+	return db.Where("id = ?", id).Where("id_admin_puskesmas = ?", idAdminPuskesmas).Where("status = ?", status).First(pasien).Error
 }
 
-func (r *PasienRepository) FindByIdAndIdAdminPuskesmasAndStatus(db *gorm.DB, pasien *entity.Pasien, id int, id_admin_puskesmas int, status string) error {
-	return db.Where("id = ?", id).Where("id_admin_puskesmas = ?", id_admin_puskesmas).Where("status = ?", status).Preload("AdminPuskesmas").Preload("Pengguna").First(pasien).Error
+func (r *PasienRepository) FindByIdAdminPuskesmas(db *gorm.DB, pasien *entity.Pasien, idAdminPuskesmas int) error {
+	return db.Where("id_admin_puskesmas = ?", idAdminPuskesmas).First(pasien).Error
+}
+func (r *PasienRepository) FindByIdPengguna(db *gorm.DB, pasien *entity.Pasien, idPengguna int) error {
+	return db.Where("id_pengguna = ?", idPengguna).First(pasien).Error
 }
 
 func (r *PasienRepository) Update(db *gorm.DB, pasien *entity.Pasien) error {

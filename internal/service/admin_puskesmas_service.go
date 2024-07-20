@@ -19,15 +19,17 @@ import (
 type AdminPuskesmasService struct {
 	DB                       *gorm.DB
 	AdminPuskesmasRepository *repository.AdminPuskesmasRepository
+	PasienRepository         *repository.PasienRepository
 	Validator                *validator.Validate
 	Config                   *viper.Viper
 }
 
 func NewAdminPuskesmasService(db *gorm.DB,
 	adminPuskesmasRepository *repository.AdminPuskesmasRepository,
+	pasienRepository *repository.PasienRepository,
 	validator *validator.Validate,
 	config *viper.Viper) *AdminPuskesmasService {
-	return &AdminPuskesmasService{db, adminPuskesmasRepository, validator, config}
+	return &AdminPuskesmasService{db, adminPuskesmasRepository, pasienRepository, validator, config}
 }
 
 func (s *AdminPuskesmasService) List(ctx context.Context) (*[]model.AdminPuskesmasResponse, error) {
@@ -217,6 +219,10 @@ func (s *AdminPuskesmasService) Delete(ctx context.Context, request *model.Admin
 	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound, "Not found")
+	}
+
+	if err := s.PasienRepository.FindByIdAdminPuskesmas(tx, &entity.Pasien{}, request.ID); err == nil {
+		return fiber.NewError(fiber.StatusConflict, "Admin puskesmas masih terkait dengan data pasien yang ada")
 	}
 
 	if err := s.AdminPuskesmasRepository.Delete(tx, adminPuskesmas); err != nil {

@@ -204,7 +204,6 @@ func (s *KontrolBalikService) Update(ctx context.Context, request *model.Kontrol
 
 	kontrolBalik.IdPasien = request.IdPasien
 	kontrolBalik.TanggalKontrol = request.TanggalKontrol
-	kontrolBalik.Pasien = entity.Pasien{}
 
 	if err := s.KontrolBalikRepository.Update(tx, kontrolBalik); err != nil {
 		log.Println(err.Error())
@@ -277,7 +276,6 @@ func (s *KontrolBalikService) Batal(ctx context.Context, request *model.KontrolB
 	}
 
 	kontrolBalik.Status = constant.StatusKontrolBalikBatal
-	kontrolBalik.Pasien = entity.Pasien{}
 
 	if err := s.KontrolBalikRepository.Update(tx, kontrolBalik); err != nil {
 		log.Println(err.Error())
@@ -315,7 +313,6 @@ func (s *KontrolBalikService) Selesai(ctx context.Context, request *model.Kontro
 	}
 
 	kontrolBalik.Status = constant.StatusKontrolBalikSelesai
-	kontrolBalik.Pasien = entity.Pasien{}
 
 	if err := s.KontrolBalikRepository.Update(tx, kontrolBalik); err != nil {
 		log.Println(err.Error())

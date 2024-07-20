@@ -757,6 +757,16 @@ paths:
                   error:
                     type: string
                     example: Bad request
+        '409':
+          description: Admin puskesmas masih terkait dengan data pasien yang ada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Admin puskesmas masih terkait dengan data pasien yang ada
         '401':
           description: Unauthorized
           content:
@@ -1382,6 +1392,16 @@ paths:
                   error:
                     type: string
                     example: Bad request
+        '409':
+          description: Admin apotek masih terkait dengan data obat yang ada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Admin apotek masih terkait dengan data obat yang ada
         '401':
           description: Unauthorized
           content:
@@ -2025,6 +2045,16 @@ paths:
                   error:
                     type: string
                     example: Bad request
+        '409':
+          description: Pengguna masih terkait dengan data pasien yang ada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Pengguna masih terkait dengan data pasien yang ada
         '401':
           description: Unauthorized
           content:
@@ -2360,6 +2390,16 @@ paths:
                   error:
                     type: string
                     example: Bad request
+        '409':
+          description: Obat masih terkait dengan data pengambilan obat yang ada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Obat masih terkait dengan data pengambilan obat yang ada
         '404':
           description: Not found
           content:
@@ -2788,6 +2828,22 @@ paths:
                   error:
                     type: string
                     example: Bad request
+        '409':
+          description: Pasien masih terkait dengan data yang ada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+              examples:
+                kontrolBalik:
+                  value:
+                    error: Pasien masih terkait dengan data kontrol balik yang ada
+                pengambilanObat:
+                  value:
+                    error: Pasien masih terkait dengan data pengambilan obat yang ada
         '401':
           description: Unauthorized
           content:
@@ -2861,7 +2917,13 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: Pasien masih memiliki kontrol balik yang harus dilakukan
+              examples:
+                kontrolBalik:
+                  value:
+                    error: Pasien masih memiliki kontrol balik yang harus dilakukan
+                pengambilanObat:
+                  value:
+                    error: Pasien masih memiliki pengambilan obat yang harus dilakukan
         '401':
           description: Unauthorized
           content:
@@ -3535,7 +3597,7 @@ paths:
     post:
       tags:
         - Pengambilan Obat
-      summary: Create new pengambilan obat
+      summary: Create new pengambilan obat menunggu
       security:
         - jwtAuth: [ ]
       requestBody:
@@ -3583,6 +3645,16 @@ paths:
                   error:
                     type: string
                     example: Bad request
+        '409':
+          description: Jumlah obat melebihi persediaan apotek
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Jumlah obat melebihi persediaan apotek
         '401':
           description: Unauthorized
           content:
@@ -3607,7 +3679,7 @@ paths:
     get:
       tags:
         - Pengambilan Obat
-      summary: Get pengambilan obat by id
+      summary: Get pengambilan obat menunggu by id
       security:
         - jwtAuth: [ ]
       parameters:
@@ -3629,81 +3701,14 @@ paths:
                     properties:
                       id:
                         type: integer
-                      resi:
-                        type: string
-                      obat:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          namaObat:
-                            type: string
-                          jumlah:
-                            type: integer
-                          adminApotek:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                              namaApotek:
-                                type: string
-                              telepon:
-                                type: string
-                              alamat:
-                                type: string
-                      pasien:
-                        type: object
-                        properties:
-                          id:
-                            type: integer
-                          noRekamMedis:
-                            type: string
-                          adminPuskesmas:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                              namaPuskesmas:
-                                type: string
-                              telepon:
-                                type: string
-                              alamat:
-                                type: string
-                          pengguna:
-                            type: object
-                            properties:
-                              id:
-                                type: integer
-                              namaLengkap:
-                                type: string
-                              telepon:
-                                type: string
-                              teleponKeluarga:
-                                type: string
-                              alamat:
-                                type: string
-                          beratBadan:
-                            type: integer
-                          tinggiBadan:
-                            type: integer
-                          tekananDarah:
-                            type: string
-                          denyutNadi:
-                            type: integer
-                          hasilLab:
-                            type: string
-                          hasilEkg:
-                            type: string
-                          tanggalPeriksa:
-                            type: integer
-                          status:
-                            type: string
+                      idObat:
+                        type: integer
+                      idPasien:
+                        type: integer
                       jumlah:
                         type: integer
                       tanggalPengambilan:
                         type: integer
-                      status:
-                        type: string
         '401':
           description: Unauthorized
           content:
@@ -3738,7 +3743,7 @@ paths:
     patch:
       tags:
         - Pengambilan Obat
-      summary: Update pengambilan obat
+      summary: Update pengambilan obat menunggu
       security:
         - jwtAuth: [ ]
       parameters:
@@ -3762,11 +3767,8 @@ paths:
                   type: integer
                 tanggalPengambilan:
                   type: integer
-                status:
-                  type: string
               required:
                 - idPasien
-                - status
                 - jumlah
                 - idAdminApotek
                 - idObat
@@ -3792,6 +3794,16 @@ paths:
                   error:
                     type: string
                     example: Bad request
+        '409':
+          description: Jumlah obat melebihi persediaan apotek
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Jumlah obat melebihi persediaan apotek
         '401':
           description: Unauthorized
           content:
@@ -3825,7 +3837,7 @@ paths:
     delete:
       tags:
         - Pengambilan Obat
-      summary: Delete pengambilan obat
+      summary: Delete pengambilan obat diambil atau batal
       security:
         - jwtAuth: [ ]
       parameters:
@@ -3889,7 +3901,7 @@ paths:
     patch:
       tags:
         - Pengambilan Obat
-      summary: Mark medicine pickup
+      summary: Tandai pengambilan obat menunggu sebagai diambil
       security:
         - jwtAuth: [ ]
       parameters:
@@ -3908,7 +3920,71 @@ paths:
                 properties:
                   data:
                     type: string
-                    example: Pengambilan obat berhasil ditandai sebagai diambil
+                    example: Pengambilan obat berhasil ditandai diambil
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Bad request
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Internal server error
+  /api/pengambilan-obat/{id}/batal:
+    patch:
+      tags:
+        - Pengambilan Obat
+      summary: Tandai pengambilan obat menunggu sebagai batal
+      security:
+        - jwtAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Pickup marked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    example: Pengambilan obat berhasil ditandai batal
         '400':
           description: Bad request
           content:

@@ -11,6 +11,7 @@ type AdminApotekRepository struct {
 func NewAdminApotekRepository() *AdminApotekRepository {
 	return &AdminApotekRepository{}
 }
+
 func (r *AdminApotekRepository) FindByUsername(db *gorm.DB, adminApotek *entity.AdminApotek, username string) error {
 	return db.Where("username = ?", username).First(adminApotek).Error
 }

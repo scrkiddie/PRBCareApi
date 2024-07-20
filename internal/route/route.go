@@ -31,6 +31,9 @@ type RouteConfig struct {
 
 	KontrolBalikController *controller.KontrolBalikController
 
+	AdminSuperOrPuskesmasOrApotekOrPenggunaAuth fiber.Handler
+	PengambilanObatController                   *controller.PengambilanObatController
+
 	Config *viper.Viper
 }
 
@@ -116,6 +119,19 @@ func (c *RouteConfig) SetupAuthRoute() {
 	c.App.Delete("/api/kontrol-balik/:id", c.KontrolBalikController.Delete)
 	c.App.Patch("/api/kontrol-balik/:id/selesai", c.KontrolBalikController.Selesai)
 	c.App.Patch("/api/kontrol-balik/:id/batal", c.KontrolBalikController.Batal)
+
+	c.App.Use("/api/pengambilan-obat", c.AdminSuperOrPuskesmasOrApotekOrPenggunaAuth)
+	c.App.Get("/api/pengambilan-obat", c.PengambilanObatController.Search)
+
+	c.App.Use("/api/pengambilan-obat", c.AdminSuperOrPuskesmasMiddleware)
+	c.App.Get("/api/pengambilan-obat/:id", c.PengambilanObatController.Get)
+	c.App.Post("/api/pengambilan-obat", c.PengambilanObatController.Create)
+	c.App.Patch("/api/pengambilan-obat/:id", c.PengambilanObatController.Update)
+	c.App.Delete("/api/pengambilan-obat/:id", c.PengambilanObatController.Delete)
+	c.App.Patch("/api/pengambilan-obat/:id/batal", c.PengambilanObatController.Batal)
+
+	c.App.Use("/api/pengambilan-obat/:id/diambil", c.AdminSuperOrApotekMiddleware)
+	c.App.Patch("/api/pengambilan-obat/:id/diambil", c.PengambilanObatController.Diambil)
 
 }
 
