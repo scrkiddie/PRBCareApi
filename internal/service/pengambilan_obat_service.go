@@ -174,7 +174,7 @@ func (s *PengambilanObatService) Create(ctx context.Context, request *model.Peng
 	}
 
 	obat := new(entity.Obat)
-	if err := s.ObatRepository.FindById(tx, obat, request.IdObat); err != nil {
+	if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obat, request.IdObat); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound)
 	}
@@ -244,20 +244,19 @@ func (s *PengambilanObatService) Update(ctx context.Context, request *model.Peng
 	}
 
 	obatNew := new(entity.Obat)
-	obatOld := new(entity.Obat)
-
-	if err := s.ObatRepository.FindById(tx, obatNew, request.IdObat); err != nil {
+	if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obatNew, request.IdObat); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound)
 	}
 
+	obatOld := new(entity.Obat)
 	if pengambilanObat.IdObat == request.IdObat {
 		obatNew.Jumlah = (obatNew.Jumlah + pengambilanObat.Jumlah) - request.Jumlah
 		if obatNew.Jumlah < 0 {
 			return fiber.NewError(fiber.StatusConflict, "Jumlah obat melebihi persediaan apotek")
 		}
 	} else {
-		if err := s.ObatRepository.FindById(tx, obatOld, pengambilanObat.IdObat); err != nil {
+		if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obatOld, pengambilanObat.IdObat); err != nil {
 			log.Println(err.Error())
 			return fiber.NewError(fiber.StatusNotFound)
 		}
@@ -353,7 +352,7 @@ func (s *PengambilanObatService) Batal(ctx context.Context, request *model.Penga
 		}
 	}
 	obat := new(entity.Obat)
-	if err := s.ObatRepository.FindById(tx, obat, pengambilanObat.IdObat); err != nil {
+	if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obat, pengambilanObat.IdObat); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound)
 	}

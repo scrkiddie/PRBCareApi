@@ -154,7 +154,7 @@ func (c *AdminPuskesmasController) Update(ctx fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"data": "Admin puskesmas berhasil diupdate"})
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Admin puskesmas berhasil diupdate"})
 }
 
 func (c *AdminPuskesmasController) Delete(ctx fiber.Ctx) error {
@@ -171,5 +171,5 @@ func (c *AdminPuskesmasController) Delete(ctx fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"data": "Admin puskesmas berhasil dihapus"})
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Admin puskesmas berhasil dihapus"})
 }

@@ -1,9 +1,2 @@
-*.iml
-*.ipr
-*.iws
-.idea/
-/build/
-/dist/
-/out/
-manual_test
+.idea
 config.json

@@ -109,7 +109,7 @@ func (c *ObatController) Update(ctx fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"data": "Obat berhasil diupdate"})
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Obat berhasil diupdate"})
 }
 
 func (c *ObatController) Delete(ctx fiber.Ctx) error {
@@ -130,5 +130,5 @@ func (c *ObatController) Delete(ctx fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"data": "Obat berhasil dihapus"})
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Obat berhasil dihapus"})
 }

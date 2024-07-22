@@ -170,7 +170,7 @@ func (c *PenggunaController) Update(ctx fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"data": "Pengguna berhasil diupdate"})
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Pengguna berhasil diupdate"})
 }
 
 func (c *PenggunaController) Delete(ctx fiber.Ctx) error {
@@ -187,5 +187,5 @@ func (c *PenggunaController) Delete(ctx fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"data": "Pengguna berhasil dihapus"})
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Pengguna berhasil dihapus"})
 }

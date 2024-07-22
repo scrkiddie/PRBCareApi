@@ -22,7 +22,7 @@ type AdminApotekProfileUpdateRequest struct {
 	ID         int    `json:"id" validate:"required,numeric"`
 	NamaApotek string `json:"namaApotek" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 	Telepon    string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
-	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3"`
 }
 type VerifyAdminApotekRequest struct {
 	Token string `validate:"required"`
@@ -33,7 +33,7 @@ type AdminApotekGetRequest struct {
 type AdminApotekCreateRequest struct {
 	NamaApotek string `json:"namaApotek" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 	Telepon    string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
-	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3"`
 	Username   string `json:"username" validate:"required,min=6,max=50,not_contain_space"`
 	Password   string `json:"password" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 }
@@ -41,7 +41,7 @@ type AdminApotekUpdateRequest struct {
 	ID         int    `json:"id" validate:"required,numeric"`
 	NamaApotek string `json:"namaApotek" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 	Telepon    string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
-	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3"`
 	Username   string `json:"username" validate:"required,min=6,max=50,not_contain_space"`
 	Password   string `json:"password" validate:"omitempty,min=6,max=255,is_password_format,not_contain_space"`
 }

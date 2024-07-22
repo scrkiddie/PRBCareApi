@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: PRBCare API
+  title: PRB Care API
   version: 1.0.0
 components:
   securitySchemes:

@@ -154,7 +154,7 @@ func (c *AdminApotekController) Update(ctx fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"data": "Admin apotek berhasil diupdate"})
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Admin apotek berhasil diupdate"})
 }
 
 func (c *AdminApotekController) Delete(ctx fiber.Ctx) error {
@@ -171,5 +171,5 @@ func (c *AdminApotekController) Delete(ctx fiber.Ctx) error {
 		return err
 	}
 
-	return ctx.Status(fiber.StatusCreated).JSON(fiber.Map{"data": "Admin apotek berhasil dihapus"})
+	return ctx.Status(fiber.StatusOK).JSON(fiber.Map{"data": "Admin apotek berhasil dihapus"})
 }

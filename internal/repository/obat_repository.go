@@ -2,6 +2,7 @@ package repository
 
 import (
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"prb_care_api/internal/entity"
 )
 
@@ -24,6 +25,12 @@ func (r *ObatRepository) FindById(db *gorm.DB, obat *entity.Obat, id int) error 
 }
 func (r *ObatRepository) FindByIdAndIdAdminApotek(db *gorm.DB, obat *entity.Obat, id int, idAdminApotek int) error {
 	return db.Where("id = ?", id).Where("id_admin_apotek = ?", idAdminApotek).First(obat).Error
+}
+func (r *ObatRepository) FindByIdAndLockForUpdate(db *gorm.DB, obat *entity.Obat, id int) error {
+	return db.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id = ?", id).First(obat).Error
+}
+func (r *ObatRepository) FindByIdAndIdAdminApotekAndLockForUpdate(db *gorm.DB, obat *entity.Obat, id int, idAdminApotek int) error {
+	return db.Clauses(clause.Locking{Strength: "UPDATE"}).Where("id = ?", id).Where("id_admin_apotek = ?", idAdminApotek).First(obat).Error
 }
 func (r *ObatRepository) FindByIdAdminApotek(db *gorm.DB, obat *entity.Obat, idAdminApotek int) error {
 	return db.Where("id_admin_apotek = ?", idAdminApotek).First(obat).Error

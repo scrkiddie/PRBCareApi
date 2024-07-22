@@ -147,18 +147,18 @@ func (s *ObatService) Update(ctx context.Context, request *model.ObatUpdateReque
 		return fiber.ErrBadRequest
 	}
 
-	obat := new(entity.Obat)
-	if request.CurrentAdminApotek {
-		if err := s.ObatRepository.FindByIdAndIdAdminApotek(tx, obat, request.ID, request.IdAdminApotek); err != nil {
-			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
-		}
-	} else if err := s.ObatRepository.FindById(tx, obat, request.ID); err != nil {
+	if err := s.AdminApotekRepository.FindById(tx, &entity.AdminApotek{}, request.IdAdminApotek); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound)
 	}
 
-	if err := s.AdminApotekRepository.FindById(tx, &entity.AdminApotek{}, request.IdAdminApotek); err != nil {
+	obat := new(entity.Obat)
+	if request.CurrentAdminApotek {
+		if err := s.ObatRepository.FindByIdAndIdAdminApotekAndLockForUpdate(tx, obat, request.ID, request.IdAdminApotek); err != nil {
+			log.Println(err.Error())
+			return fiber.NewError(fiber.StatusNotFound)
+		}
+	} else if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obat, request.ID); err != nil {
 		log.Println(err.Error())
 		return fiber.NewError(fiber.StatusNotFound)
 	}
