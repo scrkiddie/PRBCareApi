@@ -72,7 +72,7 @@ func (s *AdminApotekService) Get(ctx context.Context, request *model.AdminApotek
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return nil, fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -155,7 +155,7 @@ func (s *AdminApotekService) Update(ctx context.Context, request *model.AdminApo
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	total, err := s.AdminApotekRepository.CountByUsername(tx, request.Username)
@@ -218,7 +218,7 @@ func (s *AdminApotekService) Delete(ctx context.Context, request *model.AdminApo
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := s.ObatRepository.FindByIdAdminApotek(tx, &entity.Obat{}, request.ID); err == nil {
@@ -280,63 +280,27 @@ func (s *AdminApotekService) Login(ctx context.Context, request *model.AdminApot
 	return &model.AdminApotekResponse{Token: token}, nil
 }
 
-func (s *AdminApotekService) Verify(ctx context.Context, request *model.VerifyAdminApotekRequest) (*model.Auth, error) {
+func (s *AdminApotekService) Verify(ctx context.Context, request *model.AdminApotekVerifyRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
 	if err := s.Validator.Struct(request); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.ErrBadRequest
-	}
-
-	tokenString := request.Token
-
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			log.Println("Unexpected signing method:", token.Header["alg"])
-			return nil, fiber.ErrInternalServerError
-		}
-		return []byte(s.Config.GetString("jwt.secret")), nil
-	})
-
-	if err != nil {
-		log.Println("Error parsing token:", err.Error())
-		return nil, fiber.ErrUnauthorized
-	}
-
-	var id int32
-	var role string
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		if subFloat64, ok := claims["sub"].(float64); ok {
-			id = int32(subFloat64)
-		} else {
-			return nil, fiber.ErrUnauthorized
-		}
-		if roleString, ok := claims["role"].(string); ok {
-			role = roleString
-		} else {
-			return nil, fiber.ErrUnauthorized
-		}
-	} else {
-		return nil, fiber.ErrUnauthorized
-	}
-
-	if role != constant.RoleAdminApotek {
-		return nil, fiber.ErrUnauthorized
+		return fiber.ErrBadRequest
 	}
 
 	adminApotek := new(entity.AdminApotek)
-	if err := s.AdminApotekRepository.FindById(tx, adminApotek, id); err != nil {
+	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
 		log.Println(err.Error())
-		return nil, fiber.ErrInternalServerError
+		return fiber.ErrInternalServerError
 	}
 
-	return &model.Auth{ID: adminApotek.ID, Role: role}, nil
+	return nil
 }
 
 func (s *AdminApotekService) Current(ctx context.Context, request *model.AdminApotekGetRequest) (*model.AdminApotekResponse, error) {
@@ -351,7 +315,7 @@ func (s *AdminApotekService) Current(ctx context.Context, request *model.AdminAp
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return nil, fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -379,7 +343,7 @@ func (s *AdminApotekService) CurrentProfileUpdate(ctx context.Context, request *
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	total, err := s.AdminApotekRepository.CountByTelepon(tx, request.Telepon)
@@ -420,7 +384,7 @@ func (s *AdminApotekService) CurrentPasswordUpdate(ctx context.Context, request 
 	adminApotek := new(entity.AdminApotek)
 	if err := s.AdminApotekRepository.FindById(tx, adminApotek, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(adminApotek.Password), []byte(request.CurrentPassword)); err != nil {

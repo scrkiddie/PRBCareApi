@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gofiber/fiber/v3"
 	"log"
+	"prb_care_api/internal/constant"
 	"prb_care_api/internal/middleware"
 	"prb_care_api/internal/model"
 	"prb_care_api/internal/service"
@@ -33,6 +34,9 @@ func (c *AdminSuperController) Login(ctx fiber.Ctx) error {
 
 func (c *AdminSuperController) PasswordUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminSuperPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {

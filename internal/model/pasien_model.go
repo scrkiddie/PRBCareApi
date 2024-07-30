@@ -34,7 +34,7 @@ type PasienCreateRequest struct {
 	BeratBadan       int32  `json:"beratBadan" validate:"required,numeric,gt=0"`
 	TinggiBadan      int32  `json:"tinggiBadan" validate:"required,numeric,gt=0"`
 	TekananDarah     string `json:"tekananDarah" mod:"normalize_spaces" validate:"required,min=3,max=20"`
-	DenyutNadi       int32  `json:"denyutNadi" validate:"required,numeric"`
+	DenyutNadi       int32  `json:"denyutNadi" validate:"required,numeric,gt=0"`
 	HasilLab         string `json:"hasilLab" mod:"normalize_spaces"`
 	HasilEkg         string `json:"hasilEkg" mod:"normalize_spaces"`
 	TanggalPeriksa   int64  `json:"tanggalPeriksa" validate:"required,numeric"`
@@ -48,7 +48,7 @@ type PasienUpdateRequest struct {
 	BeratBadan            int32  `json:"beratBadan" validate:"required,numeric,gt=0"`
 	TinggiBadan           int32  `json:"tinggiBadan" validate:"required,numeric,gt=0"`
 	TekananDarah          string `json:"tekananDarah" mod:"normalize_spaces" validate:"required,min=3,max=20"`
-	DenyutNadi            int32  `json:"denyutNadi" validate:"required,numeric"`
+	DenyutNadi            int32  `json:"denyutNadi" validate:"required,numeric,gt=0"`
 	HasilLab              string `json:"hasilLab" mod:"normalize_spaces"`
 	HasilEkg              string `json:"hasilEkg" mod:"normalize_spaces"`
 	TanggalPeriksa        int64  `json:"tanggalPeriksa" validate:"required,numeric"`

@@ -131,11 +131,11 @@ func (s *PengambilanObatService) Get(ctx context.Context, request *model.Pengamb
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PengambilanObatRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pengambilanObat, request.ID, request.IdAdminPuskesmas, constant.StatusPengambilanObatMenunggu); err != nil {
 			log.Println(err.Error())
-			return nil, fiber.NewError(fiber.StatusNotFound)
+			return nil, fiber.ErrNotFound
 		}
 	} else if err := s.PengambilanObatRepository.FindByIdAndStatus(tx, pengambilanObat, request.ID, constant.StatusPengambilanObatMenunggu); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return nil, fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -164,19 +164,19 @@ func (s *PengambilanObatService) Create(ctx context.Context, request *model.Peng
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, &entity.Pasien{}, request.IdPasien, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.PasienRepository.FindByIdAndStatus(tx, &entity.Pasien{}, request.IdPasien, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 
 	obat := new(entity.Obat)
 	if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obat, request.IdObat); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 	obat.Jumlah -= request.Jumlah
 	if obat.Jumlah < 0 {
@@ -222,31 +222,31 @@ func (s *PengambilanObatService) Update(ctx context.Context, request *model.Peng
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PengambilanObatRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pengambilanObat, request.ID, request.IdAdminPuskesmas, constant.StatusPengambilanObatMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.PengambilanObatRepository.FindByIdAndStatus(tx, pengambilanObat, request.ID, constant.StatusPengambilanObatMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 	// harus pasien status aktif
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, &entity.Pasien{}, request.IdPasien, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.PasienRepository.FindByIdAndStatus(tx, &entity.Pasien{}, request.IdPasien, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 
 	obatNew := new(entity.Obat)
 	if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obatNew, request.IdObat); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	obatOld := new(entity.Obat)
@@ -258,7 +258,7 @@ func (s *PengambilanObatService) Update(ctx context.Context, request *model.Peng
 	} else {
 		if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obatOld, pengambilanObat.IdObat); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 		obatOld.Jumlah += pengambilanObat.Jumlah
 		obatNew.Jumlah -= request.Jumlah
@@ -308,12 +308,12 @@ func (s *PengambilanObatService) Delete(ctx context.Context, request *model.Peng
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PengambilanObatRepository.FindByIdAndIdAdminPuskesmasAndStatusOrStatus(tx, pengambilanObat, request.ID, request.IdAdminPuskesmas, constant.StatusPengambilanObatBatal, constant.StatusPengambilanObatDiambil); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.PengambilanObatRepository.FindByIdAndStatusOrStatus(tx, pengambilanObat, request.ID, constant.StatusPengambilanObatBatal, constant.StatusPengambilanObatDiambil); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 
@@ -343,18 +343,18 @@ func (s *PengambilanObatService) Batal(ctx context.Context, request *model.Penga
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PengambilanObatRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, pengambilanObat, request.ID, request.IdAdminPuskesmas, constant.StatusPengambilanObatMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.PengambilanObatRepository.FindByIdAndStatus(tx, pengambilanObat, request.ID, constant.StatusPengambilanObatMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 	obat := new(entity.Obat)
 	if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obat, pengambilanObat.IdObat); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 	obat.Jumlah += pengambilanObat.Jumlah
 
@@ -391,12 +391,12 @@ func (s *PengambilanObatService) Diambil(ctx context.Context, request *model.Pen
 	if request.IdAdminApotek > 0 {
 		if err := s.PengambilanObatRepository.FindByIdAndIdAdminApotekAndStatus(tx, pengambilanObat, request.ID, request.IdAdminApotek, constant.StatusPengambilanObatMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.PengambilanObatRepository.FindByIdAndStatus(tx, pengambilanObat, request.ID, constant.StatusPengambilanObatMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 

@@ -22,6 +22,9 @@ func NewObatController(obatService *service.ObatService, modifier *mold.Transfor
 }
 func (c *ObatController) List(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminApotek && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.ObatListRequest)
 	if auth.Role == constant.RoleAdminApotek {
 		request.IdAdminApotek = auth.ID
@@ -37,6 +40,9 @@ func (c *ObatController) List(ctx fiber.Ctx) error {
 
 func (c *ObatController) Get(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminApotek {
+		return fiber.ErrForbidden
+	}
 	request := new(model.ObatGetRequest)
 	if auth.Role == constant.RoleAdminApotek {
 		request.IdAdminApotek = auth.ID
@@ -62,6 +68,9 @@ func (c *ObatController) Get(ctx fiber.Ctx) error {
 
 func (c *ObatController) Create(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminApotek {
+		return fiber.ErrForbidden
+	}
 	request := new(model.ObatCreateRequest)
 
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -88,6 +97,9 @@ func (c *ObatController) Create(ctx fiber.Ctx) error {
 
 func (c *ObatController) Update(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminApotek {
+		return fiber.ErrForbidden
+	}
 	request := new(model.ObatUpdateRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -123,6 +135,9 @@ func (c *ObatController) Update(ctx fiber.Ctx) error {
 
 func (c *ObatController) Delete(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminApotek {
+		return fiber.ErrForbidden
+	}
 	request := new(model.ObatDeleteRequest)
 	if auth.Role == constant.RoleAdminApotek {
 		request.IdAdminApotek = auth.ID

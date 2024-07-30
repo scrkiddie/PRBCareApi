@@ -85,11 +85,11 @@ func (s *ObatService) Get(ctx context.Context, request *model.ObatGetRequest) (*
 	if request.IdAdminApotek > 0 {
 		if err := s.ObatRepository.FindByIdAndIdAdminApotek(tx, obat, request.ID, request.IdAdminApotek); err != nil {
 			log.Println(err.Error())
-			return nil, fiber.NewError(fiber.StatusNotFound)
+			return nil, fiber.ErrNotFound
 		}
 	} else if err := s.ObatRepository.FindById(tx, obat, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return nil, fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -117,7 +117,7 @@ func (s *ObatService) Create(ctx context.Context, request *model.ObatCreateReque
 
 	if err := s.AdminApotekRepository.FindById(tx, &entity.AdminApotek{}, request.IdAdminApotek); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	obatEnity := new(entity.Obat)
@@ -149,18 +149,18 @@ func (s *ObatService) Update(ctx context.Context, request *model.ObatUpdateReque
 
 	if err := s.AdminApotekRepository.FindById(tx, &entity.AdminApotek{}, request.IdAdminApotek); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	obat := new(entity.Obat)
 	if request.CurrentAdminApotek {
 		if err := s.ObatRepository.FindByIdAndIdAdminApotekAndLockForUpdate(tx, obat, request.ID, request.IdAdminApotek); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else if err := s.ObatRepository.FindByIdAndLockForUpdate(tx, obat, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	obat.IdAdminApotek = request.IdAdminApotek
@@ -193,11 +193,11 @@ func (s *ObatService) Delete(ctx context.Context, request *model.ObatDeleteReque
 	if request.IdAdminApotek > 0 {
 		if err := s.ObatRepository.FindByIdAndIdAdminApotek(tx, obat, request.ID, request.IdAdminApotek); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else if err := s.ObatRepository.FindById(tx, obat, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := s.PengambilanObatRepository.FindByIdObat(tx, &entity.PengambilanObat{}, request.ID); err == nil {

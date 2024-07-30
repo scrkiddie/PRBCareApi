@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"log"
 	"math"
+	"prb_care_api/internal/constant"
 	"prb_care_api/internal/middleware"
 	"prb_care_api/internal/model"
 	"prb_care_api/internal/service"
@@ -37,6 +38,9 @@ func (c *PenggunaController) Login(ctx fiber.Ctx) error {
 
 func (c *PenggunaController) Current(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RolePengguna {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PenggunaGetRequest)
 	request.ID = auth.ID
 	response, err := c.PenggunaService.Current(ctx.Context(), request)
@@ -50,6 +54,9 @@ func (c *PenggunaController) Current(ctx fiber.Ctx) error {
 
 func (c *PenggunaController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RolePengguna {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PenggunaProfileUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -70,6 +77,10 @@ func (c *PenggunaController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 
 func (c *PenggunaController) CurrentTokenPerangkatUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RolePengguna {
+		return fiber.ErrForbidden
+	}
+
 	request := new(model.PenggunaTokenPerangkatUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -86,6 +97,9 @@ func (c *PenggunaController) CurrentTokenPerangkatUpdate(ctx fiber.Ctx) error {
 
 func (c *PenggunaController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RolePengguna {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PenggunaPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -101,6 +115,10 @@ func (c *PenggunaController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) List(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	response, err := c.PenggunaService.List(ctx.Context())
 	if err != nil {
 		log.Println(err.Error())
@@ -111,6 +129,10 @@ func (c *PenggunaController) List(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) Get(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PenggunaGetRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -132,6 +154,7 @@ func (c *PenggunaController) Get(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) Create(ctx fiber.Ctx) error {
+
 	request := new(model.PenggunaCreateRequest)
 
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -153,6 +176,10 @@ func (c *PenggunaController) Create(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) Update(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PenggunaUpdateRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -183,6 +210,10 @@ func (c *PenggunaController) Update(ctx fiber.Ctx) error {
 }
 
 func (c *PenggunaController) Delete(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PenggunaDeleteRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {

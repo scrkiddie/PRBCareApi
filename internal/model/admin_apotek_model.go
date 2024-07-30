@@ -24,8 +24,8 @@ type AdminApotekProfileUpdateRequest struct {
 	Telepon    string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
 	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3"`
 }
-type VerifyAdminApotekRequest struct {
-	Token string `validate:"required"`
+type AdminApotekVerifyRequest struct {
+	ID int32 `validate:"required,numeric"`
 }
 type AdminApotekGetRequest struct {
 	ID int32 `json:"id" validate:"required,numeric"`

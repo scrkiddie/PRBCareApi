@@ -24,6 +24,9 @@ func NewPasienController(pasienService *service.PasienService, modifier *mold.Tr
 
 func (c *PasienController) Search(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas && auth.Role != constant.RolePengguna {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PasienSearchRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -42,6 +45,9 @@ func (c *PasienController) Search(ctx fiber.Ctx) error {
 
 func (c *PasienController) Get(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PasienGetRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -67,7 +73,9 @@ func (c *PasienController) Get(ctx fiber.Ctx) error {
 
 func (c *PasienController) Create(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
-
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PasienCreateRequest)
 
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -94,7 +102,9 @@ func (c *PasienController) Create(ctx fiber.Ctx) error {
 
 func (c *PasienController) Update(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
-
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PasienUpdateRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -131,7 +141,9 @@ func (c *PasienController) Update(ctx fiber.Ctx) error {
 
 func (c *PasienController) Delete(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
-
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PasienDeleteRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -157,7 +169,9 @@ func (c *PasienController) Delete(ctx fiber.Ctx) error {
 
 func (c *PasienController) Selesai(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
-
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PasienSelesaiRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID

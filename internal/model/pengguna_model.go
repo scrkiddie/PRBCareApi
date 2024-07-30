@@ -26,8 +26,8 @@ type PenggunaProfileUpdateRequest struct {
 	TeleponKeluarga string `json:"teleponKeluarga" validate:"required,min=10,max=16,not_contain_space"`
 	Alamat          string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3"`
 }
-type VerifyPenggunaRequest struct {
-	Token string `validate:"required"`
+type PenggunaVerifyRequest struct {
+	ID int32 `validate:"required,numeric"`
 }
 type PenggunaGetRequest struct {
 	ID int32 `json:"id" validate:"required,numeric"`

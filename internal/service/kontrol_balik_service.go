@@ -110,11 +110,11 @@ func (s *KontrolBalikService) Get(ctx context.Context, request *model.KontrolBal
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.KontrolBalikRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, kontrolBalik, request.ID, request.IdAdminPuskesmas, constant.StatusKontrolBalikMenunggu); err != nil {
 			log.Println(err.Error())
-			return nil, fiber.NewError(fiber.StatusNotFound)
+			return nil, fiber.ErrNotFound
 		}
 	} else if err := s.KontrolBalikRepository.FindByIdAndStatus(tx, kontrolBalik, request.ID, constant.StatusKontrolBalikMenunggu); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return nil, fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -141,12 +141,12 @@ func (s *KontrolBalikService) Create(ctx context.Context, request *model.Kontrol
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, &entity.Pasien{}, request.IdPasien, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.PasienRepository.FindByIdAndStatus(tx, &entity.Pasien{}, request.IdPasien, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 
@@ -181,24 +181,24 @@ func (s *KontrolBalikService) Update(ctx context.Context, request *model.Kontrol
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.KontrolBalikRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, kontrolBalik, request.ID, request.IdAdminPuskesmas, constant.StatusKontrolBalikMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.KontrolBalikRepository.FindByIdAndStatus(tx, kontrolBalik, request.ID, constant.StatusKontrolBalikMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 	// cek harus pasien status aktif untuk edit
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.PasienRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, &entity.Pasien{}, request.IdPasien, request.IdAdminPuskesmas, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.PasienRepository.FindByIdAndStatus(tx, &entity.Pasien{}, request.IdPasien, constant.StatusPasienAktif); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 
@@ -231,12 +231,12 @@ func (s *KontrolBalikService) Delete(ctx context.Context, request *model.Kontrol
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.KontrolBalikRepository.FindByIdAndIdAdminPuskesmasAndStatusOrStatus(tx, kontrolBalik, request.ID, request.IdAdminPuskesmas, constant.StatusKontrolBalikBatal, constant.StatusKontrolBalikSelesai); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.KontrolBalikRepository.FindByIdAndStatusOrStatus(tx, kontrolBalik, request.ID, constant.StatusKontrolBalikBatal, constant.StatusKontrolBalikSelesai); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 
@@ -266,12 +266,12 @@ func (s *KontrolBalikService) Batal(ctx context.Context, request *model.KontrolB
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.KontrolBalikRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, kontrolBalik, request.ID, request.IdAdminPuskesmas, constant.StatusKontrolBalikMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.KontrolBalikRepository.FindByIdAndStatus(tx, kontrolBalik, request.ID, constant.StatusKontrolBalikMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 
@@ -303,12 +303,12 @@ func (s *KontrolBalikService) Selesai(ctx context.Context, request *model.Kontro
 	if request.IdAdminPuskesmas > 0 {
 		if err := s.KontrolBalikRepository.FindByIdAndIdAdminPuskesmasAndStatus(tx, kontrolBalik, request.ID, request.IdAdminPuskesmas, constant.StatusKontrolBalikMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	} else {
 		if err := s.KontrolBalikRepository.FindByIdAndStatus(tx, kontrolBalik, request.ID, constant.StatusKontrolBalikMenunggu); err != nil {
 			log.Println(err.Error())
-			return fiber.NewError(fiber.StatusNotFound)
+			return fiber.ErrNotFound
 		}
 	}
 

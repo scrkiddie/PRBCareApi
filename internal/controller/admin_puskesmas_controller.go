@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"log"
 	"math"
+	"prb_care_api/internal/constant"
 	"prb_care_api/internal/middleware"
 	"prb_care_api/internal/model"
 	"prb_care_api/internal/service"
@@ -37,6 +38,9 @@ func (c *AdminPuskesmasController) Login(ctx fiber.Ctx) error {
 
 func (c *AdminPuskesmasController) Current(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminPuskesmasGetRequest)
 	request.ID = auth.ID
 	response, err := c.AdminPuskesmasService.Current(ctx.Context(), request)
@@ -50,6 +54,9 @@ func (c *AdminPuskesmasController) Current(ctx fiber.Ctx) error {
 
 func (c *AdminPuskesmasController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminPuskesmasProfileUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -70,6 +77,9 @@ func (c *AdminPuskesmasController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 
 func (c *AdminPuskesmasController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminPuskesmasPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -85,6 +95,10 @@ func (c *AdminPuskesmasController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 }
 
 func (c *AdminPuskesmasController) List(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	response, err := c.AdminPuskesmasService.List(ctx.Context())
 	if err != nil {
 		log.Println(err.Error())
@@ -95,6 +109,10 @@ func (c *AdminPuskesmasController) List(ctx fiber.Ctx) error {
 }
 
 func (c *AdminPuskesmasController) Get(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminPuskesmasGetRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -116,6 +134,10 @@ func (c *AdminPuskesmasController) Get(ctx fiber.Ctx) error {
 }
 
 func (c *AdminPuskesmasController) Create(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminPuskesmasCreateRequest)
 
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -137,6 +159,10 @@ func (c *AdminPuskesmasController) Create(ctx fiber.Ctx) error {
 }
 
 func (c *AdminPuskesmasController) Update(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminPuskesmasUpdateRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -167,6 +193,10 @@ func (c *AdminPuskesmasController) Update(ctx fiber.Ctx) error {
 }
 
 func (c *AdminPuskesmasController) Delete(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminPuskesmasDeleteRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {

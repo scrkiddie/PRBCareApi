@@ -50,36 +50,20 @@ func Bootstrap(config *BootstrapConfig) {
 	kontrolBalikController := controller.NewKontrolBalikController(kontrolBalikService)
 	pengambilanObatController := controller.NewPengambilanObatController(pengambilanObatService)
 
-	adminSuperMiddleware := middleware.AdminSuperAuth(adminSuperService)
-	adminPuskesmasMiddleware := middleware.AdminPuskesmasAuth(adminPuskesmasService)
-	adminApotekMiddleware := middleware.AdminApotekAuth(adminApotekService)
-	penggunaMiddleware := middleware.PenggunaAuth(penggunaService)
-	adminSuperOrPuskesmasMiddleware := middleware.AdminSuperOrPuskesmasAuth(adminSuperService, adminPuskesmasService)
-	adminSuperOrApotekMiddleware := middleware.AdminSuperOrApotekAuth(adminSuperService, adminApotekService)
-	adminSuperOrPuskesmasOrApotekMiddleware := middleware.AdminSuperOrPuskesmasOrApotekAuth(adminSuperService, adminPuskesmasService, adminApotekService)
-	adminSuperOrPuskesmasOrPengguna := middleware.AdminSuperOrPuskesmasOrPenggunaAuth(adminSuperService, adminPuskesmasService, penggunaService)
-	adminSuperOrPuskesmasOrApotekOrPengguna := middleware.AdminSuperOrPuskesmasOrApotekOrPenggunaAuth(adminSuperService, adminPuskesmasService, adminApotekService, penggunaService)
+	authMiddleware := middleware.AuthMiddleware(config.Config, adminSuperService, adminPuskesmasService, adminApotekService, penggunaService)
 
 	route := route.Config{
-		App:                                         config.App,
-		AdminSuperController:                        adminSuperController,
-		AdminSuperMiddleware:                        adminSuperMiddleware,
-		AdminPuskesmasController:                    adminPuskesmasController,
-		AdminPuskesmasMiddleware:                    adminPuskesmasMiddleware,
-		AdminApotekController:                       adminApotekController,
-		AdminApotekMiddleware:                       adminApotekMiddleware,
-		AdminSuperOrPuskesmasMiddleware:             adminSuperOrPuskesmasMiddleware,
-		PenggunaController:                          penggunaController,
-		PenggunaMiddleware:                          penggunaMiddleware,
-		AdminSuperOrPuskesmasOrApotekMiddleware:     adminSuperOrPuskesmasOrApotekMiddleware,
-		AdminSuperOrApotekMiddleware:                adminSuperOrApotekMiddleware,
-		ObatController:                              obatController,
-		PasienController:                            pasienController,
-		AdminSuperOrPuskesmasOrPenggunaMiddleware:   adminSuperOrPuskesmasOrPengguna,
-		KontrolBalikController:                      kontrolBalikController,
-		AdminSuperOrPuskesmasOrApotekOrPenggunaAuth: adminSuperOrPuskesmasOrApotekOrPengguna,
-		PengambilanObatController:                   pengambilanObatController,
-		Config:                                      config.Config,
+		App:                       config.App,
+		AuthMiddleware:            authMiddleware,
+		AdminSuperController:      adminSuperController,
+		AdminPuskesmasController:  adminPuskesmasController,
+		AdminApotekController:     adminApotekController,
+		PenggunaController:        penggunaController,
+		ObatController:            obatController,
+		PasienController:          pasienController,
+		KontrolBalikController:    kontrolBalikController,
+		PengambilanObatController: pengambilanObatController,
+		Config:                    config.Config,
 	}
 	route.Setup()
 

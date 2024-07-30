@@ -72,7 +72,7 @@ func (s *AdminPuskesmasService) Get(ctx context.Context, request *model.AdminPus
 	adminPuskesmas := new(entity.AdminPuskesmas)
 	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return nil, fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -155,7 +155,7 @@ func (s *AdminPuskesmasService) Update(ctx context.Context, request *model.Admin
 	adminPuskesmas := new(entity.AdminPuskesmas)
 	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	total, err := s.AdminPuskesmasRepository.CountByUsername(tx, request.Username)
@@ -218,7 +218,7 @@ func (s *AdminPuskesmasService) Delete(ctx context.Context, request *model.Admin
 	adminPuskesmas := new(entity.AdminPuskesmas)
 	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := s.PasienRepository.FindByIdAdminPuskesmas(tx, &entity.Pasien{}, request.ID); err == nil {
@@ -280,63 +280,27 @@ func (s *AdminPuskesmasService) Login(ctx context.Context, request *model.AdminP
 	return &model.AdminPuskesmasResponse{Token: token}, nil
 }
 
-func (s *AdminPuskesmasService) Verify(ctx context.Context, request *model.VerifyAdminPuskesmasRequest) (*model.Auth, error) {
+func (s *AdminPuskesmasService) Verify(ctx context.Context, request *model.AdminPuskesmasVerifyRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
 	if err := s.Validator.Struct(request); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.ErrBadRequest
-	}
-
-	tokenString := request.Token
-
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			log.Println("Unexpected signing method:", token.Header["alg"])
-			return nil, fiber.ErrInternalServerError
-		}
-		return []byte(s.Config.GetString("jwt.secret")), nil
-	})
-
-	if err != nil {
-		log.Println("Error parsing token:", err.Error())
-		return nil, fiber.ErrUnauthorized
-	}
-
-	var id int32
-	var role string
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		if subFloat64, ok := claims["sub"].(float64); ok {
-			id = int32(subFloat64)
-		} else {
-			return nil, fiber.ErrUnauthorized
-		}
-		if roleString, ok := claims["role"].(string); ok {
-			role = roleString
-		} else {
-			return nil, fiber.ErrUnauthorized
-		}
-	} else {
-		return nil, fiber.ErrUnauthorized
-	}
-
-	if role != constant.RoleAdminPuskesmas {
-		return nil, fiber.ErrUnauthorized
+		return fiber.ErrBadRequest
 	}
 
 	adminPuskesmas := new(entity.AdminPuskesmas)
-	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, id); err != nil {
+	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
 		log.Println(err.Error())
-		return nil, fiber.ErrInternalServerError
+		return fiber.ErrInternalServerError
 	}
 
-	return &model.Auth{ID: adminPuskesmas.ID, Role: role}, nil
+	return nil
 }
 
 func (s *AdminPuskesmasService) Current(ctx context.Context, request *model.AdminPuskesmasGetRequest) (*model.AdminPuskesmasResponse, error) {
@@ -351,7 +315,7 @@ func (s *AdminPuskesmasService) Current(ctx context.Context, request *model.Admi
 	adminPuskesmas := new(entity.AdminPuskesmas)
 	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return nil, fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
@@ -379,7 +343,7 @@ func (s *AdminPuskesmasService) CurrentProfileUpdate(ctx context.Context, reques
 	adminPuskesmas := new(entity.AdminPuskesmas)
 	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	total, err := s.AdminPuskesmasRepository.CountByTelepon(tx, request.Telepon)
@@ -420,7 +384,7 @@ func (s *AdminPuskesmasService) CurrentPasswordUpdate(ctx context.Context, reque
 	adminPuskesmas := new(entity.AdminPuskesmas)
 	if err := s.AdminPuskesmasRepository.FindById(tx, adminPuskesmas, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(adminPuskesmas.Password), []byte(request.CurrentPassword)); err != nil {

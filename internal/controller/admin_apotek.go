@@ -5,6 +5,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 	"log"
 	"math"
+	"prb_care_api/internal/constant"
 	"prb_care_api/internal/middleware"
 	"prb_care_api/internal/model"
 	"prb_care_api/internal/service"
@@ -37,6 +38,9 @@ func (c *AdminApotekController) Login(ctx fiber.Ctx) error {
 
 func (c *AdminApotekController) Current(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminApotek {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminApotekGetRequest)
 	request.ID = auth.ID
 	response, err := c.AdminApotekService.Current(ctx.Context(), request)
@@ -50,6 +54,9 @@ func (c *AdminApotekController) Current(ctx fiber.Ctx) error {
 
 func (c *AdminApotekController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminApotek {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminApotekProfileUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -70,6 +77,9 @@ func (c *AdminApotekController) CurrentProfileUpdate(ctx fiber.Ctx) error {
 
 func (c *AdminApotekController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminApotek {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminApotekPasswordUpdateRequest)
 	request.ID = auth.ID
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -85,6 +95,10 @@ func (c *AdminApotekController) CurrentPasswordUpdate(ctx fiber.Ctx) error {
 }
 
 func (c *AdminApotekController) List(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	response, err := c.AdminApotekService.List(ctx.Context())
 	if err != nil {
 		log.Println(err.Error())
@@ -95,6 +109,10 @@ func (c *AdminApotekController) List(ctx fiber.Ctx) error {
 }
 
 func (c *AdminApotekController) Get(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminApotekGetRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -116,6 +134,10 @@ func (c *AdminApotekController) Get(ctx fiber.Ctx) error {
 }
 
 func (c *AdminApotekController) Create(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminApotekCreateRequest)
 
 	if err := ctx.Bind().JSON(request); err != nil {
@@ -137,6 +159,10 @@ func (c *AdminApotekController) Create(ctx fiber.Ctx) error {
 }
 
 func (c *AdminApotekController) Update(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminApotekUpdateRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -167,6 +193,10 @@ func (c *AdminApotekController) Update(ctx fiber.Ctx) error {
 }
 
 func (c *AdminApotekController) Delete(ctx fiber.Ctx) error {
+	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper {
+		return fiber.ErrForbidden
+	}
 	request := new(model.AdminApotekDeleteRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {

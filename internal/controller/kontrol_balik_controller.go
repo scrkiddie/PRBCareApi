@@ -21,6 +21,9 @@ func NewKontrolBalikController(kontrolBalikService *service.KontrolBalikService)
 
 func (c *KontrolBalikController) Search(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas && auth.Role != constant.RolePengguna {
+		return fiber.ErrForbidden
+	}
 	request := new(model.KontrolBalikSearchRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -38,6 +41,9 @@ func (c *KontrolBalikController) Search(ctx fiber.Ctx) error {
 
 func (c *KontrolBalikController) Get(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.KontrolBalikGetRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -62,6 +68,9 @@ func (c *KontrolBalikController) Get(ctx fiber.Ctx) error {
 
 func (c *KontrolBalikController) Create(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.KontrolBalikCreateRequest)
 	if err := ctx.Bind().JSON(request); err != nil {
 		log.Println(err.Error())
@@ -79,6 +88,9 @@ func (c *KontrolBalikController) Create(ctx fiber.Ctx) error {
 
 func (c *KontrolBalikController) Update(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.KontrolBalikUpdateRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -106,6 +118,9 @@ func (c *KontrolBalikController) Update(ctx fiber.Ctx) error {
 
 func (c *KontrolBalikController) Delete(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.KontrolBalikDeleteRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -129,6 +144,9 @@ func (c *KontrolBalikController) Delete(ctx fiber.Ctx) error {
 
 func (c *KontrolBalikController) Batal(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.KontrolBalikBatalRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -152,6 +170,9 @@ func (c *KontrolBalikController) Batal(ctx fiber.Ctx) error {
 
 func (c *KontrolBalikController) Selesai(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.KontrolBalikSelesaiRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID

@@ -18,7 +18,7 @@ func main() {
 		Config:   viperConfig,
 		Modifier: mold,
 	})
-	err := app.Listen("localhost:" + viperConfig.GetString("web.port"))
+	err := app.Listen("0.0.0.0:" + viperConfig.GetString("web.port"))
 	if err != nil {
 		log.Fatalln(err)
 	}

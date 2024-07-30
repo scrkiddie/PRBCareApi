@@ -21,6 +21,7 @@ func NewPengambilanObatController(pengambilanObatService *service.PengambilanOba
 
 func (c *PengambilanObatController) Search(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+
 	request := new(model.PengambilanObatSearchRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -40,6 +41,9 @@ func (c *PengambilanObatController) Search(ctx fiber.Ctx) error {
 
 func (c *PengambilanObatController) Get(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PengambilanObatGetRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -64,6 +68,9 @@ func (c *PengambilanObatController) Get(ctx fiber.Ctx) error {
 
 func (c *PengambilanObatController) Create(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PengambilanObatCreateRequest)
 	if err := ctx.Bind().JSON(request); err != nil {
 		log.Println(err.Error())
@@ -81,6 +88,9 @@ func (c *PengambilanObatController) Create(ctx fiber.Ctx) error {
 
 func (c *PengambilanObatController) Update(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PengambilanObatUpdateRequest)
 	id, err := strconv.Atoi(ctx.Params("id"))
 	if err != nil {
@@ -108,6 +118,9 @@ func (c *PengambilanObatController) Update(ctx fiber.Ctx) error {
 
 func (c *PengambilanObatController) Delete(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PengambilanObatDeleteRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -131,6 +144,9 @@ func (c *PengambilanObatController) Delete(ctx fiber.Ctx) error {
 
 func (c *PengambilanObatController) Batal(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminPuskesmas {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PengambilanObatBatalRequest)
 	if auth.Role == constant.RoleAdminPuskesmas {
 		request.IdAdminPuskesmas = auth.ID
@@ -154,6 +170,9 @@ func (c *PengambilanObatController) Batal(ctx fiber.Ctx) error {
 
 func (c *PengambilanObatController) Diambil(ctx fiber.Ctx) error {
 	auth := middleware.GetAuth(ctx)
+	if auth.Role != constant.RoleAdminSuper && auth.Role != constant.RoleAdminApotek {
+		return fiber.ErrForbidden
+	}
 	request := new(model.PengambilanObatDiambilRequest)
 	if auth.Role == constant.RoleAdminApotek {
 		request.IdAdminApotek = auth.ID

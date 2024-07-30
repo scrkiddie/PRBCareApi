@@ -84,7 +84,7 @@ func (s *AdminSuperService) PasswordUpdate(ctx context.Context, request *model.A
 	adminSuper := new(entity.AdminSuper)
 	if err := s.AdminSuperRepository.FindById(tx, adminSuper, request.ID); err != nil {
 		log.Println(err.Error())
-		return fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(adminSuper.Password), []byte(request.CurrentPassword)); err != nil {
@@ -112,61 +112,25 @@ func (s *AdminSuperService) PasswordUpdate(ctx context.Context, request *model.A
 	return nil
 }
 
-func (s *AdminSuperService) Verify(ctx context.Context, request *model.VerifyAdminSuperRequest) (*model.Auth, error) {
+func (s *AdminSuperService) Verify(ctx context.Context, request *model.AdminSuperVerifyRequest) error {
 	tx := s.DB.WithContext(ctx).Begin()
 	defer tx.Rollback()
 
 	if err := s.Validator.Struct(request); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.ErrBadRequest
-	}
-
-	tokenString := request.Token
-
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			log.Println("Unexpected signing method:", token.Header["alg"])
-			return nil, fiber.ErrInternalServerError
-		}
-		return []byte(s.Config.GetString("jwt.secret")), nil
-	})
-
-	if err != nil {
-		log.Println("Error parsing token:", err.Error())
-		return nil, fiber.ErrUnauthorized
-	}
-
-	var id int32
-	var role string
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		if subFloat64, ok := claims["sub"].(float64); ok {
-			id = int32(subFloat64)
-		} else {
-			return nil, fiber.ErrUnauthorized
-		}
-		if roleString, ok := claims["role"].(string); ok {
-			role = roleString
-		} else {
-			return nil, fiber.ErrUnauthorized
-		}
-	} else {
-		return nil, fiber.ErrUnauthorized
-	}
-
-	if role != constant.RoleAdminSuper {
-		return nil, fiber.ErrUnauthorized
+		return fiber.ErrBadRequest
 	}
 
 	adminSuper := new(entity.AdminSuper)
-	if err := s.AdminSuperRepository.FindById(tx, adminSuper, id); err != nil {
+	if err := s.AdminSuperRepository.FindById(tx, adminSuper, request.ID); err != nil {
 		log.Println(err.Error())
-		return nil, fiber.NewError(fiber.StatusNotFound)
+		return fiber.ErrNotFound
 	}
 
 	if err := tx.Commit().Error; err != nil {
 		log.Println(err.Error())
-		return nil, fiber.ErrInternalServerError
+		return fiber.ErrInternalServerError
 	}
 
-	return &model.Auth{ID: adminSuper.ID, Role: role}, nil
+	return nil
 }

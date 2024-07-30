@@ -23,7 +23,7 @@ type ObatCreateRequest struct {
 type ObatUpdateRequest struct {
 	ID                 int32  `json:"id" validate:"required,numeric"`
 	NamaObat           string `json:"namaObat" mod:"normalize_spaces" validate:"required,min=3,max=50"`
-	Jumlah             int32  `json:"jumlah" validate:"required,numeric,gt=0"`
+	Jumlah             int32  `json:"jumlah" validate:"numeric,gte=0"`
 	CurrentAdminApotek bool   `validate:"omitempty"`
 	IdAdminApotek      int32  `json:"idAdminApotek" validate:"required,numeric"`
 }
