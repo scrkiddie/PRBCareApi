@@ -12,12 +12,15 @@ func AdminSuperAuth(adminSuperService *service.AdminSuperService) fiber.Handler 
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 		token := parts[1]
 
@@ -30,7 +33,7 @@ func AdminSuperAuth(adminSuperService *service.AdminSuperService) fiber.Handler 
 			return fiber.ErrUnauthorized
 		}
 
-		log.Printf("user: %+v", auth.ID)
+		log.Printf("Authenticated as AdminSuper: %+v", auth.ID)
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
@@ -40,12 +43,15 @@ func AdminPuskesmasAuth(adminPuskesmasService *service.AdminPuskesmasService) fi
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 		token := parts[1]
 
@@ -58,7 +64,7 @@ func AdminPuskesmasAuth(adminPuskesmasService *service.AdminPuskesmasService) fi
 			return fiber.ErrUnauthorized
 		}
 
-		log.Printf("user: %+v", auth.ID)
+		log.Printf("Authenticated as AdminPuskesmas: %+v", auth.ID)
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
@@ -68,12 +74,15 @@ func AdminApotekAuth(adminApotekService *service.AdminApotekService) fiber.Handl
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 		token := parts[1]
 		log.Printf("Token: %s", token)
@@ -85,7 +94,7 @@ func AdminApotekAuth(adminApotekService *service.AdminApotekService) fiber.Handl
 			return fiber.ErrUnauthorized
 		}
 
-		log.Printf("user: %+v", auth.ID)
+		log.Printf("Authenticated as AdminApotek: %+v", auth.ID)
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
@@ -95,12 +104,15 @@ func AdminSuperOrPuskesmasAuth(adminSuperService *service.AdminSuperService, adm
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 		token := parts[1]
 		log.Printf("Token: %s", token)
@@ -130,12 +142,15 @@ func PenggunaAuth(adminApotekService *service.PenggunaService) fiber.Handler {
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 		token := parts[1]
 		log.Printf("Token: %s", token)
@@ -147,7 +162,7 @@ func PenggunaAuth(adminApotekService *service.PenggunaService) fiber.Handler {
 			return fiber.ErrUnauthorized
 		}
 
-		log.Printf("user: %+v", auth.ID)
+		log.Printf("Authenticated as Pengguna: %+v", auth.ID)
 		ctx.Locals("auth", auth)
 		return ctx.Next()
 	}
@@ -156,12 +171,15 @@ func AdminSuperOrPuskesmasOrApotekAuth(adminSuperService *service.AdminSuperServ
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 
 		token := parts[1]
@@ -199,12 +217,15 @@ func AdminSuperOrApotekAuth(adminSuperService *service.AdminSuperService, adminA
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 
 		token := parts[1]
@@ -234,12 +255,15 @@ func AdminSuperOrPuskesmasOrPenggunaAuth(adminSuperService *service.AdminSuperSe
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 
 		token := parts[1]
@@ -277,12 +301,15 @@ func AdminSuperOrPuskesmasOrApotekOrPenggunaAuth(adminSuperService *service.Admi
 	return func(ctx fiber.Ctx) error {
 		tokenWithBearer := ctx.Get("Authorization")
 		if tokenWithBearer == "" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
 		}
 
 		parts := strings.Split(tokenWithBearer, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
+			log.Println("Token: Token tidak ditemukan dalam request")
 			return fiber.ErrUnauthorized
+
 		}
 		token := parts[1]
 		log.Printf("Token: %s", token)

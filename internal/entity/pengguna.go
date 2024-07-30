@@ -1,7 +1,7 @@
 package entity
 
 type Pengguna struct {
-	ID              int    `gorm:"column:id;primaryKey;type:integer;autoIncrement;not null"`
+	ID              int32  `gorm:"column:id;primaryKey;type:integer;autoIncrement;not null"`
 	TokenPerangkat  string `gorm:"column:token_perangkat;type:varchar(255)"`
 	NamaLengkap     string `gorm:"column:nama_lengkap;type:varchar(100);not null"`
 	Telepon         string `gorm:"column:telepon;type:varchar(15);unique;not null"`

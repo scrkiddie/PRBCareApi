@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gofiber/fiber/v3"
 	"log"
+	"math"
 	"prb_care_api/internal/constant"
 	"prb_care_api/internal/middleware"
 	"prb_care_api/internal/model"
@@ -46,7 +47,11 @@ func (c *KontrolBalikController) Get(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	response, err := c.KontrolBalikService.Get(ctx.Context(), request)
 	if err != nil {
 		log.Println(err.Error())
@@ -80,7 +85,11 @@ func (c *KontrolBalikController) Update(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	if err := ctx.Bind().JSON(request); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
@@ -106,7 +115,11 @@ func (c *KontrolBalikController) Delete(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	if err := c.KontrolBalikService.Delete(ctx.Context(), request); err != nil {
 		log.Println(err.Error())
 		return err
@@ -125,7 +138,11 @@ func (c *KontrolBalikController) Batal(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	if err := c.KontrolBalikService.Batal(ctx.Context(), request); err != nil {
 		log.Println(err.Error())
 		return err
@@ -144,7 +161,11 @@ func (c *KontrolBalikController) Selesai(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	if err := c.KontrolBalikService.Selesai(ctx.Context(), request); err != nil {
 		log.Println(err.Error())
 		return err

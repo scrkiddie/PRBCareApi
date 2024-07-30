@@ -16,7 +16,7 @@ func NewAdminApotekRepository() *AdminApotekRepository {
 func (r *AdminApotekRepository) FindByUsername(db *gorm.DB, adminApotek *entity.AdminApotek, username string) error {
 	return db.Where("username = ?", username).First(adminApotek).Error
 }
-func (r *AdminApotekRepository) FindById(db *gorm.DB, adminApotek *entity.AdminApotek, id int) error {
+func (r *AdminApotekRepository) FindById(db *gorm.DB, adminApotek *entity.AdminApotek, id int32) error {
 	return db.Where("id = ?", id).First(adminApotek).Error
 }
 func (r *AdminApotekRepository) CountByUsername(db *gorm.DB, username any) (int64, error) {

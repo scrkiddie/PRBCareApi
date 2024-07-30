@@ -33,6 +33,6 @@ func (r *AdminPuskesmasRepository) CountByTelepon(db *gorm.DB, telepon any) (int
 func (r *AdminPuskesmasRepository) FindAll(db *gorm.DB, adminPuskesmas *[]entity.AdminPuskesmas) error {
 	return db.Find(adminPuskesmas).Error
 }
-func (r *AdminPuskesmasRepository) FindById(db *gorm.DB, adminPuskesmas *entity.AdminPuskesmas, id int) error {
+func (r *AdminPuskesmasRepository) FindById(db *gorm.DB, adminPuskesmas *entity.AdminPuskesmas, id int32) error {
 	return db.Where("id = ?", id).First(adminPuskesmas).Error
 }

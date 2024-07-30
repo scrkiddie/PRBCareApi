@@ -304,11 +304,11 @@ func (s *AdminPuskesmasService) Verify(ctx context.Context, request *model.Verif
 		return nil, fiber.ErrUnauthorized
 	}
 
-	var id int
+	var id int32
 	var role string
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if subFloat64, ok := claims["sub"].(float64); ok {
-			id = int(subFloat64)
+			id = int32(subFloat64)
 		} else {
 			return nil, fiber.ErrUnauthorized
 		}

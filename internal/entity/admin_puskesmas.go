@@ -1,7 +1,7 @@
 package entity
 
 type AdminPuskesmas struct {
-	ID            int    `gorm:"column:id;primaryKey;type:integer;autoIncrement;not null"`
+	ID            int32  `gorm:"column:id;primaryKey;type:integer;autoIncrement;not null"`
 	NamaPuskesmas string `gorm:"column:nama_puskesmas;type:varchar(100);not null"`
 	Telepon       string `gorm:"column:telepon;type:varchar(15);unique;not null"`
 	Alamat        string `gorm:"column:alamat;type:text;not null"`

@@ -1,7 +1,7 @@
 package model
 
 type AdminApotekResponse struct {
-	ID         int    `json:"id,omitempty"`
+	ID         int32  `json:"id,omitempty"`
 	NamaApotek string `json:"namaApotek"`
 	Telepon    string `json:"telepon"`
 	Alamat     string `json:"alamat"`
@@ -13,13 +13,13 @@ type AdminApotekLoginRequest struct {
 	Password string `json:"password" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 }
 type AdminApotekPasswordUpdateRequest struct {
-	ID              int    `validate:"required,numeric"`
+	ID              int32  `validate:"required,numeric"`
 	CurrentPassword string `json:"currentPassword" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 	NewPassword     string `json:"newPassword" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=NewPassword"`
 }
 type AdminApotekProfileUpdateRequest struct {
-	ID         int    `json:"id" validate:"required,numeric"`
+	ID         int32  `json:"id" validate:"required,numeric"`
 	NamaApotek string `json:"namaApotek" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 	Telepon    string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
 	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3"`
@@ -28,7 +28,7 @@ type VerifyAdminApotekRequest struct {
 	Token string `validate:"required"`
 }
 type AdminApotekGetRequest struct {
-	ID int `json:"id" validate:"required,numeric"`
+	ID int32 `json:"id" validate:"required,numeric"`
 }
 type AdminApotekCreateRequest struct {
 	NamaApotek string `json:"namaApotek" mod:"normalize_spaces" validate:"required,min=3,max=50"`
@@ -38,7 +38,7 @@ type AdminApotekCreateRequest struct {
 	Password   string `json:"password" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 }
 type AdminApotekUpdateRequest struct {
-	ID         int    `json:"id" validate:"required,numeric"`
+	ID         int32  `json:"id" validate:"required,numeric"`
 	NamaApotek string `json:"namaApotek" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 	Telepon    string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
 	Alamat     string `json:"alamat" mod:"normalize_spaces" validate:"required,min=3"`
@@ -46,5 +46,5 @@ type AdminApotekUpdateRequest struct {
 	Password   string `json:"password" validate:"omitempty,min=6,max=255,is_password_format,not_contain_space"`
 }
 type AdminApotekDeleteRequest struct {
-	ID int `json:"id" validate:"required,numeric"`
+	ID int32 `json:"id" validate:"required,numeric"`
 }

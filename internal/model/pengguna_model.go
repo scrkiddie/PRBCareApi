@@ -1,7 +1,7 @@
 package model
 
 type PenggunaResponse struct {
-	ID              int    `json:"id,omitempty"`
+	ID              int32  `json:"id,omitempty"`
 	NamaLengkap     string `json:"namaLengkap"`
 	Telepon         string `json:"telepon"`
 	TeleponKeluarga string `json:"teleponKeluarga"`
@@ -14,13 +14,13 @@ type PenggunaLoginRequest struct {
 	Password string `json:"password" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 }
 type PenggunaPasswordUpdateRequest struct {
-	ID              int    `validate:"required,numeric"`
+	ID              int32  `validate:"required,numeric"`
 	CurrentPassword string `json:"currentPassword" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 	NewPassword     string `json:"newPassword" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 	ConfirmPassword string `json:"confirmPassword" validate:"required,eqfield=NewPassword"`
 }
 type PenggunaProfileUpdateRequest struct {
-	ID              int    `json:"id" validate:"required,numeric"`
+	ID              int32  `json:"id" validate:"required,numeric"`
 	NamaLengkap     string `json:"namaLengkap" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 	Telepon         string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
 	TeleponKeluarga string `json:"teleponKeluarga" validate:"required,min=10,max=16,not_contain_space"`
@@ -30,7 +30,7 @@ type VerifyPenggunaRequest struct {
 	Token string `validate:"required"`
 }
 type PenggunaGetRequest struct {
-	ID int `json:"id" validate:"required,numeric"`
+	ID int32 `json:"id" validate:"required,numeric"`
 }
 type PenggunaCreateRequest struct {
 	NamaLengkap     string `json:"namaLengkap" mod:"normalize_spaces" validate:"required,min=3,max=50"`
@@ -41,7 +41,7 @@ type PenggunaCreateRequest struct {
 	Password        string `json:"password" validate:"required,min=6,max=255,is_password_format,not_contain_space"`
 }
 type PenggunaUpdateRequest struct {
-	ID              int    `json:"id" validate:"required,numeric"`
+	ID              int32  `json:"id" validate:"required,numeric"`
 	NamaLengkap     string `json:"namaLengkap" mod:"normalize_spaces" validate:"required,min=3,max=50"`
 	Telepon         string `json:"telepon" validate:"required,min=10,max=16,not_contain_space"`
 	TeleponKeluarga string `json:"teleponKeluarga" validate:"required,min=10,max=16,not_contain_space"`
@@ -50,9 +50,9 @@ type PenggunaUpdateRequest struct {
 	Password        string `json:"password" validate:"omitempty,min=6,max=255,is_password_format,not_contain_space"`
 }
 type PenggunaDeleteRequest struct {
-	ID int `json:"id" validate:"required,numeric"`
+	ID int32 `json:"id" validate:"required,numeric"`
 }
 type PenggunaTokenPerangkatUpdateRequest struct {
-	ID             int    `validate:"required,numeric"`
+	ID             int32  `validate:"required,numeric"`
 	TokenPerangkat string `json:"tokenPerangkat" validate:"required,min=163,max=255"`
 }

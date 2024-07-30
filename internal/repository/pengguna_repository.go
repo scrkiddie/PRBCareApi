@@ -16,7 +16,7 @@ func NewPenggunaRepository() *PenggunaRepository {
 func (r *PenggunaRepository) FindByUsername(db *gorm.DB, pengguna *entity.Pengguna, username string) error {
 	return db.Where("username = ?", username).First(pengguna).Error
 }
-func (r *PenggunaRepository) FindById(db *gorm.DB, pengguna *entity.Pengguna, id int) error {
+func (r *PenggunaRepository) FindById(db *gorm.DB, pengguna *entity.Pengguna, id int32) error {
 	return db.Where("id = ?", id).First(pengguna).Error
 }
 func (r *PenggunaRepository) CountByUsername(db *gorm.DB, username any) (int64, error) {

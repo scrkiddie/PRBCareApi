@@ -4,6 +4,7 @@ import (
 	"github.com/go-playground/mold/v4"
 	"github.com/gofiber/fiber/v3"
 	"log"
+	"math"
 	"prb_care_api/internal/middleware"
 	"prb_care_api/internal/model"
 	"prb_care_api/internal/service"
@@ -116,7 +117,11 @@ func (c *PenggunaController) Get(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	response, err := c.PenggunaService.Get(ctx.Context(), request)
 	if err != nil {
 		log.Println(err.Error())
@@ -154,7 +159,11 @@ func (c *PenggunaController) Update(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	if err := ctx.Bind().JSON(request); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
@@ -180,7 +189,11 @@ func (c *PenggunaController) Delete(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 
 	if err := c.PenggunaService.Delete(ctx.UserContext(), request); err != nil {
 		log.Println(err.Error())

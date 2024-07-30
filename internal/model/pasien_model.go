@@ -1,16 +1,16 @@
 package model
 
 type PasienResponse struct {
-	ID               int                     `json:"id"`
+	ID               int32                   `json:"id"`
 	NoRekamMedis     string                  `json:"noRekamMedis"`
 	Pengguna         *PenggunaResponse       `json:"pengguna,omitempty"`
-	IdPengguna       int                     `json:"idPengguna,omitempty"`
+	IdPengguna       int32                   `json:"idPengguna,omitempty"`
 	AdminPuskesmas   *AdminPuskesmasResponse `json:"adminPuskesmas,omitempty"`
-	IdAdminPuskesmas int                     `json:"idAdminPuskesmas,omitempty"`
-	BeratBadan       float64                 `json:"beratBadan"`
-	TinggiBadan      float64                 `json:"tinggiBadan"`
+	IdAdminPuskesmas int32                   `json:"idAdminPuskesmas,omitempty"`
+	BeratBadan       int32                   `json:"beratBadan"`
+	TinggiBadan      int32                   `json:"tinggiBadan"`
 	TekananDarah     string                  `json:"tekananDarah"`
-	DenyutNadi       int                     `json:"denyutNadi"`
+	DenyutNadi       int32                   `json:"denyutNadi"`
 	HasilLab         string                  `json:"hasilLab"`
 	HasilEkg         string                  `json:"hasilEkg"`
 	TanggalPeriksa   int64                   `json:"tanggalPeriksa"`
@@ -18,47 +18,47 @@ type PasienResponse struct {
 }
 
 type PasienSearchRequest struct {
-	IdPengguna       int    `validate:"omitempty,numeric"`
-	IdAdminPuskesmas int    `validate:"omitempty,numeric"`
+	IdPengguna       int32  `validate:"omitempty,numeric"`
+	IdAdminPuskesmas int32  `validate:"omitempty,numeric"`
 	Status           string `json:"status" validate:"omitempty,oneof=aktif selesai"`
 }
 type PasienGetRequest struct {
-	ID               int `json:"id" validate:"required,numeric"`
-	IdPengguna       int `validate:"omitempty,numeric"`
-	IdAdminPuskesmas int `validate:"omitempty,numeric"`
+	ID               int32 `json:"id" validate:"required,numeric"`
+	IdPengguna       int32 `validate:"omitempty,numeric"`
+	IdAdminPuskesmas int32 `validate:"omitempty,numeric"`
 }
 type PasienCreateRequest struct {
-	NoRekamMedis     string  `json:"noRekamMedis" mod:"normalize_spaces" validate:"required,min=3,max=50"`
-	IdPengguna       int     `json:"idPengguna" validate:"required,numeric"`
-	IdAdminPuskesmas int     `json:"idAdminPuskesmas" validate:"required,numeric"`
-	BeratBadan       float64 `json:"beratBadan" validate:"required,numeric"`
-	TinggiBadan      float64 `json:"tinggiBadan" validate:"required,numeric"`
-	TekananDarah     string  `json:"tekananDarah" mod:"normalize_spaces" validate:"required,min=3,max=20"`
-	DenyutNadi       int     `json:"denyutNadi" validate:"required,numeric"`
-	HasilLab         string  `json:"hasilLab" mod:"normalize_spaces"`
-	HasilEkg         string  `json:"hasilEkg" mod:"normalize_spaces"`
-	TanggalPeriksa   int64   `json:"tanggalPeriksa" validate:"required,numeric"`
+	NoRekamMedis     string `json:"noRekamMedis" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	IdPengguna       int32  `json:"idPengguna" validate:"required,numeric"`
+	IdAdminPuskesmas int32  `json:"idAdminPuskesmas" validate:"required,numeric"`
+	BeratBadan       int32  `json:"beratBadan" validate:"required,numeric,gt=0"`
+	TinggiBadan      int32  `json:"tinggiBadan" validate:"required,numeric,gt=0"`
+	TekananDarah     string `json:"tekananDarah" mod:"normalize_spaces" validate:"required,min=3,max=20"`
+	DenyutNadi       int32  `json:"denyutNadi" validate:"required,numeric"`
+	HasilLab         string `json:"hasilLab" mod:"normalize_spaces"`
+	HasilEkg         string `json:"hasilEkg" mod:"normalize_spaces"`
+	TanggalPeriksa   int64  `json:"tanggalPeriksa" validate:"required,numeric"`
 }
 type PasienUpdateRequest struct {
-	ID                    int     `json:"id" validate:"required,numeric"`
-	NoRekamMedis          string  `json:"noRekamMedis" mod:"normalize_spaces" validate:"required,min=3,max=50"`
-	IdPengguna            int     `json:"idPengguna" validate:"required,numeric"`
-	CurrentAdminPuskesmas bool    `validate:"omitempty"`
-	IdAdminPuskesmas      int     `json:"idAdminPuskesmas" validate:"required,numeric"`
-	BeratBadan            float64 `json:"beratBadan" validate:"required,numeric"`
-	TinggiBadan           float64 `json:"tinggiBadan" validate:"required,numeric"`
-	TekananDarah          string  `json:"tekananDarah" mod:"normalize_spaces" validate:"required,min=3,max=20"`
-	DenyutNadi            int     `json:"denyutNadi" validate:"required,numeric"`
-	HasilLab              string  `json:"hasilLab" mod:"normalize_spaces"`
-	HasilEkg              string  `json:"hasilEkg" mod:"normalize_spaces"`
-	TanggalPeriksa        int64   `json:"tanggalPeriksa" validate:"required,numeric"`
+	ID                    int32  `json:"id" validate:"required,numeric"`
+	NoRekamMedis          string `json:"noRekamMedis" mod:"normalize_spaces" validate:"required,min=3,max=50"`
+	IdPengguna            int32  `json:"idPengguna" validate:"required,numeric"`
+	CurrentAdminPuskesmas bool   `validate:"omitempty"`
+	IdAdminPuskesmas      int32  `json:"idAdminPuskesmas" validate:"required,numeric"`
+	BeratBadan            int32  `json:"beratBadan" validate:"required,numeric,gt=0"`
+	TinggiBadan           int32  `json:"tinggiBadan" validate:"required,numeric,gt=0"`
+	TekananDarah          string `json:"tekananDarah" mod:"normalize_spaces" validate:"required,min=3,max=20"`
+	DenyutNadi            int32  `json:"denyutNadi" validate:"required,numeric"`
+	HasilLab              string `json:"hasilLab" mod:"normalize_spaces"`
+	HasilEkg              string `json:"hasilEkg" mod:"normalize_spaces"`
+	TanggalPeriksa        int64  `json:"tanggalPeriksa" validate:"required,numeric"`
 }
 type PasienDeleteRequest struct {
-	ID               int `json:"id" validate:"required,numeric"`
-	IdAdminPuskesmas int `validate:"omitempty,numeric"`
+	ID               int32 `json:"id" validate:"required,numeric"`
+	IdAdminPuskesmas int32 `validate:"omitempty,numeric"`
 }
 
 type PasienSelesaiRequest struct {
-	ID               int `json:"id" validate:"required,numeric"`
-	IdAdminPuskesmas int `validate:"omitempty,numeric"`
+	ID               int32 `json:"id" validate:"required,numeric"`
+	IdAdminPuskesmas int32 `validate:"omitempty,numeric"`
 }

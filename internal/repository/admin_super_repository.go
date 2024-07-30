@@ -16,6 +16,6 @@ func NewAdminSuperRepository() *AdminSuperRepository {
 func (r *AdminSuperRepository) FindByUsername(db *gorm.DB, adminSuper *entity.AdminSuper, username string) error {
 	return db.Where("username = ?", username).First(adminSuper).Error
 }
-func (r *AdminSuperRepository) FindById(db *gorm.DB, adminSuper *entity.AdminSuper, id int) error {
+func (r *AdminSuperRepository) FindById(db *gorm.DB, adminSuper *entity.AdminSuper, id int32) error {
 	return db.Where("id = ?", id).First(adminSuper).Error
 }

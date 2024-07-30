@@ -2,6 +2,7 @@ package controller
 
 import (
 	"log"
+	"math"
 	"strconv"
 
 	"github.com/go-playground/mold/v4"
@@ -50,7 +51,11 @@ func (c *PasienController) Get(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	response, err := c.PasienService.Get(ctx.Context(), request)
 	if err != nil {
 		log.Println(err.Error())
@@ -96,7 +101,11 @@ func (c *PasienController) Update(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 	if err := ctx.Bind().JSON(request); err != nil {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
@@ -132,7 +141,11 @@ func (c *PasienController) Delete(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 
 	if err := c.PasienService.Delete(ctx.UserContext(), request); err != nil {
 		log.Println(err.Error())
@@ -154,7 +167,11 @@ func (c *PasienController) Selesai(ctx fiber.Ctx) error {
 		log.Println(err.Error())
 		return fiber.ErrBadRequest
 	}
-	request.ID = id
+	if id < math.MinInt32 || id > math.MaxInt32 {
+		log.Println("value out of range for int32")
+		return fiber.ErrBadRequest
+	}
+	request.ID = int32(id)
 
 	if err := c.PasienService.Selesai(ctx.UserContext(), request); err != nil {
 		log.Println(err.Error())
