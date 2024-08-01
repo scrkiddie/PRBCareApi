@@ -1,28 +1,42 @@
 # PRBCareAPI
 
-PRBCareAPI adalah aplikasi REST API yang dibuat dengan bahasa Golang untuk manajemen Puskesmas, manajemen Apotek, pengambilan obat, kontrol balik, dan manajemen pasien. Aplikasi ini menyediakan fungsionalitas khusus berdasarkan peran pengguna yang berbeda, termasuk Super Admin, Admin Puskesmas, Admin Apotek, dan Calon Pasien.
+PRBCareAPI adalah aplikasi REST API untuk manajemen Puskesmas, manajemen Apotek, pengambilan obat, kontrol balik, dan manajemen pasien. Aplikasi ini menyediakan fungsionalitas khusus berdasarkan peran pengguna yang berbeda, termasuk Admin Super, Admin Puskesmas, Admin Apotek, dan Calon Pasien.
 PRBCareAPI dikembangkan dengan mengikuti prinsip-prinsip REST API untuk memastikan skalabilitas dan pemeliharaan yang mudah. Sistem autentikasi dilengkapi untuk memastikan keamanan data.
-
-## Pengguna dan Hak Akses
-
-- **Super Admin**: Dapat melakukan semua operasi manajemen dalam sistem, termasuk manajemen pengguna.
-- **Admin Apotek**: Mengelola obat dan proses pengambilan obat.
-- **Admin Puskesmas**: Mengelola pasien, kontrol balik, dan pengambilan obat sesuai resep, serta mengarahkan ke Admin Apotek yang terkait.
-- **Calon Pasien**: Dapat mengakses informasi terkait dengan layanan Puskesmas dan Apotek yang mereka butuhkan.
 
 ## Fitur
 
-- Manajemen pengguna dengan autentikasi yang berbeda untuk Super Admin, Admin Puskesmas, dan Admin Apotek.
-- Manajemen pasien yang meliputi pendaftaran, pembaruan data, dan pencatatan medis.
+- Autentikasi yang berbeda untuk Admin Super, Admin Puskesmas, Admin Apotek, dan Calon Pasien.
+- Manajemen pasien oleh Admin Puskesmas yang meliputi pendaftaran, pembaruan data, dan pencatatan medis.
 - Manajemen obat oleh Admin Apotek, termasuk stok dan dispensasi obat.
-- Kontrol balik untuk memonitor dan mengevaluasi pengobatan pasien.
-- Sistem pembuatan jadwal kontrol balik dan pengambilan obat.
+- Kontrol balik oleh Admin Puskesmas untuk memonitor dan mengevaluasi pengobatan pasien.
+- Sistem pembuatan jadwal kontrol balik dan pengambilan obat oleh Admin Puskesmas.
 
+## Tech Stack
+
+- **Programming Language**: Golang
+- **Web Framework**: Fiber
+- **ORM**: GORM
+- **Database**: PostgreSQL
+
+## Environment Variables
+PRBCareAPI akan menggunakan environment variables sebagai konfigurasi utama menggantikan `config.json` jika variabel-variabel tersebut diset sebelum menjalankan proyek:
+* **JWT_SECRET**: Secret key untuk JWT.
+* **JWT_EXP**: Waktu kadaluwarsa JWT dalam jam.
+* **WEB_PORT**: Port untuk menjalankan server web.
+* **DB_USERNAME**: Nama pengguna database.
+* **DB_PASSWORD**: Kata sandi database.
+* **DB_HOST**: Host database.
+* **DB_PORT**: Port koneksi database.
+* **DB_NAME**: Nama database.
+### Cara Set Environment Variables:
+- **Windows**: Gunakan System Properties > Advanced > Environment Variables, atau command setx.
+- **Linux/macOS**: Tambahkan export VARIABLE="value" ke file .bashrc atau .profile dan jalankan source ~/.bashrc.
 ## Dokumentasi API
 
 Untuk mendapatkan lebih detail mengenai endpoint dan cara penggunaan API, kunjungi dokumentasi API di link berikut:
 
 [API Documentation](https://bump.sh/sckiddie/doc/prb-care-api)
+
 
 ## Contoh Implementasi Frontend
 

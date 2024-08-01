@@ -11,11 +11,12 @@ import (
 )
 
 func NewDatabase(config *viper.Viper) *gorm.DB {
-	username := config.GetString("database.username")
-	password := config.GetString("database.password")
-	host := config.GetString("database.host")
-	port := config.GetInt("database.port")
-	database := config.GetString("database.name")
+	username := config.GetString("db.username")
+	password := config.GetString("db.password")
+	host := config.GetString("db.host")
+	port := config.GetInt("db.port")
+	database := config.GetString("db.name")
+
 	dsn := fmt.Sprintf("postgresql://%s:%s@%s:%d/%s?sslmode=disable&lock_timeout=5000", username, password, host, port, database)
 
 	db, err := gorm.Open(postgres.Open(dsn))
